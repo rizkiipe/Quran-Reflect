@@ -80,8 +80,13 @@ def buat_ikon(root, main):
     try:
         from PIL import Image, ImageDraw
     except ImportError:
-        import subprocess
+        import importlib, subprocess
         subprocess.check_call([sys.executable, '-m', 'pip', 'install', '--quiet', '--break-system-packages', 'pillow'])
+        import site
+        # pip bisa memasang ke folder pengguna (~/.local) bila folder sistem tidak bisa ditulis;
+        # folder itu belum ada di jalur impor proses yang sedang berjalan, jadi tambahkan secara manual
+        site.addsitedir(site.getusersitepackages())
+        importlib.invalidate_caches()
         from PIL import Image, ImageDraw
     img = Image.open(src).convert('RGBA')
     px = img.getpixel((2, 2))
@@ -133,6 +138,9 @@ def buat_ikon(root, main):
                     print('Lewati', pth, e)
     print('Ikon dari', os.path.relpath(src, os.path.dirname(root)), '| warna latar', hexbg, '| splash diganti:', ganti)
 
-buat_ikon(root, main)
+try:
+    buat_ikon(root, main)
+except Exception as e:                      # ikon gagal tidak boleh menggagalkan seluruh build
+    print('PERINGATAN: ikon tidak dibuat, memakai ikon bawaan Capacitor:', e)
 
 print('Selesai. Paket aplikasi:', app_id)
