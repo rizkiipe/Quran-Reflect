@@ -716,6 +716,15 @@ async function natPin(){
 /* ===== Pembaruan aplikasi: cek rilis terbaru di GitHub, lalu tawarkan unduhan APK. Versi baru terpasang di atas yang lama, tanpa hapus aplikasi. ===== */
 function verCmp(a,b){a=String(a).replace(/^v/i,'').split('.').map(Number);b=String(b).replace(/^v/i,'').split('.').map(Number);for(var i=0;i<Math.max(a.length,b.length);i++){var x=a[i]||0,y=b[i]||0;if(x!==y)return x>y?1:-1}return 0}
 function updMsg(t){var m=$('updmsg');if(!m)return;m.textContent=t;m.hidden=!t}
+async function pasangUpd(url,btn){
+  var W=nplug('TadabburWidget'),st=$('updst');
+  if(!W||!W.installApk){window.open(url,'_blank');return}
+  btn.disabled=true;st.textContent='Menyiapkan unduhan…';
+  var tm=setInterval(async function(){try{var r=await W.dlProgress();if(r&&r.pct)st.textContent='Mengunduh… '+r.pct+'%'}catch(e){}},700);
+  try{await W.installApk({url:url});st.textContent='Unduhan selesai. Tekan Pasang pada layar Android yang muncul.'}
+  catch(e){st.textContent=(e&&e.code==='IZIN')?'Aktifkan “Izinkan dari sumber ini” untuk Tadabbur Harian di layar yang terbuka, kembali ke aplikasi, lalu tekan Unduh dan pasang lagi.':'Gagal: '+String((e&&e.message)||e)+'. Coba lagi atau pakai tombol Lewat browser.'}
+  finally{clearInterval(tm);btn.disabled=false}
+}
 async function cekUpdate(manual){
   var V=window.APP_VERSION;if(!NATIVE||!V)return;
   if(!V.repo){if(manual)updMsg('Alamat repositori GitHub belum terisi, jadi pembaruan belum bisa dicek.');return}
@@ -731,8 +740,8 @@ async function cekUpdate(manual){
     if(!manual&&ls('updskip','')===tag)return;
     var apk=(j.assets||[]).filter(function(a){return /\.apk$/i.test(a.name||'')})[0],url=apk?apk.browser_download_url:j.html_url;
     var z=$('upd');z.hidden=false;
-    z.innerHTML='<div class="hd"><b>Pembaruan tersedia</b><span>'+esc(tag.replace(/^v/i,''))+'</span></div><p class="id" style="margin:8px 0 10px">Versi '+esc(tag.replace(/^v/i,''))+' siap diunduh (kamu memakai '+esc(V.v)+'). Setelah unduhan selesai, buka file APK-nya lalu tekan Pasang. Aplikasi lama diperbarui, data favorit tetap aman.</p>'
-      +'<div class="row"><a class="btn" href="'+esc(url)+'" target="_blank" rel="noopener" style="text-decoration:none;display:inline-block">Unduh pembaruan</a><button class="ib" id="updx" data-tag="'+esc(tag)+'">Nanti</button></div>';
+    z.innerHTML='<div class="hd"><b>Pembaruan tersedia</b><span>'+esc(tag.replace(/^v/i,''))+'</span></div><p class="id" style="margin:8px 0 10px">Versi '+esc(tag.replace(/^v/i,''))+' siap diunduh (kamu memakai '+esc(V.v)+'). Tekan Unduh dan pasang: aplikasi mengunduhnya sendiri, lalu Android menampilkan tombol Pasang yang perlu kamu tekan. Data favorit tetap aman.</p><p class="sub" id="updst" style="margin:0 0 8px"></p>'
+      +'<div class="row"><button class="btn" id="updgo" data-url="'+esc(url)+'">Unduh dan pasang</button><a class="ib" href="'+esc(url)+'" target="_blank" rel="noopener" style="text-decoration:none">Lewat browser</a><button class="ib" id="updx" data-tag="'+esc(tag)+'">Nanti</button></div>';
     if(manual)updMsg('');
   }catch(e){if(manual)updMsg('Gagal memeriksa pembaruan: '+(e.name==='AbortError'?'koneksi terlalu lambat':(e.message||e))+'.')}
   finally{clearTimeout(tm)}
@@ -740,6 +749,7 @@ async function cekUpdate(manual){
 if(NATIVE&&window.APP_VERSION){$('verbar').hidden=false;$('vernow').textContent=APP_VERSION.v}
 document.addEventListener('click',function(e){
   if(e.target.closest('#updbtn'))cekUpdate(true);
+  var g=e.target.closest('#updgo');if(g)pasangUpd(g.dataset.url,g);
   var x=e.target.closest('#updx');if(x){sv('updskip',x.dataset.tag);$('upd').hidden=true}
 });
 async function natNotif(){
