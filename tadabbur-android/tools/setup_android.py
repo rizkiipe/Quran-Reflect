@@ -29,7 +29,7 @@ for sub in ('layout', 'xml', 'drawable', 'values'):
 # 3) AndroidManifest: izin notifikasi + receiver widget (aman dijalankan berulang)
 mp = os.path.join(main, 'AndroidManifest.xml')
 m = open(mp, encoding='utf-8').read()
-for perm in ('android.permission.POST_NOTIFICATIONS', 'android.permission.RECEIVE_BOOT_COMPLETED'):
+for perm in ('android.permission.POST_NOTIFICATIONS', 'android.permission.RECEIVE_BOOT_COMPLETED', 'android.permission.REQUEST_INSTALL_PACKAGES'):
     if perm not in m:
         m = m.replace('<application', '<uses-permission android:name="%s" />\n    <application' % perm, 1)
 if 'AyatWidget' not in m:
@@ -43,6 +43,15 @@ if 'AyatWidget' not in m:
 '''
     m = re.sub(r'</application>', receiver + '    </application>', m, count=1)
 open(mp, 'w', encoding='utf-8').write(m)
+# 3b) FileProvider bawaan Capacitor harus mengizinkan folder cache (tempat APK pembaruan diunduh)
+fp = os.path.join(main, 'res', 'xml', 'file_paths.xml')
+if os.path.isfile(fp):
+    x = open(fp, encoding='utf-8').read()
+    if 'cache-path' not in x:
+        x = x.replace('</paths>', '    <cache-path name="tadabbur_cache" path="." />\n</paths>')
+        open(fp, 'w', encoding='utf-8').write(x)
+if 'fileprovider' not in m.lower():
+    print('PERINGATAN: FileProvider tidak ditemukan di AndroidManifest; pasang pembaruan dalam aplikasi mungkin gagal.')
 # 4) Ikon aplikasi: pakai ikon terbesar yang tertulis di manifest.json web app (cadangan: icon-512.png)
 def cari_ikon(root):
     repo = os.path.dirname(root)
