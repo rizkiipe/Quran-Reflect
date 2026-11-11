@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0B2E31">
+<title>Tadabbur Harian</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-title" content="Tadabbur">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Newsreader:opsz,wght@6..72,400;6..72,600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#E4EFEC;--ink:#10282A;--mute:#4A6561;--card:#FAFCFB;--line:#C3D6D1;--gold:#B07A16;--teal:#23807A;--dusk:#3A5C8E;--mix:#000;--on:#fff;--g1:#0B2E31;--g2:#1F6F69;--g3:#3E9A90;--sh:rgba(16,40,42,.35);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root{--bg:#0A1618;--ink:#E6EEEA;--mute:#9DB6B0;--card:#122427;--line:#27403F;--gold:#E2AE45;--teal:#5FC0B6;--dusk:#93B4E6;--mix:#fff;--on:#0A1618;--g1:#071F22;--g2:#12534F;--g3:#2A8179;--sh:rgba(0,0,0,.6);color-scheme:dark}}
+*{box-sizing:inherit}html,body{margin:0}
+body{background:linear-gradient(180deg,color-mix(in srgb,var(--teal) 16%,var(--bg)) 0,var(--bg) 380px) no-repeat var(--bg);color:var(--ink);font:18px/1.6 'Newsreader',Georgia,serif}
+main{max-width:680px;margin:0 auto;padding:16px 16px 60px}
+.hero{position:relative;border-radius:22px;padding:26px 22px 22px;margin:0 0 16px;color:#fff;background:radial-gradient(circle at 92% 8%,rgba(236,190,90,.55),transparent 42%),linear-gradient(135deg,var(--g1),var(--g2) 58%,var(--g3));box-shadow:0 14px 30px -16px var(--sh)}
+h1{font-size:clamp(32px,8vw,44px);line-height:1.1;margin:0 0 4px;font-weight:600;color:#fff}
+.tgl{margin:0;font-size:16px;color:rgba(255,255,255,.82)}
+h2{font-size:21px;margin:26px 0 6px;font-weight:600}
+.sub,.pesan{color:var(--mute);font-size:16px;margin:0 0 14px}
+nav{display:flex;gap:6px;margin:0 0 18px;position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);padding:8px 0;z-index:5;overflow-x:auto}
+nav button{flex:1;white-space:nowrap;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:8px 14px;cursor:pointer;font-size:16px}
+nav button[aria-current="true"]{background:linear-gradient(135deg,var(--teal),color-mix(in srgb,var(--teal) 60%,var(--mix)));color:var(--on);border-color:transparent;box-shadow:0 6px 14px -8px var(--teal)}
+.card{--c2:color-mix(in srgb,var(--c) 62%,var(--mix));--c1:color-mix(in srgb,var(--c) 70%,#fff);position:relative;overflow:hidden;background:linear-gradient(160deg,color-mix(in srgb,var(--c) 7%,var(--card)),var(--card) 55%);border:1px solid var(--line);border-radius:18px;padding:16px 18px 14px 24px;margin:0 0 16px;box-shadow:0 10px 24px -16px var(--sh)}
+.card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:7px;background:linear-gradient(180deg,var(--c1),var(--c),var(--c2))}
+.hd{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:15px;color:var(--mute)}
+.hd b{background:linear-gradient(135deg,var(--c),var(--c2));color:var(--on);border-radius:999px;padding:1px 13px;font-size:15.5px;font-weight:600}
+.ar{font:400 clamp(27px,7vw,34px)/2.1 'Amiri','Traditional Arabic',serif;direction:rtl;text-align:right;margin:10px 0 6px;padding:4px 14px;border-radius:12px;background:linear-gradient(135deg,color-mix(in srgb,var(--c) 14%,transparent),color-mix(in srgb,var(--c) 3%,transparent))}
+.id{margin:0 0 8px}.mk{margin:0 0 8px;color:var(--mute);font-size:16.5px;border-top:1px solid var(--line);padding-top:8px}
+details{font-size:16.5px;margin:6px 0}summary{cursor:pointer;color:var(--c,var(--teal));font-weight:600}
+.gd{display:inline-block;border:1px solid currentColor;border-radius:999px;padding:0 9px;margin-left:6px;font-size:13px;font-weight:600}
+.tjar{font:400 clamp(26px,6.6vw,32px)/2.2 'Amiri','Traditional Arabic',serif;direction:rtl;text-align:right;margin:6px 0 8px}
+.tjl{list-style:none;margin:0;padding:0}.tjl li{margin:0 0 10px;padding:8px 10px;border:1px solid var(--line);border-radius:12px}
+.tjl b{display:flex;align-items:center;gap:8px;font-size:16px}.sw{width:14px;height:14px;border-radius:4px;display:inline-block;flex:none;border:1px solid var(--line)}
+.tjl p{margin:4px 0 0;font-size:15.5px;color:var(--mute);line-height:1.5}.tjl p.ex{direction:rtl;text-align:right;font:400 26px/1.9 'Amiri',serif;color:var(--ink);margin:2px 0 0}
+.tjw{font-size:14.5px;color:var(--mute);margin:8px 0 0}
+.t-h,.t-s,.t-l{color:#8A9A97}.t-n{color:#3F66F0}.t-p{color:#3347E8}.t-m{color:#1F2FD0}.t-o{color:#2B4FD0}.t-q{color:#D3000A}.t-c{color:#C400A8}.t-f{color:#8F00A3}.t-w{color:#3F9A00}.t-i{color:#0F8FC4}.t-a{color:#0F8A6E}.t-u{color:#2E8A00}.t-d,.t-b{color:#7A7A7A}.t-g{color:#E06400}
+@media (prefers-color-scheme:dark){.t-h,.t-s,.t-l{color:#AAB8B5}.t-n{color:#7E9BFF}.t-p{color:#8D9BFF}.t-m{color:#8E9BFF}.t-o{color:#7F9BFF}.t-q{color:#FF6B73}.t-c{color:#FF6EE0}.t-f{color:#D77AEA}.t-w{color:#7FD13B}.t-i{color:#4DC8FF}.t-a{color:#2FD3AA}.t-u{color:#6FD94D}.t-d,.t-b{color:#B5B5B5}.t-g{color:#FF9A4A}}
+#doaq{width:100%;padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;margin:0 0 10px}
+.dt{font-size:19px;line-height:1.3;margin:8px 0 0;font-weight:600}
+.lat{font-style:italic;color:var(--mute);margin:2px 0 8px;font-size:16.5px}.nolat .lat{display:none}
+body.wg main>*:not(#wg){display:none!important}
+.tm{font:inherit;padding:6px 8px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);margin-left:4px}
+body.native{padding-top:max(env(safe-area-inset-top,0px),var(--safe-area-inset-top,0px));padding-bottom:max(env(safe-area-inset-bottom,0px),var(--safe-area-inset-bottom,0px))}
+.tf{white-space:pre-line;color:var(--mute);margin:6px 0}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.row.r4{flex-wrap:nowrap;gap:5px}.row.r4 .ib{flex:1 1 auto;min-width:0;padding:7px 6px;font-size:13.5px;white-space:nowrap;text-align:center;overflow:hidden;text-overflow:ellipsis}
+@media (max-width:360px){.row.r4 .ib{font-size:12.5px;padding:7px 3px}}
+button{font:inherit}
+.ib,.btn,.chip{border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:999px;padding:5px 14px;cursor:pointer;font-size:15.5px}
+.ib[aria-pressed="true"]{background:linear-gradient(135deg,var(--gold),color-mix(in srgb,var(--gold) 62%,var(--mix)));color:var(--on);border-color:transparent}
+.btn{background:linear-gradient(135deg,var(--teal),color-mix(in srgb,var(--teal) 62%,var(--mix)));color:var(--on);border-color:transparent;padding:9px 20px;font-size:16px;box-shadow:0 8px 16px -10px var(--teal)}
+.btn.o{background:transparent;color:var(--ink);border-color:var(--line);box-shadow:none}
+.chip{font-size:16px;background:var(--card)}
+.chip[aria-pressed="true"]{background:linear-gradient(135deg,var(--teal),color-mix(in srgb,var(--teal) 60%,var(--mix)));color:var(--on);border-color:transparent}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px}
+textarea{width:100%;min-height:72px;padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;resize:vertical}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.grid button{text-align:left;border:1px solid var(--line);background:linear-gradient(160deg,color-mix(in srgb,var(--teal) 9%,var(--card)),var(--card));color:var(--ink);border-radius:14px;padding:10px 12px;cursor:pointer;font-size:15.5px}
+.grid small{display:block;color:var(--mute)}
+button:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.err{color:#B3261E;font-size:16px}@media (prefers-color-scheme:dark){.err{color:#FF8A80}}
+.note{font-size:14.5px;color:var(--mute);margin-top:36px;border-top:1px solid var(--line);padding-top:12px}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<main>
+<div id="wg" hidden><div class="card" style="--c:var(--gold)"><div class="hd"><b>Tadabbur</b><span id="wgdate"></span></div><div class="chips" id="wgchips" style="margin:10px 0 0"></div><div id="wgbody"></div><div class="row"><button class="btn" id="wgoff">Buka aplikasi</button><button class="ib" data-wgimg="save">🖼 Gambar kunci layar</button></div><p class="pesan wgmsg" aria-live="polite" style="margin:8px 0 0"></p></div></div>
+<header class="hero"><h1>Tadabbur Harian</h1><p class="tgl" id="tgl"></p></header>
+<div id="upd" class="card" style="--c:var(--gold)" hidden></div>
+<nav id="nav"><button data-v="hari" aria-current="true">Hari ini</button><button data-v="cari" aria-current="false">Sesuai harimu</button><button data-v="quran" aria-current="false">Al-Qur’an</button><button data-v="doa" aria-current="false">Doa</button><button data-v="simpan" aria-current="false">Tersimpan</button></nav>
+
+<section id="v-hari"><p class="sub">Tiga ayat untuk hari ini. Ayatnya berbeda setiap hari dan tidak berulang dalam siklus ±5 tahun.</p><div id="tiga"></div>
+<div class="card" id="panelw" style="--c:var(--dusk)"><div class="hd"><b>Widget dan pengingat</b></div>
+<p class="sub" style="margin:6px 0">Halaman web tidak bisa membuat widget asli di layar utama HP. Tiga cara ini bisa dipakai sebagai gantinya.</p>
+<details><summary>1. Tampilan widget (ayat sesuai waktu)</summary><p class="tf">Halaman ringkas berisi ayat pagi, siang, atau malam sesuai jam sekarang. Buka tampilan ini, lalu di Chrome Android pilih menu ⋮ → Tambahkan ke layar utama agar ikonnya ada di layar utama.</p><div class="row"><button class="btn" id="wgopen">Buka tampilan widget</button><button class="ib" id="wgcopy">Salin tautan</button></div></details>
+<details><summary>2. Gambar untuk layar kunci</summary><p class="tf">Membuat gambar ayat (1080×2340) dari ayat yang sedang tampil. Simpan lalu atur sebagai wallpaper layar kunci. Gambar bersifat tetap, jadi buat ulang saat ingin ayat baru.</p><div class="row"><button class="btn" data-wgimg="save">Buat dan simpan gambar</button><button class="ib" data-wgimg="share">Bagikan</button></div></details>
+<details><summary>3. Pengingat di kalender HP</summary><p class="tf">Membuat pengingat harian berulang di aplikasi Kalender HP, lengkap dengan alarm. Notifikasinya tampil di layar kunci menurut pengaturan Kalender. Isinya ajakan membuka aplikasi, bukan ayatnya. Untuk berhenti, hapus acara “Tadabbur” di Kalender.</p>
+<div class="row" style="align-items:center"><label>Pagi <input type="time" id="rtPagi" class="tm"></label><label>Siang <input type="time" id="rtSiang" class="tm"></label><label>Malam <input type="time" id="rtMalam" class="tm"></label></div>
+<div class="row"><button class="btn" id="wgics">Unduh pengingat</button></div></details>
+<details id="natbox" hidden><summary>4. Widget asli dan notifikasi ayat (aplikasi Android)</summary><p class="tf">Widget di layar utama menampilkan ayat pagi, siang, atau malam sesuai jam. Ayat 7 hari ke depan disimpan di HP, jadi widget tetap terisi saat offline. Ketuk widget untuk membuka aplikasi.</p><div class="row"><button class="btn" id="natpin">Pasang widget</button><button class="ib" id="natsync">Perbarui data widget</button></div><p class="tf">Notifikasi ayat dijadwalkan sesuai jam pengingat di atas (isinya nama surah, ayat, dan terjemahan singkat).</p><div class="row"><button class="btn" id="natnotif">Jadwalkan notifikasi ayat</button></div></details>
+<p class="pesan wgmsg" aria-live="polite" style="margin:8px 0 0"></p></div></section>
+
+<section id="v-cari" hidden>
+<p class="sub">Pilih perasaan atau tema, atau ceritakan harimu dengan kata-katamu sendiri.</p>
+<div class="chips" id="chips"></div>
+<textarea id="cerita" placeholder="Contoh: besok presentasi ke klien dan aku gugup banget…" aria-label="Ceritakan harimu"></textarea>
+<div class="row"><button class="btn" id="cari">Carikan ayat</button><button class="btn o" id="lain" hidden>Ayat lain</button></div>
+<p class="pesan" id="pesan" aria-live="polite"></p><div id="hasil"></div>
+</section>
+
+<section id="v-quran" hidden><div id="daftar" class="grid"></div><div id="surah" hidden></div></section>
+<section id="v-doa" hidden>
+<p class="sub">Doa harian dengan sumber kitab dan derajat riwayat. Doa berderajat lemah ada di kategori “Riwayat Lemah” dan diberi tanda. Cari dengan kata kunci, atau pilih kategori.</p>
+<input id="doaq" type="search" placeholder="Cari doa: tidur, makan, shalat…" aria-label="Cari doa" autocomplete="off">
+<div class="chips" id="doachips"></div>
+<div class="row" style="margin:0 0 10px"><button class="chip" id="latbtn" aria-pressed="true">Tampilkan Latin</button></div>
+<div id="doalist"></div>
+<p class="sub" style="font-size:14.5px;margin-top:14px">Terjemahan doa dari hadis ditulis penyusun aplikasi berdasarkan makna lafaznya; ayat Al-Qur’an memakai terjemahan Kemenag seperti di bagian Al-Qur’an. Tulisan Latin hanya alat bantu baca, bukan pengganti belajar membaca huruf Arab.</p>
+</section>
+<section id="v-simpan" hidden><div id="simpan"></div></section>
+
+<p class="note" id="ver"></p>
+<p class="note" style="margin-top:12px">Teks Arab dan terjemahan Indonesia diambil langsung dari sumber data (api.quran.gading.dev; terjemahan dan tafsir dari Kementerian Agama RI, teks Arab dari api.alquran.cloud) dan tidak diubah oleh aplikasi ini. Tafsir yang ditampilkan adalah Tafsir Kemenag RI. “Renungan” dan tema adalah catatan ringkas aplikasi, bukan tafsir ulama; tema ditentukan otomatis dari kata kunci terjemahan. Favorit dan penanda disimpan di perangkat dan, saat online, di Firebase (proyek terpisah khusus aplikasi ini) pada dokumen milikmu sendiri. Asbabun nuzul hanya ditampilkan untuk ayat yang memiliki riwayat sahih (Bukhari/Muslim) dan sudah dicocokkan dengan teks hadisnya; isinya ringkasan aplikasi, bukan kutipan harfiah, dan sumbernya dicantumkan. Tajwid diambil dari data alquran.cloud dan audio dari CDN yang sama (qari Mishary Alafasy); keduanya perlu internet dan hanya alat bantu belajar. Tiap keterangan diberi derajat (Kuat, Cukup kuat, atau Belum terverifikasi) beserta nama kitab dan nomor riwayatnya. Tidak semua ayat memiliki sebab turun, dan ayat tanpa keterangan itu bukan berarti tidak berkaitan dengan peristiwa. Untuk rujukan hukum atau pembahasan mendalam, cocokkan dengan mushaf dan tanyakan kepada guru atau ulama.</p>
+<p class="sub" id="verbar" hidden style="font-size:14px;text-align:center;margin-top:18px">Versi aplikasi <span id="vernow"></span> · <button class="chip" id="updbtn">Cek pembaruan</button></p>
+<p class="sub" id="updmsg" aria-live="polite" style="font-size:14px;text-align:center" hidden></p>
+</main>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="app-version.js"></script>
+<script>
+var API='https://api.quran.gading.dev/surah/';
+var COUNTS=[7,286,200,176,120,165,206,75,129,109,123,111,43,52,99,128,111,110,98,135,112,78,118,64,77,227,93,88,69,60,34,30,73,54,45,83,182,88,75,85,54,53,89,59,37,35,38,29,18,45,60,49,62,55,78,96,29,22,24,13,14,11,11,18,12,12,30,52,52,44,28,28,20,56,40,31,50,40,46,42,29,19,36,25,22,17,19,26,30,20,15,21,11,8,8,19,5,8,8,11,11,8,3,9,5,4,7,3,6,3,5,4,5,6];
+var NAMA='Al-Fatihah|Al-Baqarah|Ali ‘Imran|An-Nisa’|Al-Ma’idah|Al-An‘am|Al-A‘raf|Al-Anfal|At-Taubah|Yunus|Hud|Yusuf|Ar-Ra‘d|Ibrahim|Al-Hijr|An-Nahl|Al-Isra’|Al-Kahf|Maryam|Taha|Al-Anbiya’|Al-Hajj|Al-Mu’minun|An-Nur|Al-Furqan|Asy-Syu‘ara’|An-Naml|Al-Qasas|Al-‘Ankabut|Ar-Rum|Luqman|As-Sajdah|Al-Ahzab|Saba’|Fatir|Yasin|As-Saffat|Sad|Az-Zumar|Gafir|Fussilat|Asy-Syura|Az-Zukhruf|Ad-Dukhan|Al-Jasiyah|Al-Ahqaf|Muhammad|Al-Fath|Al-Hujurat|Qaf|Az-Zariyat|At-Tur|An-Najm|Al-Qamar|Ar-Rahman|Al-Waqi‘ah|Al-Hadid|Al-Mujadalah|Al-Hasyr|Al-Mumtahanah|As-Saff|Al-Jumu‘ah|Al-Munafiqun|At-Tagabun|At-Talaq|At-Tahrim|Al-Mulk|Al-Qalam|Al-Haqqah|Al-Ma‘arij|Nuh|Al-Jinn|Al-Muzzammil|Al-Muddassir|Al-Qiyamah|Al-Insan|Al-Mursalat|An-Naba’|An-Nazi‘at|‘Abasa|At-Takwir|Al-Infitar|Al-Mutaffifin|Al-Insyiqaq|Al-Buruj|At-Tariq|Al-A‘la|Al-Gasyiyah|Al-Fajr|Al-Balad|Asy-Syams|Al-Lail|Ad-Duha|Asy-Syarh|At-Tin|Al-‘Alaq|Al-Qadr|Al-Bayyinah|Az-Zalzalah|Al-‘Adiyat|Al-Qari‘ah|At-Takasur|Al-‘Asr|Al-Humazah|Al-Fil|Quraisy|Al-Ma‘un|Al-Kausar|Al-Kafirun|An-Nasr|Al-Lahab|Al-Ikhlas|Al-Falaq|An-Nas'.split('|');
+var CURM={};[['2:286','Beban yang kamu pikul sudah ditakar; kamu mampu melaluinya, dan istirahat sejenak bukan menyerah.'],['94:5 94:6','Kemudahan menyertai kesulitan, bukan hanya datang sesudahnya. Diulang dua kali sebagai penguat hati.'],['13:28','Saat pikiran riuh, berhenti sejenak untuk berzikir atau salat bisa menjadi jangkar.'],['14:7','Syukur mengubah cara memandang hari: hal kecil mulai terasa sebagai nikmat.'],['2:153','Sabar bukan diam pasrah, melainkan tetap melangkah dengan tenang sambil merasa ditemani.'],['65:3','Lakukan bagianmu sebaik mungkin, lalu serahkan hasilnya. Itu cara melepas cemas tanpa berhenti berusaha.'],['3:159','Timbang dan bermusyawarahlah dahulu, lalu putuskan dan melangkah tanpa mengulang keraguan.'],['2:156','Kehilangan terasa berat; ayat ini menunjukkan tempat bersandar: semua yang kita punya adalah titipan.'],['17:23','Berbakti kepada orang tua disandingkan langsung dengan tauhid. Satu telepon atau pesan hari ini pun berarti.'],['30:21','Kasih dalam keluarga adalah anugerah yang dirawat lewat sapaan, mendengarkan, dan mengalah di waktu yang tepat.'],['2:186','Saat merasa sendirian, doa tidak butuh perantara atau waktu khusus. Dia dekat.'],['41:34','Membalas dengan cara yang lebih baik bisa mengubah lawan menjadi sahabat. Mulailah dengan nada tenang.'],['3:134','Kuat bukan berarti menang berdebat, tetapi mampu menahan diri lalu memaafkan.'],['53:39','Hasil mengikuti usaha. Kerja konsisten hari ini adalah investasi yang tidak sia-sia.'],['39:53','Sebesar apa pun salahmu, pintu kembali terbuka. Berhenti menyalahkan diri, lalu perbaiki langkah.'],['5:2','Di tempat kerja, membantu rekan dan berbagi beban adalah ibadah yang nyata.'],['28:77','Kerja keras tetap butuh tidur, makan, keluarga, dan jeda. Keseimbangan adalah bagian dari ajaran.'],['55:13','Pertanyaan yang diulang untuk mengajak menghitung nikmat: napas, kesehatan, orang yang menyayangimu.'],['20:25 20:26','Doa Nabi Musa sebelum tugas besar. Cocok dibaca sebelum presentasi, rapat, atau hal yang membuat gugup.'],['93:3','Turun saat Nabi merasa sepi. Pengingat bahwa masa sulit bukan tanda ditinggalkan.']].forEach(function(x){x[0].split(' ').forEach(function(k){CURM[k]=x[1]})});
+
+/* Asbabun nuzul: hanya riwayat sahih (Bukhari/Muslim) yang sudah dicocokkan ke teks hadisnya. Ringkasan berbahasa Indonesia, bukan kutipan harfiah. Ayat yang tidak ada di sini sengaja tidak diberi asbabun nuzul. */
+var GR={lemah:['Lemah','#B3472F'],beda:['Diperselisihkan','var(--gold)'],susun:['Susunan penyusun','var(--mute)'],kuat:['Kuat','var(--teal)'],sedang:['Cukup kuat','var(--gold)'],belum:['Belum terverifikasi','var(--mute)']};
+var AN={};[
+['93:1 93:2 93:3','Terkait Ad-Duha ayat 1–3. Nabi ﷺ sakit sehingga tidak bangun salat malam selama dua atau tiga malam. Seorang perempuan Quraisy mencemooh bahwa setan beliau sudah meninggalkannya. Dalam riwayat lain disebutkan Jibril terlambat datang. Setelah itu turun surah Ad-Duha yang menegaskan bahwa Tuhanmu tidak meninggalkan dan tidak membenci engkau.','Jundub bin Sufyan al-Bajali. Shahih al-Bukhari no. 4950, 4983, dan 1125; Shahih Muslim no. 1797.'],
+['2:284 2:285 2:286','Terkait Al-Baqarah ayat 284–286. Ketika ayat 284 turun (perhitungan atas isi hati), para sahabat merasa sangat berat dan mengadu kepada Nabi ﷺ. Beliau menyuruh mereka berkata “kami dengar dan kami taat”. Setelah mereka melakukannya, Allah menurunkan ayat penutup surah ini, termasuk penegasan bahwa Allah tidak membebani seseorang melebihi kesanggupannya. Tiap doa dalam ayat 286 dijawab Allah dengan “ya” (dalam riwayat Muslim yang lain: “Aku telah melakukannya”).','Abu Hurairah. Shahih Muslim no. 125 dan 126.'],
+['39:53','Terkait Az-Zumar ayat 53. Sejumlah orang musyrik yang pernah banyak membunuh dan berzina datang kepada Nabi ﷺ. Mereka menilai ajakan beliau baik, tetapi bertanya apakah ada penebus bagi perbuatan masa lalu mereka. Maka turun ayat ini bersama Al-Furqan ayat 68–70, yang menegaskan bahwa Allah mengampuni dosa bagi yang bertobat.','Ibnu ‘Abbas. Shahih al-Bukhari no. 4810; Shahih Muslim no. 122.'],
+['111:1 111:2','Terkait Al-Lahab ayat 1–2. Setelah turun perintah memperingatkan kerabat dekat (Asy-Syu‘ara’ 214), Nabi ﷺ naik ke bukit Safa dan memanggil kaum Quraisy. Beliau bertanya apakah mereka percaya jika beliau memberi tahu ada pasukan berkuda yang akan menyerang. Mereka menjawab percaya karena belum pernah mendapati beliau berdusta. Beliau lalu memperingatkan azab yang keras. Abu Lahab berkata, “Celaka engkau, untuk inikah kau kumpulkan kami?” Maka turun surah Al-Lahab.','Ibnu ‘Abbas. Shahih al-Bukhari no. 4770, 4971; Shahih Muslim no. 208.'],
+['9:113 28:56','Terkait At-Taubah ayat 113 dan Al-Qasas ayat 56. Ketika Abu Talib hampir wafat, Nabi ﷺ mengajaknya mengucapkan kalimat tauhid, tetapi Abu Jahal dan ‘Abdullah bin Abi Umayyah mencegahnya. Abu Talib wafat dalam keadaan tetap berada pada agama ‘Abdul Muttalib. Nabi ﷺ berkata akan terus memohonkan ampun baginya selama tidak dilarang. Lalu turun At-Taubah 113 yang melarang memohonkan ampun bagi orang musyrik. Al-Qasas 56 juga diriwayatkan turun tentang Abu Talib: hidayah ada di tangan Allah.','Sa‘id bin al-Musayyab dari ayahnya. Shahih al-Bukhari no. 1360, 3884, dan 4772; juga diriwayatkan Muslim.'],
+['2:158','Terkait Al-Baqarah ayat 158. Sebagian sahabat merasa keberatan melakukan sa‘i antara Safa dan Marwa. Menurut penjelasan ‘Aisyah, sebabnya kaum Ansar sebelum Islam berihram untuk berhala Manat dan menganggap tidak pantas bersa‘i di antara keduanya. Setelah masuk Islam mereka bertanya kepada Nabi ﷺ, lalu turun ayat ini yang menegaskan bahwa Safa dan Marwa termasuk syiar Allah. Anas bin Malik juga meriwayatkan bahwa para sahabat dahulu enggan karena keduanya terkait kebiasaan masa jahiliah. ‘Aisyah menegaskan bahwa Nabi ﷺ menetapkan sa‘i sebagai bagian dari ibadah haji dan umrah.','‘Urwah dari ‘Aisyah; ‘Asim bin Sulaiman dari Anas. Shahih al-Bukhari no. 1643, 1790, 4495, 4496, dan 4861; juga diriwayatkan Muslim.'],
+['5:3','Terkait Al-Ma’idah ayat 3 (bagian “Pada hari ini telah Kusempurnakan agamamu”). Ini keterangan waktu dan tempat turunnya ayat, bukan peristiwa pemicu. Seorang Yahudi berkata kepada ‘Umar bahwa seandainya ayat ini turun kepada mereka, mereka akan menjadikan harinya hari raya. ‘Umar menjawab bahwa ia tahu hari dan tempatnya: ayat itu turun kepada Nabi ﷺ saat beliau berada di ‘Arafah pada hari Jumat.','Umar bin al-Khattab. Shahih al-Bukhari no. 45, 4407, dan 4606; Shahih Muslim no. 3017.'],
+['17:85','Terkait Al-Isra’ ayat 85. Ibnu Mas‘ud menceritakan bahwa ia berjalan bersama Nabi ﷺ di Madinah ketika beberapa orang Yahudi saling menyuruh bertanya kepada beliau tentang roh. Sebagian khawatir jawabannya tidak menyenangkan, tetapi mereka tetap bertanya. Nabi ﷺ diam sejenak menunggu wahyu, lalu turunlah ayat ini: roh termasuk urusan Tuhanku, dan manusia hanya diberi sedikit ilmu. Sebagian ulama mencatat surah ini Makkiyah, sehingga ayat ini dipahami turun kembali atau diwahyukan lagi di Madinah.','Ibnu Mas‘ud. Shahih al-Bukhari no. 125, 7297, dan 7462; Shahih Muslim no. 2794.'],
+['2:222','Terkait Al-Baqarah ayat 222. Menurut Anas bin Malik, orang Yahudi tidak makan bersama, tidak minum bersama, dan tidak serumah dengan perempuan yang sedang haid. Para sahabat menanyakan hal itu kepada Nabi ﷺ, lalu turun ayat ini. Nabi ﷺ menjelaskan bahwa mereka boleh bergaul seperti biasa kecuali hubungan suami istri.','Anas bin Malik. Shahih Muslim no. 302; juga Sunan Abu Dawud no. 258.'],
+['66:1 66:3 66:4','Terkait At-Tahrim ayat 1–4. Menurut ‘Aisyah, Nabi ﷺ biasa meminum madu di rumah Zainab binti Jahsy. ‘Aisyah dan Hafsah bersepakat berkata kepada beliau bahwa tercium bau tidak sedap (maghafir). Beliau menjawab bahwa itu madu yang beliau minum di rumah Zainab dan bersumpah tidak akan meminumnya lagi, serta meminta hal itu dirahasiakan. Lalu turun ayat yang menegur beliau karena mengharamkan atas dirinya sesuatu yang dihalalkan Allah. Ada pula versi lain dalam Bukhari yang menyebut tempatnya di rumah Hafsah; keterkaitan dengan turunnya ayat disebut jelas pada versi rumah Zainab. Riwayat tentang Mariyah (budak Nabi ﷺ) sengaja tidak dimasukkan.','‘Aisyah. Shahih al-Bukhari no. 4912, 5267, dan 6691 (Kitab at-Tafsir, bab surah At-Tahrim); Shahih Muslim no. 1474.','kuat'],
+['80:1 80:2 80:3 80:4 80:5 80:6 80:7 80:8 80:9 80:10','Terkait awal surah ‘Abasa. Ibnu Ummi Maktum, sahabat yang buta, datang kepada Nabi ﷺ dan meminta bimbingan, sementara beliau sedang bersama para pembesar musyrik yang beliau harapkan masuk Islam. Beliau berpaling darinya dan menghadap mereka. Lalu turun ‘Abasa yang menegur sikap itu dan menegaskan nilai orang yang datang mencari pelajaran.','‘Aisyah. Jami‘ at-Tirmidzi no. 3331 (Kitab Tafsir, bab surah ‘Abasa); Muwatta’ Malik (jalur mursal dari ‘Urwah); disebut pula dalam Tafsir Ibnu Katsir.','sedang','Cukup kuat. Sanad hadis at-Tirmidzi dinilai sahih oleh al-Albani dan Ahmad Syakir, tetapi at-Tirmidzi sendiri menyebutnya gharib dan sebagian jalurnya mursal (tanpa menyebut ‘Aisyah). Bukan riwayat Bukhari atau Muslim.'],
+['2:186','Terkait Al-Baqarah ayat 186. Disebutkan bahwa sekelompok pengikut Nabi ﷺ bertanya apakah Tuhan mereka dekat sehingga cukup dibisiki, atau jauh sehingga harus diseru dengan suara keras. Lalu turun ayat ini yang menegaskan bahwa Allah dekat dan mengabulkan doa.','Tafsir al-Jalalayn (surah Al-Baqarah 186); disebut pula dalam rujukan sekunder sebagai riwayat at-Thabari.','belum','Belum terverifikasi. Riwayat ini saya temukan di kitab tafsir, bukan di Shahih al-Bukhari atau Shahih Muslim, dan derajat sanadnya belum saya periksa langsung. Jangan dijadikan pegangan hukum atau akidah; bacalah ayatnya sebagai penegasan kedekatan Allah yang maknanya berdiri sendiri.']
+].forEach(function(x){x[0].split(' ').forEach(function(k){var q=k.split(':');if(+q[1]<1||+q[1]>COUNTS[+q[0]-1])throw new Error('Kunci asbabun nuzul tidak valid: '+k);AN[k]={t:x[1],r:x[2],g:x[3]||'kuat',n:x[4]||'Diriwayatkan dalam Shahih al-Bukhari dan/atau Shahih Muslim, dua kitab hadis dengan tingkat kesahihan tertinggi.'}})});
+var TH={sabar:/sabar|tabah|kesulitan|kesusahan|cobaan/i,syukur:/bersyukur|syukur|nikmat/i,tawakal:/bertawakal|tawakal|penolong|pelindung|mencukupkan|cukuplah/i,doa:/berdoa|doa|memohon|mohonlah|Tuhan kami/i,taubat:/ampun|tobat|taubat|rahmat Allah/i,keluarga:/ibu bapak|orang tua|anak|istri|suami|kerabat|keluarga/i,ilmu:/ilmu|berpikir|akal|pengetahuan|merenung|memikirkan/i,adil:/adil|keadilan|zalim|amanah|janji/i,sedekah:/sedekah|infak|menafkahkan|harta|miskin|fakir/i,akhlak:/memaafkan|amarah|berbuat baik|santun|lemah lembut|jujur/i,kerja:/bekerja|amal|berusaha|usaha/i};
+var FM={cemas:['tawakal','doa'],lelah:['sabar'],sedih:['sabar','doa'],marah:['akhlak','sabar'],syukur:['syukur'],ragu:['tawakal','ilmu'],kerja:['kerja'],keluarga:['keluarga'],menyesal:['taubat'],ilmu:['ilmu'],adil:['adil'],sedekah:['sedekah'],akhlak:['akhlak']};
+var KW={cemas:/cemas|khawatir|takut|gugup|panik|deg-degan|overthinking/,lelah:/lelah|capek|capai|burnout|penat|kewalahan|stres|stress/,sedih:/sedih|kehilangan|meninggal|kesepian|sendiri|galau|nangis|menangis/,marah:/marah|kesal|jengkel|emosi|dongkol|bertengkar/,syukur:/senang|bahagia|syukur|lega|alhamdulillah|berhasil/,ragu:/ragu|bingung|dilema|memutuskan|pilih/,kerja:/kerja|kantor|deadline|rapat|meeting|proyek|presentasi|atasan|klien|kolega|bos/,keluarga:/ibu|ayah|orang tua|anak|istri|suami|keluarga|adik|kakak/,menyesal:/menyesal|salah|dosa|gagal|malu/};
+
+var $=function(i){return document.getElementById(i)};
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function ls(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}}
+function sv(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+var FAV=ls('fav',[]),BM=ls('bm',null),VER=ls('ver',[]),MEM={};
+
+/* penyimpanan lokal (IndexedDB) agar bisa dibaca ulang tanpa internet */
+var DB=null;
+function idb(){return DB||(DB=new Promise(function(ok,no){try{var r=indexedDB.open('tadabbur',1);r.onupgradeneeded=function(){r.result.createObjectStore('s')};r.onsuccess=function(){ok(r.result)};r.onerror=function(){no(r.error)}}catch(e){no(e)}}))}
+function idbGet(k){return idb().then(function(d){return new Promise(function(ok){var q=d.transaction('s').objectStore('s').get(k);q.onsuccess=function(){ok(q.result)};q.onerror=function(){ok(null)}})}).catch(function(){return null})}
+function idbSet(k,v){return idb().then(function(d){d.transaction('s','readwrite').objectStore('s').put(v,k)}).catch(function(){})}
+
+/* pemuatan + verifikasi: jumlah ayat dan urutan harus cocok dengan standar mushaf (114 surah, 6.236 ayat) */
+function parse(n,j){
+  var d=j.data||j,vs=d.verses;
+  if(!vs||vs.length!==COUNTS[n-1])throw new Error('Verifikasi gagal: jumlah ayat surah '+n+' tidak cocok');
+  return{n:n,nm:(d.name&&d.name.transliteration&&d.name.transliteration.id)||NAMA[n-1],v:vs.map(function(x,i){
+    if(x.number.inSurah!==i+1||!x.text.arab)throw new Error('Verifikasi gagal: urutan/teks ayat surah '+n);
+    var t=(x.tafsir&&x.tafsir.id)||{};
+    return{a:x.text.arab,t:x.translation.id,s:t.short||'',l:t.long||''}})};
+}
+function markVer(n){if(VER.indexOf(n)<0){VER.push(n);sv('ver',VER)}showVer()}
+function showVer(){$('ver').textContent='Verifikasi: '+VER.length+' dari 114 surah yang pernah dimuat sudah dicocokkan dengan jumlah dan urutan ayat standar (total 6.236 ayat). Surah lain diverifikasi otomatis saat pertama kali dibuka.'}
+function getS(n){
+  if(MEM[n])return Promise.resolve(MEM[n]);
+  return idbGet(n).then(function(c){
+    if(c){MEM[n]=c;return c}
+    return fetch(API+n).then(function(r){if(!r.ok)throw new Error('Server menjawab '+r.status);return r.json()}).then(function(j){var s=parse(n,j);MEM[n]=s;idbSet(n,s);markVer(n);return s});
+  });
+}
+
+/* ===== Tajwid per ayat (data: edisi quran-tajweed dari alquran.cloud) + audio (CDN alquran.cloud, qari Mishary Alafasy) ===== */
+var TJAPI='https://api.alquran.cloud/v1/ayah/';
+var TJ={
+ h:['Hamzah washal','Alif di awal kata (ٱ) yang hanya dilafalkan bila bacaan dimulai dari kata itu. Jika disambung dengan kata sebelumnya, tidak dibunyikan.'],
+ s:['Huruf tidak dibaca','Huruf yang tertulis tetapi tidak dilafalkan ketika dibaca.'],
+ l:['Lam syamsiyah','Lam pada “al-” (ال) yang tidak dibunyikan karena bertemu huruf syamsiyah; huruf sesudahnya dibaca bertasydid.'],
+ n:['Mad thabi’i (mad asli)','Dibaca panjang 2 harakat (kira-kira dua ketukan).'],
+ p:['Mad jaiz (panjang yang boleh bervariasi)','Panjangnya boleh bervariasi, umumnya 2, 4, atau 6 harakat, misalnya mad munfasil atau mad ‘arid lissukun. Ikuti ketentuan guru dan riwayat bacaan yang kamu pelajari.'],
+ m:['Mad lazim','Dibaca panjang 6 harakat, wajib dan tetap.'],
+ o:['Mad wajib muttasil','Mad thabi’i bertemu hamzah dalam satu kata, dibaca panjang 4 sampai 5 harakat.'],
+ q:['Qalqalah','Pantulan suara ringan pada huruf ق ط ب ج د ketika sukun atau ketika berhenti (waqaf) di huruf itu.'],
+ c:['Ikhfa’ syafawi','Mim sukun bertemu huruf ba (ب): mim dibaca samar dengan dengung sekitar 2 harakat, bibir merapat ringan.'],
+ f:['Ikhfa’ haqiqi','Nun sukun atau tanwin bertemu salah satu dari 15 huruf ikhfa’: dibaca samar dengan dengung sekitar 2 harakat.'],
+ w:['Idgham syafawi (mimi)','Mim sukun bertemu mim: dilebur menjadi satu mim bertasydid dengan dengung sekitar 2 harakat.'],
+ i:['Iqlab','Nun sukun atau tanwin bertemu ba (ب): bunyi nun diganti mim samar, disertai dengung sekitar 2 harakat.'],
+ a:['Idgham bighunnah','Nun sukun atau tanwin bertemu huruf ي ن م و pada kata berikutnya: dilebur ke huruf itu dengan dengung sekitar 2 harakat.'],
+ u:['Idgham bilaghunnah','Nun sukun atau tanwin bertemu huruf ل atau ر: dilebur tanpa dengung.'],
+ d:['Idgham mutajanisain','Dua huruf yang sama tempat keluarnya tetapi berbeda sifat bertemu, huruf pertama sukun: dilebur ke huruf kedua.'],
+ b:['Idgham mutaqaribain','Dua huruf yang berdekatan tempat keluar atau sifatnya bertemu, huruf pertama sukun: dilebur ke huruf kedua.'],
+ g:['Ghunnah','Dengung selama sekitar 2 harakat pada nun atau mim bertasydid.']
+};
+/* urai format “[x:id[teks]” menjadi daftar kata; tiap kata berisi potongan {t:teks, r:kode aturan atau null} */
+function tjParse(raw){
+  var segs=[],re=/\[([a-z])(?::\d+)?\[([^\]]*)\]/g,last=0,m;
+  while((m=re.exec(raw))){if(m.index>last)segs.push({t:raw.slice(last,m.index),r:null});segs.push({t:m[2],r:m[1]});last=re.lastIndex}
+  if(last<raw.length)segs.push({t:raw.slice(last),r:null});
+  var words=[[]];
+  segs.forEach(function(g){
+    g.t.split(/(\s+)/).forEach(function(pt){
+      if(pt==='')return;
+      if(/^\s+$/.test(pt)){words.push([]);return}
+      words[words.length-1].push({t:pt,r:g.r});
+    });
+  });
+  return words.filter(function(w){return w.length});
+}
+function tjPlain(words){return words.map(function(w){return w.map(function(x){return x.t}).join('')}).join(' ')}
+/* pengaman: kerangka huruf teks tajwid harus mirip ayat di aplikasi, supaya tidak tertukar ayat */
+function skel(t){return String(t).replace(/[\u0640\u064B-\u065F\u0670\u06D6-\u06ED\u200C-\u200F]/g,'').replace(/[\u0671\u0623\u0625\u0622]/g,'\u0627').replace(/\u0649/g,'\u064A').replace(/\u0629/g,'\u0647').replace(/[^\u0621-\u064A]/g,'')}
+function lev(a,b){var m=a.length,n=b.length;if(!m)return n;if(!n)return m;var p=[],i,j;for(j=0;j<=n;j++)p[j]=j;for(i=1;i<=m;i++){var c=[i];for(j=1;j<=n;j++)c[j]=Math.min(p[j]+1,c[j-1]+1,p[j-1]+(a.charCodeAt(i-1)===b.charCodeAt(j-1)?0:1));p=c}return p[n]}
+function tjOk(plain,arab){var a=skel(plain),b=skel(arab),L=Math.max(a.length,b.length);return L>0&&lev(a,b)/L<=0.2}
+function tjHtml(words){return words.map(function(w){return w.map(function(x){return x.r&&TJ[x.r]?'<span class="t-'+x.r+'">'+esc(x.t)+'</span>':esc(x.t)}).join('')}).join(' ')}
+function tjRules(words){
+  var seen={},order=[];
+  words.forEach(function(w){var key=w.map(function(y){return y.t}).join('');w.forEach(function(x){
+    if(!x.r||!TJ[x.r])return;
+    if(!seen[x.r]){seen[x.r]={n:0,ex:[]};order.push(x.r)}
+    seen[x.r].n++;
+    if(seen[x.r].ex.length<3&&seen[x.r].ex.every(function(e){return e.k!==key}))seen[x.r].ex.push({k:key,h:tjHtml([w])});
+  })});
+  return order.map(function(r){return{r:r,n:seen[r].n,ex:seen[r].ex}});
+}
+function tjView(raw,arab){
+  var w=tjParse(raw),plain=tjPlain(w);
+  if(!tjOk(plain,arab))throw new Error('Teks tajwid tidak cocok dengan ayat ini, jadi tidak ditampilkan');
+  var rs=tjRules(w);
+  return '<p class="tjar" lang="ar">'+tjHtml(w)+'</p>'
+   +(rs.length?'<ul class="tjl">'+rs.map(function(x){return '<li><b><span class="sw t-'+x.r+'" style="background:currentColor"></span>'+esc(TJ[x.r][0])+' <small style="font-weight:400;color:var(--mute)">× '+x.n+'</small></b><p>'+esc(TJ[x.r][1])+'</p><p class="ex" lang="ar">'+x.ex.map(function(e){return e.h}).join(' ، ')+'</p></li>'}).join('')+'</ul>':'<p class="tf">Tidak ada tanda hukum khusus pada ayat ini dalam data sumber.</p>')
+   +'<p class="tjw">Pewarnaan otomatis dari data tajwid alquran.cloud (edisi quran-tajweed, riwayat Hafs). Gunakan sebagai alat bantu belajar. Tetap cocokkan dengan guru, karena hukum bisa berubah saat bacaan disambung atau berhenti (waqaf).</p>';
+}
+function tjGet(k){
+  return idbGet('tj'+k).then(function(c){
+    if(c)return c;
+    return fetch(TJAPI+k+'/quran-tajweed').then(function(r){if(!r.ok)throw new Error('Server menjawab '+r.status);return r.json()}).then(function(j){
+      var d=j.data||j;if(!d||typeof d.text!=='string')throw new Error('Format data tajwid tidak dikenali');
+      idbSet('tj'+k,d.text);return d.text});
+  });
+}
+function tjLoad(d){
+  var k=d.dataset.tj,box=d.querySelector('.tjb'),q=k.split(':'),S=MEM[+q[0]],arab=S&&S.v[+q[1]-1]?S.v[+q[1]-1].a:'';
+  box.textContent='Memuat data tajwid…';
+  tjGet(k).then(function(raw){box.innerHTML=tjView(raw,arab);d.dataset.done='1'}).catch(function(err){box.innerHTML='<p class="err">Gagal memuat tajwid: '+esc(err.message||err)+'. <button class="ib" data-tjretry="1">Coba lagi</button></p>'});
+}
+document.addEventListener('toggle',function(e){var d=e.target;if(d&&d.dataset&&d.dataset.tj&&d.open&&!d.dataset.done)tjLoad(d)},true);
+/* audio per ayat */
+var AU=null,AK=null,SLOW=ls('slow',false);
+function gnum(k){var q=k.split(':'),n=+q[1],i;for(i=0;i<+q[0]-1;i++)n+=COUNTS[i];return n}
+function audioBtns(){Array.prototype.forEach.call(document.querySelectorAll('[data-p]'),function(x){var on=x.dataset.p===AK&&AU&&!AU.paused;x.setAttribute('aria-pressed',on);x.textContent=on?'⏸ Jeda':'▶ Dengar'})}
+function playAyat(k){
+  if(AU&&AK===k){if(AU.paused)AU.play().catch(function(){});else AU.pause();audioBtns();return}
+  if(AU)AU.pause();
+  var n=gnum(k),a=new Audio('https://cdn.islamic.network/quran/audio/128/ar.alafasy/'+n+'.mp3'),tried=0;
+  a.preload='auto';a.playbackRate=SLOW?0.75:1;AU=a;AK=k;
+  a.onended=a.onpause=a.onplay=function(){audioBtns()};
+  a.onerror=function(){
+    if(tried++===0){a.src='https://cdn.islamic.network/quran/audio/64/ar.alafasy/'+n+'.mp3';a.load();a.playbackRate=SLOW?0.75:1;a.play().catch(function(){})}
+    else{AU=null;AK=null;audioBtns();Array.prototype.forEach.call(document.querySelectorAll(".aud-err"),function(m){m.textContent='Audio belum bisa dimuat. Periksa koneksi internet, lalu coba lagi.'})}
+  };
+  Array.prototype.forEach.call(document.querySelectorAll(".aud-err"),function(m){m.textContent=''});
+  a.play().catch(function(){});audioBtns();
+}
+document.addEventListener('click',function(e){
+  var p=e.target.closest('[data-p]'),sl=e.target.closest('[data-slow]'),rt=e.target.closest('[data-tjretry]');
+  if(p)playAyat(p.dataset.p);
+  if(sl){SLOW=!SLOW;sv('slow',SLOW);if(AU)AU.playbackRate=SLOW?0.75:1;Array.prototype.forEach.call(document.querySelectorAll('[data-slow]'),function(x){x.setAttribute('aria-pressed',SLOW)})}
+  if(rt){var d=rt.closest('details');if(d)tjLoad(d)}
+});
+
+/* ===== Doa & Dzikir: tiap doa memuat sumber kitab dan derajat riwayat; ayat Al-Qur’an memakai teks dan terjemahan yang sama dengan bagian Al-Qur’an ===== */
+var DC={semua:'Semua',shalat:'Setelah Shalat',pagi:'Pagi & Petang',sehari:'Sehari-hari',lindung:'Perlindungan',khusus:'Waktu Khusus',lemah:'Riwayat Lemah',matsurat:'Al-Ma’tsurat'};
+var DOA=[
+{id:'salam',c:['shalat'],t:'Setelah salam shalat fardu',k:'shalat salam istighfar sholat',
+ ar:['أَسْتَغْفِرُ اللَّهَ (٣×)','اللَّهُمَّ أَنْتَ السَّلَامُ وَمِنْكَ السَّلَامُ تَبَارَكْتَ يَا ذَا الْجَلَالِ وَالْإِكْرَامِ'],
+ lat:['Astaghfirullah (3×)','Allahumma antas-salam wa minkas-salam, tabarakta ya dzal-jalali wal-ikram.'],
+ ia:['Aku memohon ampun kepada Allah (3 kali).','Ya Allah, Engkau Maha Sejahtera dan dari-Mu kesejahteraan. Maha Suci Engkau, wahai Pemilik keagungan dan kemuliaan.'],
+ src:'Tsauban. Shahih Muslim no. 591 (Kitab al-Masajid); juga Jami‘ at-Tirmidzi no. 300 dan Sunan Ibnu Majah no. 928.',g:'kuat'},
+{id:'tasbih',c:['shalat'],t:'Tasbih setelah shalat fardu',k:'shalat tasbih tahmid takbir dzikir sholat',
+ ar:['سُبْحَانَ اللَّهِ (٣٣×)','الْحَمْدُ لِلَّهِ (٣٣×)','اللَّهُ أَكْبَرُ (٣٣×)','ثم يقول تمامَ المائة:','لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ'],
+ lat:['Subhanallah (33×), Alhamdulillah (33×), Allahu akbar (33×).','Lalu, untuk menggenapkan seratus:','La ilaha illallah wahdahu la syarika lah, lahul-mulku wa lahul-hamdu wa huwa ‘ala kulli syai’in qadir.'],
+ ia:['Maha Suci Allah (33 kali), segala puji bagi Allah (33 kali), Allah Maha Besar (33 kali).','Lalu untuk menggenapkan seratus:','Tiada tuhan selain Allah semata, tiada sekutu bagi-Nya. Milik-Nya kerajaan dan milik-Nya segala puji, dan Dia Maha Kuasa atas segala sesuatu.'],
+ note:'Ada variasi sahih lain: takbir 34 kali sehingga genap seratus (Shahih Muslim no. 596).',
+ src:'Abu Hurairah. Shahih Muslim no. 597 (Kitab al-Masajid); variasi takbir 34 kali: Shahih Muslim no. 596.',g:'kuat'},
+{id:'istighfar',c:['pagi'],t:'Sayyidul istighfar (pemimpin istighfar)',k:'pagi petang sore istighfar ampun taubat',
+ ar:['اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ خَلَقْتَنِي وَأَنَا عَبْدُكَ وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ وَأَبُوءُ لَكَ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ'],
+ lat:['Allahumma anta rabbi la ilaha illa anta, khalaqtani wa ana ‘abduka, wa ana ‘ala ‘ahdika wa wa‘dika mastatha‘tu, a‘udzu bika min syarri ma shana‘tu, abu’u laka bi ni‘matika ‘alayya, wa abu’u laka bi dzanbi, faghfir li fa innahu la yaghfirudz-dzunuba illa anta.'],
+ ia:['Ya Allah, Engkau Tuhanku, tiada tuhan selain Engkau. Engkau menciptakanku dan aku hamba-Mu. Aku berada di atas perjanjian dan janji-Mu semampuku. Aku berlindung kepada-Mu dari keburukan perbuatanku. Aku mengakui nikmat-Mu atasku dan mengakui dosaku, maka ampunilah aku, sebab tidak ada yang mengampuni dosa kecuali Engkau.'],
+ note:'Menurut hadis, siapa yang membacanya pada siang hari dengan penuh keyakinan lalu wafat sebelum sore, atau membacanya pada malam hari lalu wafat sebelum pagi, ia termasuk penghuni surga.',
+ src:'Syaddad bin Aus. Shahih al-Bukhari no. 6306 (Kitab ad-Da‘awat, bab afdalul istighfar).',g:'kuat'},
+{id:'bangun',c:['pagi','sehari'],t:'Bangun tidur',k:'tidur bangun pagi',
+ ar:['الْحَمْدُ لِلَّهِ الَّذِي أَحْيَانَا بَعْدَ مَا أَمَاتَنَا وَإِلَيْهِ النُّشُورُ'],
+ lat:['Alhamdu lillahilladzi ahyana ba‘da ma amatana wa ilaihin-nusyur.'],
+ ia:['Segala puji bagi Allah yang menghidupkan kami setelah mematikan kami, dan kepada-Nya kami dibangkitkan.'],
+ src:'Hudzaifah. Shahih al-Bukhari no. 6324 dan 6312 (Kitab ad-Da‘awat).',g:'kuat'},
+{id:'tidur',c:['sehari'],t:'Sebelum tidur',k:'tidur malam',
+ ar:['بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا'],
+ lat:['Bismika Allahumma amutu wa ahya.'],
+ ia:['Dengan nama-Mu ya Allah, aku mati dan aku hidup.'],
+ src:'Hudzaifah. Shahih al-Bukhari no. 6324 dan 6312 (Kitab ad-Da‘awat).',g:'kuat'},
+{id:'makan-awal',c:['sehari'],t:'Sebelum makan',k:'makan minum',
+ ar:['بِسْمِ اللَّهِ','وَإِذَا نَسِيَ فِي أَوَّلِهِ: بِسْمِ اللَّهِ أَوَّلَهُ وَآخِرَهُ'],
+ lat:['Bismillah.','Jika lupa di awal: Bismillahi awwalahu wa akhirahu.'],
+ ia:['Dengan nama Allah.','Jika lupa di awal: Dengan nama Allah pada awal dan akhirnya.'],
+ src:'‘Aisyah. Sunan Abu Dawud no. 3767; Jami‘ at-Tirmidzi no. 1858.',g:'kuat',n:'Sahih menurut al-Albani (Sunan Abu Dawud); at-Tirmidzi menilainya hasan sahih. Bukan riwayat Bukhari atau Muslim.'},
+{id:'makan-akhir',c:['sehari'],t:'Sesudah makan',k:'makan minum syukur',
+ ar:['الْحَمْدُ لِلَّهِ الَّذِي أَطْعَمَنِي هَذَا وَرَزَقَنِيهِ مِنْ غَيْرِ حَوْلٍ مِنِّي وَلَا قُوَّةٍ'],
+ lat:['Alhamdu lillahilladzi ath‘amani hadza wa razaqanihi min ghairi haulin minni wa la quwwah.'],
+ ia:['Segala puji bagi Allah yang telah memberiku makan ini dan memberikannya kepadaku tanpa daya dan kekuatan dariku.'],
+ note:'Menurut hadis, orang yang membacanya diampuni dosanya yang telah lalu. Tambahan “wa ma ta’akhkhar” pada sebagian lafaz Abu Dawud tidak dimasukkan karena dinilai tidak sahih.',
+ src:'Mu‘adz bin Anas. Jami‘ at-Tirmidzi no. 3458; Sunan Abu Dawud no. 4023; Sunan Ibnu Majah no. 3285.',g:'sedang',n:'Cukup kuat (hasan) menurut at-Tirmidzi, al-Albani, dan Ahmad Syakir. Bukan riwayat Bukhari atau Muslim.'},
+{id:'keluar-rumah',c:['sehari','lindung'],t:'Keluar rumah',k:'rumah keluar berangkat bepergian perlindungan tawakal',
+ ar:['بِسْمِ اللَّهِ تَوَكَّلْتُ عَلَى اللَّهِ لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ'],
+ lat:['Bismillah, tawakkaltu ‘alallah, la haula wa la quwwata illa billah.'],
+ ia:['Dengan nama Allah, aku bertawakal kepada Allah. Tiada daya dan kekuatan kecuali dengan pertolongan Allah.'],
+ note:'Menurut hadis, orang yang membacanya dikatakan kepadanya: “Engkau diberi petunjuk, dicukupi, dan dilindungi.” Lafaz ditulis sesuai kitab sumber (tanpa huruf “wa” sebelum “la haula”).',
+ src:'Anas bin Malik. Sunan Abu Dawud no. 5095; Jami‘ at-Tirmidzi no. 3426.',g:'kuat',n:'At-Tirmidzi menilainya hasan sahih. Bukan riwayat Bukhari atau Muslim.'},
+{id:'hamm',c:['lindung'],t:'Berlindung dari kesedihan, kemalasan, dan utang',k:'sedih cemas utang malas lelah perlindungan sulit',
+ ar:['اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْهَمِّ وَالْحَزَنِ وَالْعَجْزِ وَالْكَسَلِ وَالْجُبْنِ وَالْبُخْلِ وَضَلَعِ الدَّيْنِ وَغَلَبَةِ الرِّجَالِ'],
+ lat:['Allahumma inni a‘udzu bika minal-hammi wal-hazan, wal-‘ajzi wal-kasal, wal-jubni wal-bukhl, wa dhala‘id-dain wa ghalabatir-rijal.'],
+ ia:['Ya Allah, aku berlindung kepada-Mu dari kesusahan dan kesedihan, dari kelemahan dan kemalasan, dari sifat pengecut dan kikir, dari lilitan utang dan dari dikuasai orang lain.'],
+ src:'Anas bin Malik. Shahih al-Bukhari no. 6369 (Kitab ad-Da‘awat).',g:'kuat'},
+{id:'q-sapu-jagat',c:['sehari'],t:'Doa kebaikan dunia dan akhirat',k:'sapu jagat dunia akhirat kebaikan neraka',q:[2,201,201],lat:'Rabbana atina fid-dunya hasanah, wa fil-akhirati hasanah, wa qina ‘adzaban-nar.'},
+{id:'q-ortu',c:['sehari'],t:'Doa untuk kedua orang tua',k:'orang tua ibu bapak ayah',q:[17,24,24],lat:'Bagian doa: Rabbir-hamhuma kama rabbayani shaghira.'},
+{id:'q-ilmu',c:['sehari'],t:'Doa memohon tambahan ilmu',k:'ilmu belajar sekolah kuliah',q:[20,114,114],lat:'Bagian doa: Rabbi zidni ‘ilma.'},
+{id:'q-lapang',c:['sehari'],t:'Doa memohon kelapangan dada dan kemudahan urusan',k:'gugup cemas presentasi bicara urusan lapang dada',q:[20,25,28],lat:'Rabbisyrah li shadri, wa yassir li amri, wahlul ‘uqdatam min lisani, yafqahu qauli.'},
+{id:'q-yunus',c:['lindung'],t:'Doa saat dalam kesulitan (doa Nabi Yunus)',k:'sulit sempit susah kesulitan musibah',q:[21,87,87],lat:'Bagian doa: La ilaha illa anta subhanaka inni kuntu minazh-zhalimin.'}
+/* Doa berderajat lemah (dha‘if): ditampilkan terpisah dan ditandai jelas, lengkap dengan sumber dan alasan penilaiannya. */
+,{id:'w-buka-puasa',c:['khusus','lemah'],t:'Doa berbuka puasa (“Allahumma laka shumtu”)',k:'puasa buka berbuka iftar ramadan lemah dhaif',
+ ar:['اللَّهُمَّ لَكَ صُمْتُ وَعَلَى رِزْقِكَ أَفْطَرْتُ'],
+ lat:['Allahumma laka shumtu wa ‘ala rizqika afthartu.'],
+ ia:['Ya Allah, untuk-Mu aku berpuasa dan dengan rezeki-Mu aku berbuka.'],
+ note:'Doa ini sangat populer, tetapi riwayatnya lemah. Pilihan yang lebih kuat: “Dzahabazh-zhama’u wabtallatil-‘uruqu wa tsabatal-ajru insya Allah” (Telah hilang dahaga, urat-urat telah basah, dan pahala telah tetap insya Allah), Sunan Abu Dawud no. 2357, yang sanadnya dinilai hasan oleh ad-Daruquthni.',
+ src:'Mu‘adz bin Zuhrah (tabi‘in). Sunan Abu Dawud no. 2358 (Kitab ash-Shaum, bab ucapan ketika berbuka); juga al-Baihaqi, as-Sunan al-Kubra no. 8134.',g:'lemah',
+ n:'Lemah (dha‘if) karena mursal: Mu‘adz bin Zuhrah seorang tabi‘in yang menyampaikan langsung dari Nabi ﷺ tanpa menyebut sahabat, dan ia hanya dinilai tepercaya oleh Ibnu Hibban. Al-Albani menilainya dha‘if (Dha‘if Sunan Abi Dawud no. 510).'},
+{id:'w-rajab',c:['khusus','lemah'],t:'Doa memasuki bulan Rajab dan Sya‘ban',k:'rajab syaban sya\'ban ramadan ramadhan bulan lemah dhaif',
+ ar:['اللَّهُمَّ بَارِكْ لَنَا فِي رَجَبٍ وَشَعْبَانَ وَبَلِّغْنَا رَمَضَانَ'],
+ lat:['Allahumma barik lana fi Rajaba wa Sya‘bana wa ballighna Ramadhan.'],
+ ia:['Ya Allah, berkahilah kami di bulan Rajab dan Sya‘ban, dan sampaikanlah kami ke bulan Ramadhan.'],
+ note:'Menurut riwayat, Nabi ﷺ membacanya ketika bulan Rajab tiba. Tidak ada keterangan sahih tentang keutamaan khusus bulan Rajab; doa ini sendiri berisi permohonan yang baik.',
+ src:'Anas bin Malik. Zawa’id Musnad Ahmad (‘Abdullah bin Ahmad) no. 2346; al-Bazzar no. 616; ath-Thabrani, al-Mu‘jam al-Awsath no. 3939; al-Baihaqi, Syu‘abul Iman no. 3534. Nomor bisa berbeda antar cetakan.',g:'lemah',
+ n:'Lemah (dha‘if): dalam sanadnya ada Zaidah bin Abi ar-Ruqad (dinilai munkar oleh al-Bukhari dan an-Nasa’i) dan Ziyad an-Numairi (dinilai lemah oleh Ibnu Ma‘in dan Abu Dawud). Ahmad Syakir dan Syu‘aib al-Arna’uth menilai sanadnya dha‘if. Ulama berbeda pendapat apakah doa semacam ini boleh diamalkan untuk keutamaan amal.'},
+{id:'w-petir',c:['khusus','lindung','lemah'],t:'Ketika mendengar guntur atau petir',k:'petir guntur halilintar kilat hujan takut lemah dhaif',
+ ar:['اللَّهُمَّ لَا تَقْتُلْنَا بِغَضَبِكَ وَلَا تُهْلِكْنَا بِعَذَابِكَ وَعَافِنَا قَبْلَ ذَلِكَ'],
+ lat:['Allahumma la taqtulna bi ghadhabika, wa la tuhlikna bi ‘adzabika, wa ‘afina qabla dzalik.'],
+ ia:['Ya Allah, janganlah Engkau bunuh kami dengan murka-Mu, janganlah Engkau binasakan kami dengan azab-Mu, dan selamatkanlah kami sebelum itu.'],
+ note:'Ada pilihan yang lebih kuat, yaitu ucapan sahabat Abdullah bin az-Zubair ketika mendengar guntur: “Subhanalladzi yusabbihur-ra‘du bihamdihi wal-malaikatu min khifatihi” (Maha Suci Dzat yang guntur bertasbih dengan memuji-Nya, begitu pula para malaikat karena takut kepada-Nya). Ucapan ini dari sahabat, bukan sabda Nabi ﷺ, dan dinilai sahih oleh al-Albani dalam Shahih al-Adab al-Mufrad no. 556.',
+ src:'Ibnu ‘Umar. Jami‘ at-Tirmidzi no. 3450 (Kitab ad-Da‘awat, bab ucapan ketika mendengar guntur).',g:'lemah',
+ n:'Lemah (dha‘if). At-Tirmidzi sendiri menyebutnya gharib (hanya dikenal dari satu jalur). Al-Albani (antara lain dalam Silsilah adh-Dha‘ifah no. 1042), Ahmad Syakir, dan an-Nawawi dalam al-Adzkar menilainya dha‘if.'}
+
+,{id:'w-barik-makan',c:['sehari','lemah'],t:'Doa memohon berkah makanan (“Allahumma barik lana fima razaqtana”)',k:'makan makanan berkah rezeki neraka sebelum makan lemah dhaif',
+ ar:['اللَّهُمَّ بَارِكْ لَنَا فِيمَا رَزَقْتَنَا وَقِنَا عَذَابَ النَّارِ'],
+ lat:['Allahumma barik lana fima razaqtana wa qina ‘adzaban-nar.'],
+ ia:['Ya Allah, berkahilah rezeki yang Engkau berikan kepada kami, dan lindungilah kami dari azab neraka.'],
+ note:'Doa ini populer dibaca sebelum makan. Dalam riwayatnya disebutkan dibaca ketika makanan didekatkan kepada Nabi ﷺ. Pilihan yang lebih kuat untuk memulai makan adalah “Bismillah” (Sunan Abu Dawud no. 3767; at-Tirmidzi no. 1858), seperti pada doa “Sebelum makan” di aplikasi ini.',
+ src:'‘Abdullah bin ‘Amr bin al-‘Ash. Ibnu as-Sunni, ‘Amalul Yaum wal Lailah no. 457; teksnya juga dimuat an-Nawawi dalam al-Adzkar.',g:'lemah',
+ n:'Lemah (dha‘if jiddan): sanadnya dinilai sangat lemah oleh para ahli hadis terdahulu, sebagaimana dikutip dalam al-Futuhat ar-Rabbaniyyah (5/178). Bukan riwayat Bukhari atau Muslim.'},
+{id:'w-ajirni',c:['shalat','lemah'],t:'Memohon perlindungan dari neraka setelah Maghrib dan Subuh',k:'neraka api maghrib subuh fajar tujuh kali perlindungan lemah dhaif',
+ ar:['اللَّهُمَّ أَجِرْنِي مِنَ النَّارِ (٧×)'],
+ lat:['Allahumma ajirni minan-nar (7×).'],
+ ia:['Ya Allah, lindungilah aku dari api neraka (7 kali).'],
+ note:'Menurut riwayat, dibaca tujuh kali seusai shalat Maghrib dan seusai shalat Subuh. Tanpa kaitan waktu tertentu, memohon perlindungan dari neraka tetap dianjurkan berdasarkan hadis sahih: siapa yang memohon surga tiga kali, surga berkata “Ya Allah, masukkan dia ke surga”; siapa yang memohon perlindungan dari neraka tiga kali, neraka berkata “Ya Allah, lindungi dia dari neraka” (Jami‘ at-Tirmidzi no. 2572; Sunan Ibnu Majah no. 4340).',
+ src:'Muslim bin al-Harits at-Tamimi. Sunan Abu Dawud no. 5079 (Kitab al-Adab); Musnad Ahmad no. 17362.',g:'lemah',
+ n:'Lemah (dha‘if) menurut al-Albani (Silsilah adh-Dha‘ifah no. 1624; Dha‘if Sunan Abi Dawud), karena perawi bernama al-Harits bin Muslim dinilai kurang dikenal. Sebagian peneliti lain menilai perawi ini baik sehingga riwayatnya hasan, jadi ada perbedaan pendapat. Hadis Tirmidzi dan Ibnu Majah di atas dinilai sahih oleh al-Albani.'}
+/* ===== Al-Ma’tsurat Sughra (versi petang), urutan mengikuti al-matsurat.com sebagaimana dimuat CNN Indonesia (15 Sep 2025). Derajat tiap bacaan dicek terpisah; yang belum terverifikasi diberi label itu. ===== */
+,{id:'m-01',c:['matsurat'],t:'1. Ta‘awudz',k:'matsurat taawudz isti’adzah',
+ ar:['أَعُوذُ بِاللَّهِ السَّمِيعِ الْعَلِيمِ مِنَ الشَّيْطَانِ الرَّجِيمِ'],lat:['A‘udzu billahis-sami‘il-‘alimi minasy-syaithanir-rajim.'],ia:['Aku berlindung kepada Allah Yang Maha Mendengar lagi Maha Mengetahui dari setan yang terkutuk.'],
+ src:'Perintah berlindung kepada Allah dari setan: QS. al-A‘raf 7:200 dan QS. Fushshilat 41:36.',g:'kuat',n:'Bersumber dari ayat Al-Qur’an, bukan hadis.'}
+,{id:'m-02',c:['matsurat'],t:'2. Al-Fatihah',k:'matsurat fatihah',q:[1,1,7]}
+,{id:'m-03',c:['matsurat'],t:'3. Al-Baqarah 1–5',k:'matsurat baqarah alif lam mim',q:[2,1,5]}
+,{id:'m-04',c:['matsurat'],t:'4. Ayat Kursi dan lanjutannya (Al-Baqarah 255–257)',k:'matsurat ayat kursi baqarah',q:[2,255,257]}
+,{id:'m-05',c:['matsurat'],t:'5. Al-Baqarah 284–286',k:'matsurat baqarah amanar rasul',q:[2,284,286]}
+,{id:'m-06',c:['matsurat'],t:'6. Al-Ikhlas (3×)',k:'matsurat ikhlas',q:[112,1,4]}
+,{id:'m-07',c:['matsurat'],t:'7. Al-Falaq (3×)',k:'matsurat falaq',q:[113,1,5]}
+,{id:'m-08',c:['matsurat'],t:'8. An-Nas (3×)',k:'matsurat nas',q:[114,1,6]}
+,{id:'m-09',c:['matsurat','lemah'],t:'9. “Amsaina wa amsal-mulku lillah” (3×)',k:'matsurat amsaina petang sore kerajaan lemah dhaif',
+ ar:['أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ لَا شَرِيكَ لَهُ، لَا إِلَهَ إِلَّا هُوَ وَإِلَيْهِ الْمَصِيرُ'],
+ lat:['Amsaina wa amsal-mulku lillah, walhamdu lillahi la syarika lah, la ilaha illa huwa wa ilaihil-mashir.'],
+ ia:['Kami memasuki waktu petang, dan kerajaan pun memasuki petang milik Allah. Segala puji bagi Allah yang tiada sekutu bagi-Nya, tiada tuhan selain Dia, dan kepada-Nya tempat kembali.'],
+ note:'Lafaz yang lebih kuat: “Amsaina wa amsal-mulku lillah, walhamdu lillah, la ilaha illallahu wahdahu la syarika lah, lahul-mulku wa lahul-hamdu wa huwa ‘ala kulli syai’in qadir” (Shahih Muslim no. 2723, dari Ibnu Mas‘ud).',
+ src:'Abu Hurairah. al-Bukhari, al-Adab al-Mufrad; Ibnu as-Sunni, ‘Amalul Yaum wal Lailah (lafaz pagi “wa ilaihin-nusyur”).',g:'lemah',
+ n:'Lemah (dha‘if) untuk lafaz ini menurut al-Albani (Dha‘if al-Adab al-Mufrad), karena dalam sanadnya ada ‘Umar bin Abi Salamah az-Zuhri yang dinilai lemah.'}
+,{id:'m-10',c:['matsurat'],t:'10. Fitrah Islam (3×)',k:'matsurat fitrah islam kalimat ikhlas ibrahim petang',
+ ar:['أَمْسَيْنَا عَلَى فِطْرَةِ الْإِسْلَامِ، وَعَلَى كَلِمَةِ الْإِخْلَاصِ، وَعَلَى دِينِ نَبِيِّنَا مُحَمَّدٍ ﷺ، وَعَلَى مِلَّةِ أَبِينَا إِبْرَاهِيمَ حَنِيفًا مُسْلِمًا وَمَا كَانَ مِنَ الْمُشْرِكِينَ'],
+ lat:['Amsaina ‘ala fithratil-Islam, wa ‘ala kalimatil-ikhlash, wa ‘ala dini nabiyyina Muhammadin shallallahu ‘alaihi wa sallam, wa ‘ala millati abina Ibrahima hanifan musliman wa ma kana minal-musyrikin.'],
+ ia:['Kami memasuki waktu petang di atas fitrah Islam, kalimat ikhlas, agama Nabi kami Muhammad ﷺ, dan ajaran bapak kami Ibrahim yang lurus dan berserah diri, dan ia bukan termasuk orang musyrik.'],
+ src:'Musnad Ahmad, dan sumber lain; dinilai sahih oleh al-Albani dalam Shahih al-Jami‘ no. 4674.',g:'kuat',n:'Sahih menurut al-Albani (Shahih al-Jami‘ no. 4674). Bukan riwayat Bukhari atau Muslim. Pagi: “Ashbahna”.'}
+,{id:'m-11',c:['matsurat'],t:'11. Memohon nikmat, kesehatan, dan perlindungan (3×)',k:'matsurat nikmat afiyah sitr petang',
+ ar:['اللَّهُمَّ إِنِّي أَمْسَيْتُ مِنْكَ فِي نِعْمَةٍ وَعَافِيَةٍ وَسِتْرٍ، فَأَتِمَّ نِعْمَتَكَ عَلَيَّ وَعَافِيَتَكَ وَسِتْرَكَ فِي الدِّينِ وَالدُّنْيَا وَالْآخِرَةِ'],
+ lat:['Allahumma inni amsaitu minka fi ni‘matin wa ‘afiyatin wa sitrin, fa atimma ‘alayya ni‘mataka wa ‘afiyataka wa sitraka fid-dini wad-dunya wal-akhirah.'],
+ ia:['Ya Allah, di petang ini aku berada dalam nikmat, kesehatan, dan penjagaan dari-Mu. Maka sempurnakanlah nikmat, kesehatan, dan penjagaan-Mu atasku dalam agama, dunia, dan akhirat.'],
+ src:'Belum saya temukan rujukan kitab hadisnya.',g:'belum',n:'Sumber dan derajat bacaan ini belum terverifikasi.'}
+,{id:'m-12',c:['matsurat','lemah'],t:'12. “Allahumma ma amsa bi min ni‘matin” (3×)',k:'matsurat nikmat syukur petang lemah dhaif',
+ ar:['اللَّهُمَّ مَا أَمْسَى بِي مِنْ نِعْمَةٍ أَوْ بِأَحَدٍ مِنْ خَلْقِكَ فَمِنْكَ وَحْدَكَ لَا شَرِيكَ لَكَ، فَلَكَ الْحَمْدُ وَلَكَ الشُّكْرُ'],
+ lat:['Allahumma ma amsa bi min ni‘matin au bi ahadin min khalqika faminka wahdaka la syarika laka, falakal-hamdu wa lakasy-syukr.'],
+ ia:['Ya Allah, nikmat apa pun yang ada padaku atau pada salah satu makhluk-Mu di petang ini, semuanya dari-Mu semata, tiada sekutu bagi-Mu. Maka bagi-Mu segala puji dan syukur.'],
+ src:'‘Abdullah bin Ghannam al-Bayadhi. Sunan Abu Dawud no. 5073; an-Nasa’i, as-Sunan al-Kubra; Ibnu Hibban; al-Baihaqi, Syu‘abul Iman.',g:'lemah',
+ n:'Lemah (dha‘if) menurut al-Albani (Takhrij al-Kalim ath-Thayyib; Dha‘if al-Jami‘ no. 5730), karena perawi ‘Abdullah bin ‘Anbasah dinilai adz-Dzahabi “hampir tidak dikenal”.'}
+,{id:'m-13',c:['matsurat','lemah'],t:'13. “Ya Rabbi lakal-hamdu” (3×)',k:'matsurat pujian jalal wajhika lemah dhaif',
+ ar:['يَا رَبِّ لَكَ الْحَمْدُ كَمَا يَنْبَغِي لِجَلَالِ وَجْهِكَ وَعَظِيمِ سُلْطَانِكَ'],
+ lat:['Ya Rabbi lakal-hamdu kama yanbaghi lijalali wajhika wa ‘azhimi sulthanik.'],
+ ia:['Wahai Tuhanku, bagi-Mu segala puji sebagaimana layak bagi keagungan wajah-Mu dan kebesaran kekuasaan-Mu.'],
+ src:'Ibnu ‘Umar. Sunan Ibnu Majah (Kitab al-Adab); ath-Thabrani, al-Mu‘jam al-Awsath dan al-Kabir; al-Baihaqi, Syu‘abul Iman.',g:'lemah',
+ n:'Lemah (dha‘if) menurut al-Albani (Dha‘if Sunan Ibni Majah; Dha‘if al-Jami‘ no. 1877). Al-Bushiri menyebut ada kritik pada sanadnya, dan dua perawinya (Shadaqah bin Basyir dan Qudamah bin Ibrahim) hanya “maqbul” menurut Ibnu Hajar, artinya diterima bila ada penguat.'}
+,{id:'m-14',c:['matsurat'],t:'14. “Radhitu billahi rabba” (3×)',k:'matsurat ridha rabb islam nabi petang',
+ ar:['رَضِيتُ بِاللَّهِ رَبًّا، وَبِالْإِسْلَامِ دِينًا، وَبِمُحَمَّدٍ نَبِيًّا وَرَسُولًا','رَبِّ زِدْنِي عِلْمًا وَارْزُقْنِي فَهْمًا وَاجْعَلْنِي مِنَ الصَّالِحِينَ'],
+ lat:['Radhitu billahi rabba, wa bil-Islami dina, wa bi Muhammadin nabiyyan wa rasula.','Rabbi zidni ‘ilman warzuqni fahman waj‘alni minash-shalihin.'],
+ ia:['Aku ridha Allah sebagai Tuhan, Islam sebagai agama, dan Muhammad sebagai nabi dan rasul.','Ya Tuhanku, tambahkanlah ilmuku, berilah aku pemahaman, dan jadikan aku termasuk orang-orang saleh.'],
+ note:'Bagian kedua: “Rabbi zidni ‘ilma” adalah doa dalam QS. Thaha 20:114. Kalimat sesudahnya belum saya temukan dalil haditsnya.',
+ src:'Bagian pertama: Tsauban, Jami‘ at-Tirmidzi no. 3389; seorang pelayan Nabi ﷺ, Sunan Abu Dawud no. 5072 dan Musnad Ahmad no. 18967–18969; an-Nasa’i, as-Sunan al-Kubra no. 9747 dan 10324.',g:'beda',
+ n:'Diperselisihkan. At-Tirmidzi menyebutnya hasan gharib; Bashar ‘Awwad Ma‘ruf dan Zubair ‘Ali Za’i menilainya hasan. Al-Albani dan Ahmad Syakir menilai riwayat at-Tirmidzi dha‘if, dan al-Albani juga mendha‘ifkan riwayat Abu Dawud no. 5072.'}
+,{id:'m-15',c:['matsurat'],t:'15. “Subhanallahi wa bihamdihi ‘adada khalqihi” (3×)',k:'matsurat tasbih jumlah makhluk arsy tinta',
+ ar:['سُبْحَانَ اللَّهِ وَبِحَمْدِهِ عَدَدَ خَلْقِهِ، وَرِضَا نَفْسِهِ، وَزِنَةَ عَرْشِهِ، وَمِدَادَ كَلِمَاتِهِ'],
+ lat:['Subhanallahi wa bihamdihi ‘adada khalqihi, wa ridha nafsihi, wa zinata ‘arsyihi, wa midada kalimatih.'],
+ ia:['Maha Suci Allah dan segala puji bagi-Nya, sebanyak bilangan makhluk-Nya, seridha diri-Nya, seberat timbangan Arsy-Nya, dan sebanyak tinta kalimat-Nya.'],
+ note:'Dalam hadisnya dibaca tiga kali pada pagi hari. Al-Ma’tsurat membacanya juga di waktu petang.',
+ src:'Shahih Muslim no. 2726 (Kitab adz-Dzikr wad-Du‘a).',g:'kuat'}
+,{id:'m-16',c:['matsurat'],t:'16. “Bismillahilladzi la yadhurru” (3×)',k:'matsurat bismillah tidak membahayakan petang',
+ ar:['بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ، وَهُوَ السَّمِيعُ الْعَلِيمُ'],
+ lat:['Bismillahilladzi la yadhurru ma‘asmihi syai’un fil-ardhi wa la fis-sama’, wa huwas-sami‘ul-‘alim.'],
+ ia:['Dengan nama Allah yang bersama nama-Nya tidak ada sesuatu pun di bumi maupun di langit yang membahayakan, dan Dia Maha Mendengar lagi Maha Mengetahui.'],
+ src:'Sunan Abu Dawud (Kitab al-Adab, bab ucapan ketika pagi) dan Jami‘ at-Tirmidzi (Kitab ad-Da‘awat).',g:'kuat',n:'Sahih menurut al-Albani (Shahih Abi Dawud no. 4244). Bukan riwayat Bukhari atau Muslim.'}
+,{id:'m-17',c:['matsurat'],t:'17. Berlindung dari syirik yang tidak disadari (3×)',k:'matsurat syirik berlindung ampun tidak diketahui',
+ ar:['اللَّهُمَّ إِنَّا نَعُوذُ بِكَ مِنْ أَنْ نُشْرِكَ بِكَ شَيْئًا نَعْلَمُهُ، وَنَسْتَغْفِرُكَ لِمَا لَا نَعْلَمُهُ'],
+ lat:['Allahumma inna na‘udzu bika min an nusyrika bika syai’an na‘lamuhu, wa nastaghfiruka lima la na‘lamuh.'],
+ ia:['Ya Allah, kami berlindung kepada-Mu dari menyekutukan-Mu dengan sesuatu yang kami ketahui, dan kami memohon ampun kepada-Mu atas yang tidak kami ketahui.'],
+ src:'Belum saya verifikasi rujukan kitab hadisnya.',g:'belum',n:'Sumber dan derajat bacaan ini belum terverifikasi.'}
+,{id:'m-18',c:['matsurat'],t:'18. “A‘udzu bikalimatillahit-tammati” (3×)',k:'matsurat kalimat sempurna berlindung kejahatan makhluk',
+ ar:['أَعُوذُ بِكَلِمَاتِ اللَّهِ التَّامَّاتِ مِنْ شَرِّ مَا خَلَقَ'],
+ lat:['A‘udzu bikalimatillahit-tammati min syarri ma khalaq.'],
+ ia:['Aku berlindung dengan kalimat-kalimat Allah yang sempurna dari keburukan makhluk yang Dia ciptakan.'],
+ note:'Dibaca tiga kali di waktu petang.',
+ src:'Jami‘ at-Tirmidzi (Kitab ad-Da‘awat).',g:'kuat',n:'Sahih menurut al-Albani (Shahih at-Tirmidzi no. 2851). Bukan hanya dari Bukhari atau Muslim.'}
+,{id:'m-19',c:['matsurat'],t:'19. Berlindung dari kesedihan, kemalasan, dan utang (3×)',k:'matsurat sedih cemas malas utang',
+ ar:['اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْهَمِّ وَالْحَزَنِ، وَأَعُوذُ بِكَ مِنَ الْعَجْزِ وَالْكَسَلِ، وَأَعُوذُ بِكَ مِنَ الْجُبْنِ وَالْبُخْلِ، وَأَعُوذُ بِكَ مِنْ غَلَبَةِ الدَّيْنِ وَقَهْرِ الرِّجَالِ'],
+ lat:['Allahumma inni a‘udzu bika minal-hammi wal-hazan, wa a‘udzu bika minal-‘ajzi wal-kasal, wa a‘udzu bika minal-jubni wal-bukhl, wa a‘udzu bika min ghalabatid-daini wa qahrir-rijal.'],
+ ia:['Ya Allah, aku berlindung kepada-Mu dari kesusahan dan kesedihan, dari kelemahan dan kemalasan, dari sifat pengecut dan kikir, dan dari lilitan utang serta tekanan orang lain.'],
+ note:'Lafaz al-Ma’tsurat berakhir “ghalabatid-dain wa qahrir-rijal”. Lafaz Shahih al-Bukhari berakhir “wa dhala‘id-dain wa ghalabatir-rijal”, seperti pada doa “Berlindung dari kesedihan, kemalasan, dan utang” di kategori Perlindungan.',
+ src:'Anas bin Malik. Shahih al-Bukhari no. 6369 (Kitab ad-Da‘awat).',g:'kuat'}
+,{id:'m-20',c:['matsurat'],t:'20. Memohon kesehatan badan, pendengaran, penglihatan (3×)',k:'matsurat afini badan pendengaran penglihatan kesehatan',
+ ar:['اللَّهُمَّ عَافِنِي فِي بَدَنِي، اللَّهُمَّ عَافِنِي فِي سَمْعِي، اللَّهُمَّ عَافِنِي فِي بَصَرِي، لَا إِلَهَ إِلَّا أَنْتَ'],
+ lat:['Allahumma ‘afini fi badani, Allahumma ‘afini fi sam‘i, Allahumma ‘afini fi bashari, la ilaha illa anta.'],
+ ia:['Ya Allah, sehatkanlah badanku. Ya Allah, sehatkanlah pendengaranku. Ya Allah, sehatkanlah penglihatanku. Tiada tuhan selain Engkau.'],
+ note:'Al-Ma’tsurat menambah “Allahumma ‘afini fi qalbi” (sehatkanlah hatiku). Tambahan ini tidak ada dalam riwayat di atas.',
+ src:'Abu Bakrah. Sunan Abu Dawud no. 5090; Musnad Ahmad no. 20430 (cetakan ar-Risalah).',g:'beda',
+ n:'Diperselisihkan. Al-Albani menilai sanadnya hasan (Shahih Abi Dawud no. 4245). Zubair ‘Ali Za’i menilainya dha‘if karena perawi Ja‘far bin Maimun dilemahkan jumhur ulama.'}
+,{id:'m-21',c:['matsurat'],t:'21. Berlindung dari kekufuran, kefakiran, dan azab kubur (3×)',k:'matsurat kufur fakir kubur berlindung',
+ ar:['اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْكُفْرِ وَالْفَقْرِ، وَأَعُوذُ بِكَ مِنْ عَذَابِ الْقَبْرِ، لَا إِلَهَ إِلَّا أَنْتَ'],
+ lat:['Allahumma inni a‘udzu bika minal-kufri wal-faqr, wa a‘udzu bika min ‘adzabil-qabr, la ilaha illa anta.'],
+ ia:['Ya Allah, aku berlindung kepada-Mu dari kekufuran dan kefakiran, dan aku berlindung kepada-Mu dari azab kubur. Tiada tuhan selain Engkau.'],
+ src:'Abu Bakrah. Sunan Abu Dawud no. 5090 (tambahan dalam riwayat ‘Abbas); Musnad Ahmad no. 20430.',g:'beda',
+ n:'Diperselisihkan, sama dengan bacaan nomor 20 karena berasal dari riwayat yang sama: al-Albani menilai sanadnya hasan (Shahih Abi Dawud no. 4245), sedangkan Zubair ‘Ali Za’i menilainya dha‘if.'}
+,{id:'m-22',c:['matsurat'],t:'22. Sayyidul istighfar (3×)',k:'matsurat sayyidul istighfar ampun',
+ ar:['اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ لَكَ بِذَنْبِي فَاغْفِرْ لِي، فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ'],
+ lat:['Allahumma anta rabbi la ilaha illa anta, khalaqtani wa ana ‘abduka, wa ana ‘ala ‘ahdika wa wa‘dika mastatha‘tu, a‘udzu bika min syarri ma shana‘tu, abu’u laka bini‘matika ‘alayya, wa abu’u laka bidzanbi faghfir li fa innahu la yaghfirudz-dzunuba illa anta.'],
+ ia:['Ya Allah, Engkau Tuhanku, tiada tuhan selain Engkau. Engkau menciptakanku dan aku hamba-Mu. Aku berada di atas perjanjian dan janji-Mu semampuku. Aku berlindung kepada-Mu dari keburukan perbuatanku. Aku mengakui nikmat-Mu atasku dan mengakui dosaku, maka ampunilah aku, sebab tidak ada yang mengampuni dosa kecuali Engkau.'],
+ note:'Dalam hadisnya dibaca sekali, bukan tiga kali.',
+ src:'Syaddad bin Aus. Shahih al-Bukhari no. 6306 (Kitab ad-Da‘awat).',g:'kuat'}
+,{id:'m-23',c:['matsurat'],t:'23. Istighfar dan tobat (3×)',k:'matsurat istighfar tobat hayyul qayyum',
+ ar:['أَسْتَغْفِرُ اللَّهَ الَّذِي لَا إِلَهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ وَأَتُوبُ إِلَيْهِ'],
+ lat:['Astaghfirullahalladzi la ilaha illa huwal-hayyul-qayyumu wa atubu ilaih.'],
+ ia:['Aku memohon ampun kepada Allah yang tiada tuhan selain Dia, Yang Maha Hidup lagi Maha Mengurus makhluk-Nya, dan aku bertobat kepada-Nya.'],
+ src:'Belum saya verifikasi rujukan kitab hadisnya.',g:'belum',n:'Sumber dan derajat bacaan ini belum terverifikasi.'}
+,{id:'m-24',c:['matsurat'],t:'24. Salawat Ibrahimiyah (10×)',k:'matsurat shalawat sholawat nabi ibrahim',
+ ar:['اللَّهُمَّ صَلِّ عَلَى مُحَمَّدٍ وَعَلَى آلِ مُحَمَّدٍ، كَمَا صَلَّيْتَ عَلَى إِبْرَاهِيمَ وَعَلَى آلِ إِبْرَاهِيمَ، وَبَارِكْ عَلَى مُحَمَّدٍ وَعَلَى آلِ مُحَمَّدٍ، كَمَا بَارَكْتَ عَلَى إِبْرَاهِيمَ وَعَلَى آلِ إِبْرَاهِيمَ فِي الْعَالَمِينَ، إِنَّكَ حَمِيدٌ مَجِيدٌ'],
+ lat:['Allahumma shalli ‘ala Muhammad wa ‘ala ali Muhammad, kama shallaita ‘ala Ibrahima wa ‘ala ali Ibrahim, wa barik ‘ala Muhammad wa ‘ala ali Muhammad, kama barakta ‘ala Ibrahima wa ‘ala ali Ibrahima fil-‘alamin, innaka hamidum majid.'],
+ ia:['Ya Allah, limpahkanlah salawat kepada Muhammad dan keluarga Muhammad, sebagaimana Engkau melimpahkan salawat kepada Ibrahim dan keluarga Ibrahim. Berkahilah Muhammad dan keluarga Muhammad, sebagaimana Engkau memberkahi Ibrahim dan keluarga Ibrahim di seluruh alam. Sesungguhnya Engkau Maha Terpuji lagi Maha Mulia.'],
+ note:'Al-Ma’tsurat menambahkan kata “sayyidina” sebelum nama Muhammad dan Ibrahim; kata itu tidak ada dalam lafaz hadisnya.',
+ src:'Lafaz salawat Ibrahimiyah: Shahih al-Bukhari (Kitab Ahadits al-Anbiya’) dan Shahih Muslim (Kitab ash-Shalah). Anjuran 10× pagi dan petang: dinilai hasan oleh al-Albani, Shahih al-Jami‘ no. 6357.',g:'sedang',
+ n:'Lafaz salawatnya sahih (Bukhari dan Muslim). Anjuran membacanya 10 kali pagi dan petang dinilai hasan oleh al-Albani (Shahih al-Jami‘ no. 6357).'}
+,{id:'m-25',c:['matsurat'],t:'25. Empat kalimat dzikir (100×)',k:'matsurat subhanallah alhamdulillah takbir tahlil seratus',
+ ar:['سُبْحَانَ اللَّهِ، وَالْحَمْدُ لِلَّهِ، وَلَا إِلَهَ إِلَّا اللَّهُ، وَاللَّهُ أَكْبَرُ'],
+ lat:['Subhanallah, walhamdulillah, wa la ilaha illallah, wallahu akbar.'],
+ ia:['Maha Suci Allah, segala puji bagi Allah, tiada tuhan selain Allah, dan Allah Maha Besar.'],
+ note:'Dalam hadis sahih yang saya periksa, bilangan seratus kali pagi dan petang adalah untuk kalimat “Subhanallahi wa bihamdihi” (Shahih Muslim no. 2692).',
+ src:'Gabungan empat kalimat ini dengan bilangan 100× belum saya temukan dalilnya.',g:'belum',n:'Belum terverifikasi sebagai satu rangkaian 100×. Kalimat tunggal “Subhanallahi wa bihamdihi” 100× sahih (Shahih Muslim no. 2692).'}
+,{id:'m-26',c:['matsurat'],t:'26. Tahlil “yuhyi wa yumit” (10×)',k:'matsurat tahlil la ilaha illallah menghidupkan mematikan sepuluh',
+ ar:['لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ، يُحْيِي وَيُمِيتُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ'],
+ lat:['La ilaha illallahu wahdahu la syarika lah, lahul-mulku wa lahul-hamdu, yuhyi wa yumitu, wa huwa ‘ala kulli syai’in qadir.'],
+ ia:['Tiada tuhan selain Allah semata, tiada sekutu bagi-Nya. Milik-Nya kerajaan dan milik-Nya segala puji, Dia menghidupkan dan mematikan, dan Dia Maha Kuasa atas segala sesuatu.'],
+ src:'Dibaca 10× pagi dan petang; dinilai sahih oleh al-Albani, Shahih at-Targhib no. 653.',g:'kuat',n:'Sahih menurut al-Albani (Shahih at-Targhib no. 653). Bukan hanya dari Bukhari atau Muslim.'}
+,{id:'m-27',c:['matsurat'],t:'27. “Subhanakallahumma wa bihamdika” (3×)',k:'matsurat tasbih istighfar tobat asyhadu',
+ ar:['سُبْحَانَكَ اللَّهُمَّ وَبِحَمْدِكَ، أَشْهَدُ أَنْ لَا إِلَهَ إِلَّا أَنْتَ، أَسْتَغْفِرُكَ وَأَتُوبُ إِلَيْكَ'],
+ lat:['Subhanakallahumma wa bihamdika, asyhadu an la ilaha illa anta, astaghfiruka wa atubu ilaik.'],
+ ia:['Maha Suci Engkau ya Allah dan dengan memuji-Mu. Aku bersaksi tiada tuhan selain Engkau, aku memohon ampun dan bertobat kepada-Mu.'],
+ src:'Belum saya verifikasi rujukan kitab hadisnya untuk dibaca di waktu pagi atau petang.',g:'belum',n:'Sumber dan derajat bacaan ini belum terverifikasi.'}
+,{id:'m-28',c:['matsurat'],t:'28. Salawat “‘adada ma ahatha bihi ‘ilmuka”',k:'matsurat shalawat sholawat sahabat khulafaur',
+ ar:['اللَّهُمَّ صَلِّ عَلَى سَيِّدِنَا مُحَمَّدٍ عَبْدِكَ وَرَسُولِكَ النَّبِيِّ الْأُمِّيِّ وَعَلَى آلِهِ وَصَحْبِهِ وَسَلِّمْ تَسْلِيمًا عَدَدَ مَا أَحَاطَ بِهِ عِلْمُكَ، وَخَطَّ بِهِ قَلَمُكَ، وَأَحْصَاهُ كِتَابُكَ، وَارْضَ اللَّهُمَّ عَنْ سَادَاتِنَا أَبِي بَكْرٍ وَعُمَرَ وَعُثْمَانَ وَعَلِيٍّ، وَعَنِ الصَّحَابَةِ أَجْمَعِينَ، وَعَنِ التَّابِعِينَ وَتَابِعِيهِمْ بِإِحْسَانٍ إِلَى يَوْمِ الدِّينِ'],
+ lat:['Allahumma shalli ‘ala sayyidina Muhammadin ‘abdika wa rasulika an-nabiyyil-ummiyyi wa ‘ala alihi wa shahbihi wa sallim tasliman ‘adada ma ahatha bihi ‘ilmuka wa khaththa bihi qalamuka wa ahshahu kitabuk, war-dha allahumma ‘an sadatina Abi Bakrin wa ‘Umara wa ‘Utsmana wa ‘Aliyy, wa ‘anish-shahabati ajma‘in, wa ‘anit-tabi‘ina wa tabi‘ihim bi-ihsanin ila yaumid-din.'],
+ ia:['Ya Allah, limpahkanlah salawat kepada junjungan kami Muhammad, hamba dan utusan-Mu, nabi yang ummi, serta keluarga dan sahabatnya, dan berilah keselamatan sebanyak yang dicakup ilmu-Mu, ditulis pena-Mu, dan dihitung kitab-Mu. Ridhailah, ya Allah, Abu Bakar, Umar, Utsman, dan Ali, seluruh sahabat, para tabi‘in, dan pengikut mereka dengan baik sampai hari pembalasan.'],
+ src:'Susunan dalam al-Ma’tsurat. Penelaah dalam risalah “Fiqh Al-Ma’tsurat” menyebut bagian salawat ini tidak ditemukan asalnya dalam kitab hadis mu‘tabar.',g:'susun',
+ n:'Bukan kutipan hadis yang saya temukan. Mendoakan salawat dan keridhaan bagi para sahabat tetap doa yang baik, tetapi lafaznya sebaiknya tidak dianggap sabda Nabi ﷺ.'}
+,{id:'m-29',c:['matsurat'],t:'29. Ash-Shaffat 180–182',k:'matsurat shaffat subhana rabbika rabbil izzah',q:[37,180,182]}
+,{id:'m-30',c:['matsurat'],t:'30. Ali ‘Imran 26–27',k:'matsurat ali imran malikal mulk',q:[3,26,27]}
+,{id:'m-31',c:['matsurat'],t:'31. “Allahumma inna hadza iqbalu lailika”',k:'matsurat petang maghrib adzan iqbal lailika ampun',
+ ar:['اللَّهُمَّ إِنَّ هَذَا إِقْبَالُ لَيْلِكَ وَإِدْبَارُ نَهَارِكَ وَأَصْوَاتُ دُعَاتِكَ فَاغْفِرْ لِي'],
+ lat:['Allahumma inna hadza iqbalu lailika wa idbaru naharika wa ashwatu du‘atika faghfir li.'],
+ ia:['Ya Allah, inilah datangnya malam-Mu, perginya siang-Mu, dan suara orang-orang yang menyeru-Mu, maka ampunilah aku.'],
+ note:'Dalam riwayat aslinya, Nabi ﷺ mengajarkan Ummu Salamah membaca ini ketika adzan Maghrib.',
+ src:'Ummu Salamah. Sunan Abu Dawud no. 530 (Kitab ash-Shalah); Jami‘ at-Tirmidzi no. 3589.',g:'beda',
+ n:'Diperselisihkan. Al-Albani dan Ahmad Syakir menilainya dha‘if karena perawi Abu Katsir (bekas budak Ummu Salamah) dinilai lemah atau tidak dikenal. Zubair ‘Ali Za’i menilainya hasan, dan al-Hakim serta adz-Dzahabi menerimanya. At-Tirmidzi menyebutnya gharib.'}
+,{id:'m-32',c:['matsurat'],t:'32. Doa Rabithah',k:'matsurat rabithah rabitah hati persaudaraan',
+ ar:['اللَّهُمَّ إِنَّكَ تَعْلَمُ أَنَّ هَذِهِ الْقُلُوبَ قَدِ اجْتَمَعَتْ عَلَى مَحَبَّتِكَ، وَالْتَقَتْ عَلَى طَاعَتِكَ، وَتَوَحَّدَتْ عَلَى دَعْوَتِكَ، وَتَعَاهَدَتْ عَلَى نُصْرَةِ شَرِيعَتِكَ، فَوَثِّقِ اللَّهُمَّ رَابِطَتَهَا، وَأَدِمْ وُدَّهَا، وَاهْدِهَا سُبُلَهَا، وَامْلَأْهَا بِنُورِكَ الَّذِي لَا يَخْبُو، وَاشْرَحْ صُدُورَهَا بِفَيْضِ الْإِيمَانِ بِكَ، وَجَمِيلِ التَّوَكُّلِ عَلَيْكَ، وَأَحْيِهَا بِمَعْرِفَتِكَ، وَأَمِتْهَا عَلَى الشَّهَادَةِ فِي سَبِيلِكَ، إِنَّكَ نِعْمَ الْمَوْلَى وَنِعْمَ النَّصِيرُ'],
+ lat:['Allahumma innaka ta‘lamu anna hadzihil-quluba qadijtama‘at ‘ala mahabbatika, waltaqat ‘ala tha‘atika, wa tawahhadat ‘ala da‘watika, wa ta‘ahadat ‘ala nushrati syari‘atika, fawatstsiqillahumma rabithatahaa, wa adim wuddahaa, wahdihaa subulahaa, wamla’haa binurikalladzi la yakhbu, wasyrah shuduraha bifaidhil-imani bika, wa jamilit-tawakkuli ‘alaika, wa ahyiha bima‘rifatika, wa amitha ‘alasy-syahadati fi sabilika, innaka ni‘mal-maula wa ni‘man-nashir.'],
+ ia:['Ya Allah, Engkau mengetahui bahwa hati-hati ini telah berkumpul atas dasar cinta kepada-Mu, bertemu dalam ketaatan kepada-Mu, bersatu dalam dakwah kepada-Mu, dan berjanji untuk menolong syariat-Mu. Maka kuatkanlah ikatannya, abadikanlah kasih sayangnya, tunjukkanlah jalan-jalannya, penuhilah ia dengan cahaya-Mu yang tidak padam, lapangkanlah dadanya dengan limpahan iman kepada-Mu dan indahnya tawakal kepada-Mu, hidupkanlah ia dengan mengenal-Mu, dan wafatkanlah ia dalam syahid di jalan-Mu. Sesungguhnya Engkau sebaik-baik pelindung dan sebaik-baik penolong.'],
+ src:'Susunan Hasan al-Banna sendiri.',g:'susun',
+ n:'Doa Rabithah bukan doa ma’tsur dari Nabi ﷺ, melainkan susunan Hasan al-Banna. Sebagian ulama mempermasalahkan penambahan wirid seperti ini, sebagian lain membolehkan berdoa dengan lafaz yang baik dan tidak bertentangan dengan syariat. Doa dengan lafaz dari Nabi ﷺ tetap lebih utama.'}
+,{id:'m-33',c:['matsurat'],t:'33. Penutup',k:'matsurat penutup amin shalawat',
+ ar:['اللَّهُمَّ آمِينَ، وَصَلِّ اللَّهُمَّ عَلَى سَيِّدِنَا مُحَمَّدٍ وَعَلَى آلِهِ وَصَحْبِهِ وَسَلِّمْ'],
+ lat:['Allahumma amin, wa shalli allahumma ‘ala sayyidina Muhammadin wa ‘ala alihi wa shahbihi wa sallim.'],
+ ia:['Ya Allah, kabulkanlah. Limpahkanlah salawat dan salam kepada junjungan kami Muhammad, keluarga, dan sahabatnya.'],
+ src:'Penutup susunan al-Ma’tsurat.',g:'susun',n:'Kalimat penutup dari susunan al-Ma’tsurat, bukan kutipan hadis.'}
+];
+var DQ='',DCAT='semua';
+function doaById(id){for(var i=0;i<DOA.length;i++)if(DOA[i].id===id)return DOA[i];return null}
+function nl(a){return a.map(esc).join('<br>')}
+function doaCard(d){
+  var k='D:'+d.id,f=FAV.indexOf(k)>-1,cat=d.c.map(function(x){return DC[x]}).join(' · ');
+  return '<article class="card" id="d-'+d.id+'" style="--c:var(--teal)"><div class="hd"><b>'+esc(cat)+'</b><span>Doa</span></div>'
+   +'<h3 class="dt">'+esc(d.t)+'</h3><p class="ar" lang="ar">'+nl(d.ar)+'</p><p class="lat">'+nl(d.lat)+'</p><p class="id">'+nl(d.ia)+'</p>'
+   +(d.g==='lemah'?'<p class="mk" style="color:#B3472F"><b>Riwayat lemah.</b> Ditampilkan lengkap dengan sumbernya. Utamakan doa yang sahih bila ada, dan ketahui bahwa ulama berbeda pendapat soal mengamalkannya.</p>':'')
+   +(d.note?'<p class="mk">'+esc(d.note)+'</p>':'')
+   +'<details><summary>Sumber dan derajat <span class="gd" style="color:'+GR[d.g][1]+'">'+GR[d.g][0]+'</span></summary><p class="tf" style="font-size:14.5px"><b>Derajat riwayat:</b> '+esc(d.n||'Diriwayatkan dalam Shahih al-Bukhari dan/atau Shahih Muslim, dua kitab hadis dengan tingkat kesahihan tertinggi.')+'</p><p class="tf" style="font-size:14.5px"><b>Rujukan kitab:</b> '+esc(d.src)+'</p></details>'
+   +'<div class="row"><button class="ib" data-f="'+k+'" aria-pressed="'+f+'">'+(f?'★ Favorit':'☆ Favorit')+'</button><button class="ib" data-copy="'+d.id+'">📋 Salin</button></div></article>';
+}
+function doaText(d){return d.t+'\n\n'+d.ar.join('\n')+'\n\n'+d.lat.join('\n')+'\n\n'+d.ia.join('\n')+'\n\nSumber: '+d.src}
+function doaMatch(d){
+  if(DCAT!=='semua'&&d.c.indexOf(DCAT)<0)return false;
+  if(!DQ)return true;
+  var h=(d.t+' '+(d.k||'')+' '+(d.ia?d.ia.join(' '):'')+' '+(d.src||'')).toLowerCase();
+  return DQ.split(/\s+/).every(function(w){return h.indexOf(w)>-1});
+}
+async function doaQ(d){
+  var S=await getS(d.q[0]),o='<h3 class="dt" style="margin:18px 0 4px">'+esc(d.t)+'</h3><p class="sub" style="margin:0 0 6px">'+esc(d.c.map(function(x){return DC[x]}).join(' · '))+' · Al-Qur’an '+d.q[0]+':'+d.q[1]+(d.q[2]>d.q[1]?'–'+d.q[2]:'')+'</p>';
+  if(d.lat)o+='<p class="lat" style="margin:0 0 6px">'+esc(d.lat)+'</p>';
+  for(var a=d.q[1];a<=d.q[2];a++)o+=card(S,a,'Doa','teal');
+  return o;
+}
+var DTOK=0;
+async function doa(){
+  var tok=++DTOK,z=$('doalist');
+  $('doachips').innerHTML=Object.keys(DC).map(function(x){return '<button class="chip dc" data-dc="'+x+'" aria-pressed="'+(x===DCAT)+'">'+esc(DC[x])+'</button>'}).join('');
+  $('latbtn').setAttribute('aria-pressed',!document.body.classList.contains('nolat'));
+  var L=DOA.filter(doaMatch);
+  if(!L.length){z.innerHTML='<p class="sub">Belum ada doa yang cocok. Coba kata lain, misalnya “tidur”, “makan”, atau “shalat”.</p>';return}
+  if(DCAT==='matsurat'&&!DQ){
+    z.innerHTML='<p class="sub" style="font-size:14.5px;margin:0 0 6px">Al-Ma’tsurat Sughra versi <b>petang</b>, urutan mengikuti al-matsurat.com sebagaimana dimuat CNN Indonesia (15 September 2025). Untuk pagi, ganti “amsaina”, “amsa”, “amsaitu” menjadi “ashbahna”, “ashbaha”, “ashbahtu”. Urutan dan jumlah bacaan adalah susunan penyusun, bukan ketetapan syariat. Derajat tiap bacaan dicek satu per satu; yang belum bisa saya verifikasi diberi label “Belum terverifikasi”. Ayat Al-Qur’an memakai teks yang sama dengan bagian Al-Qur’an.</p>';
+    for(var j=0;j<L.length;j++){
+      var s2;try{s2=L[j].q?await doaQ(L[j]):doaCard(L[j])}catch(e){s2='<h3 class="dt">'+esc(L[j].t)+'</h3>'+fail(e,'doa()')}
+      if(tok!==DTOK)return;
+      z.insertAdjacentHTML('beforeend',s2);
+    }
+    return;
+  }
+  var h=L.filter(function(d){return !d.q}).map(doaCard).join('');
+  z.innerHTML=h;
+  for(var i=0;i<L.length;i++){
+    if(!L[i].q)continue;
+    var s;try{s=await doaQ(L[i])}catch(e){s='<h3 class="dt">'+esc(L[i].t)+'</h3>'+fail(e,'doa()')}
+    if(tok!==DTOK)return;
+    z.insertAdjacentHTML('beforeend',s);
+  }
+}
+document.addEventListener('click',function(e){
+  var c=e.target.closest('[data-dc]'),cp=e.target.closest('[data-copy]'),lb=e.target.closest('#latbtn');
+  if(c){DCAT=c.dataset.dc;doa()}
+  if(lb){var off=document.body.classList.toggle('nolat');sv('nolat',off);lb.setAttribute('aria-pressed',!off)}
+  if(cp){var d=doaById(cp.dataset.copy);if(d){var t=doaText(d),ok=function(){cp.textContent='✓ Tersalin';setTimeout(function(){cp.textContent='📋 Salin'},1600)};
+    try{navigator.clipboard.writeText(t).then(ok,function(){throw 0})}catch(x){var ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');ok()}catch(y){}document.body.removeChild(ta)}}}
+});
+$('doaq').addEventListener('input',function(){DQ=this.value.toLowerCase().trim();clearTimeout(doa.t);doa.t=setTimeout(doa,200)});
+if(ls('nolat',false))document.body.classList.add('nolat');
+
+/* ===== Tampilan widget, gambar kunci layar, pengingat kalender ===== */
+function dayNow(){return Math.floor((Date.now()-new Date().getTimezoneOffset()*60000)/864e5)}
+function slotNow(){var hh=new Date().getHours();return hh<11?0:hh<18?1:2}
+var SLN=['Pagi','Siang','Malam'],WI=0,WR=null,WTOK=0;
+/* ayat per slot: aturan yang sama dengan kartu “Hari ini” */
+async function ayatSlot(i,off){
+  var base=((dayNow()+(off||0))*3+i)%TOT,S,a;
+  for(var k=0;k<7;k++){var l=loc(P[(base+k*1237)%TOT]);S=await getS(l[0]);a=l[1];if(S.v[a-1].t.length<=420)break}
+  return{S:S,a:a};
+}
+async function wgShow(i){
+  var tok=++WTOK,z=$('wgbody');WI=i;
+  $('wgchips').innerHTML=SLN.map(function(n,x){return '<button class="chip dc" data-wg="'+x+'" aria-pressed="'+(x===i)+'">'+n+'</button>'}).join('');
+  z.innerHTML='<p class="sub">Memuat ayat '+SLN[i].toLowerCase()+'…</p>';
+  try{
+    var r=await ayatSlot(i);if(tok!==WTOK)return;WR=r;var v=r.S.v[r.a-1];
+    z.innerHTML='<p class="ar" lang="ar">'+esc(v.a)+'</p><p class="id">'+esc(v.t)+'</p><p class="sub" style="margin:0">'+esc(r.S.nm)+' '+r.S.n+':'+r.a+'</p>';
+  }catch(e){if(tok===WTOK)z.innerHTML=fail(e,'wgShow('+i+')')}
+}
+function wgOn(){$('wgdate').textContent=new Date().toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long'});document.body.classList.add('wg');$('wg').hidden=false;if(location.hash!=='#widget')history.replaceState(null,'',location.pathname+location.search+'#widget');wgShow(slotNow())}
+function wgOff(){document.body.classList.remove('wg');$('wg').hidden=true;history.replaceState(null,'',location.pathname+location.search);if(!$('tiga').children.length)hari()}
+setInterval(function(){if(document.body.classList.contains('wg')&&!document.hidden&&WI!==slotNow()&&!WSEL)wgShow(slotNow())},60000);
+var WSEL=false;
+document.addEventListener('visibilitychange',function(){if(!document.hidden&&document.body.classList.contains('wg')){WSEL=false;wgShow(slotNow())}});
+
+/* gambar kunci layar (PNG 1080×2340) dari ayat yang sedang tampil */
+function wrapLines(c,text,maxW){var w=String(text).split(/\s+/),lines=[],cur='';w.forEach(function(x){var t=cur?cur+' '+x:x;if(cur&&c.measureText(t).width>maxW){lines.push(cur);cur=x}else cur=t});if(cur)lines.push(cur);return lines}
+async function makeImg(S,a,nama){
+  try{await document.fonts.load('64px Amiri');await document.fonts.load('36px Newsreader')}catch(e){}
+  var W=1080,H=2340,cv=document.createElement('canvas');cv.width=W;cv.height=H;var c=cv.getContext('2d');
+  var g=c.createLinearGradient(0,0,W,H);g.addColorStop(0,'#071F22');g.addColorStop(.55,'#12534F');g.addColorStop(1,'#2A8179');c.fillStyle=g;c.fillRect(0,0,W,H);
+  var rg=c.createRadialGradient(W*.9,H*.3,10,W*.9,H*.3,720);rg.addColorStop(0,'rgba(236,190,90,.32)');rg.addColorStop(1,'rgba(236,190,90,0)');c.fillStyle=rg;c.fillRect(0,0,W,H);
+  var v=S.v[a-1],MAXW=W-200,fa,ar,ia,lh,fi,ilh,th=0;
+  for(fa=68;fa>=40;fa-=4){
+    c.font='400 '+fa+'px Amiri,"Traditional Arabic",serif';c.direction='rtl';ar=wrapLines(c,v.a,MAXW);lh=Math.round(fa*1.95);
+    fi=Math.max(30,Math.round(fa*.56));c.font='400 '+fi+'px Newsreader,Georgia,serif';c.direction='ltr';ia=wrapLines(c,v.t,MAXW);ilh=Math.round(fi*1.45);
+    th=ar.length*lh+70+ia.length*ilh+130;if(th<=1300)break;
+  }
+  if(th>1300)throw new Error('Ayat ini terlalu panjang untuk gambar kunci layar. Coba waktu lain (pagi, siang, atau malam).');
+  var y=Math.max(780,Math.round(1420-th/2)),tg=new Date().toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'});
+  c.textAlign='center';c.direction='ltr';c.fillStyle='#E2AE45';c.font='600 34px Newsreader,Georgia,serif';c.fillText(('TADABBUR '+nama+' · '+tg).toUpperCase(),W/2,y-50);
+  c.fillStyle='#fff';c.font='400 '+fa+'px Amiri,"Traditional Arabic",serif';c.direction='rtl';
+  ar.forEach(function(l,i){c.fillText(l,W/2,y+i*lh+Math.round(lh*.72))});y+=ar.length*lh+30;
+  c.fillStyle='rgba(255,255,255,.35)';c.fillRect(W/2-60,y,120,3);y+=40;
+  c.direction='ltr';c.fillStyle='rgba(255,255,255,.9)';c.font='400 '+fi+'px Newsreader,Georgia,serif';
+  ia.forEach(function(l,i){c.fillText(l,W/2,y+i*ilh+Math.round(ilh*.75))});y+=ia.length*ilh+50;
+  c.fillStyle='#E2AE45';c.font='600 36px Newsreader,Georgia,serif';c.fillText(S.nm+' '+S.n+':'+a,W/2,y+30);
+  return new Promise(function(ok){cv.toBlob(ok,'image/png')});
+}
+function saveBlob(b,name){var u=URL.createObjectURL(b),el=document.createElement('a');el.href=u;el.download=name;document.body.appendChild(el);el.click();document.body.removeChild(el);setTimeout(function(){URL.revokeObjectURL(u)},5000)}
+function wgMsg(t){Array.prototype.forEach.call(document.querySelectorAll('.wgmsg'),function(x){x.textContent=t})}
+async function bikinGambar(bagikan){
+  wgMsg('Membuat gambar…');
+  try{
+    var r=WR;if(!r||!document.body.classList.contains('wg')){r=await ayatSlot(slotNow());WI=slotNow()}
+    var b=await makeImg(r.S,r.a,SLN[WI]),nm='tadabbur-'+r.S.n+'-'+r.a+'.png';
+    if(bagikan&&navigator.canShare){var f=new File([b],nm,{type:'image/png'});if(navigator.canShare({files:[f]})){await navigator.share({files:[f]});wgMsg('Gambar dibagikan.');return}}
+    saveBlob(b,nm);wgMsg('Gambar disimpan ('+nm+'). Buka di galeri, lalu atur sebagai wallpaper layar kunci.');
+  }catch(e){wgMsg(e&&e.name==='AbortError'?'':'Gagal membuat gambar: '+(e.message||e))}
+}
+
+/* pengingat kalender (.ics): acara harian berulang dengan alarm; waktu mengikuti zona waktu HP */
+function icsEsc(t){return String(t).replace(/\\/g,'\\\\').replace(/\r?\n/g,'\\n').replace(/,/g,'\\,').replace(/;/g,'\\;')}
+function fold(l){var o='';while(l.length>73){o+=l.slice(0,73)+'\r\n ';l=l.slice(73)}return o+l}
+function p2(n){return(n<10?'0':'')+n}
+function ymd(d){return d.getFullYear()+p2(d.getMonth()+1)+p2(d.getDate())}
+function hms(d){return p2(d.getHours())+p2(d.getMinutes())+'00'}
+function makeIcs(times){
+  var link=/^https?:$/.test(location.protocol)?location.origin+location.pathname+'#widget':'',now=new Date();
+  var stamp=now.getUTCFullYear()+p2(now.getUTCMonth()+1)+p2(now.getUTCDate())+'T'+p2(now.getUTCHours())+p2(now.getUTCMinutes())+p2(now.getUTCSeconds())+'Z';
+  var L=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Tadabbur Harian//ID','CALSCALE:GREGORIAN'];
+  Object.keys(times).forEach(function(n){
+    var hm=times[n].split(':'),st=new Date();st.setHours(+hm[0],+hm[1],0,0);if(st<=now)st.setDate(st.getDate()+1);
+    var en=new Date(st.getTime()+15*60000);
+    L.push('BEGIN:VEVENT','UID:tadabbur-'+n.toLowerCase()+'@tadabbur-harian','DTSTAMP:'+stamp,'DTSTART:'+ymd(st)+'T'+hms(st),'DTEND:'+ymd(en)+'T'+hms(en),'RRULE:FREQ=DAILY','SUMMARY:'+icsEsc('Tadabbur '+n),
+      'DESCRIPTION:'+icsEsc('Waktunya tadabbur '+n.toLowerCase()+'. Buka Tadabbur Harian untuk membaca ayat hari ini.'+(link?'\n'+link:'')));
+    if(link)L.push('URL:'+link);
+    L.push('BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:'+icsEsc('Tadabbur '+n),'TRIGGER:PT0S','END:VALARM','END:VEVENT');
+  });
+  L.push('END:VCALENDAR');return L.map(fold).join('\r\n')+'\r\n';
+}
+var RT=ls('remind',{Pagi:'05:30',Siang:'12:30',Malam:'19:30'});
+function rtInit(){['Pagi','Siang','Malam'].forEach(function(n){var e=$('rt'+n);if(e)e.value=RT[n]||'12:00'})}
+function bikinIcs(){
+  var t={};['Pagi','Siang','Malam'].forEach(function(n){var v=$('rt'+n).value;t[n]=/^\d\d:\d\d$/.test(v)?v:RT[n]});RT=t;sv('remind',t);
+  saveBlob(new Blob([makeIcs(t)],{type:'text/calendar'}),'tadabbur-pengingat.ics');
+  wgMsg(/^https?:$/.test(location.protocol)?'File pengingat diunduh. Buka file itu, lalu pilih Kalender untuk menambahkannya.':'File pengingat diunduh, tetapi tanpa tautan ke aplikasi karena halaman ini dibuka dari file lokal (bukan alamat web).');
+}
+function salinTautan(){
+  if(!/^https?:$/.test(location.protocol)){wgMsg('Tautan hanya tersedia bila aplikasi dibuka dari alamat web (https), bukan dari file di HP.');return}
+  var u=location.origin+location.pathname+'#widget';
+  try{navigator.clipboard.writeText(u).then(function(){wgMsg('Tautan tampilan widget disalin.')},function(){wgMsg(u)})}catch(e){wgMsg(u)}
+}
+document.addEventListener('click',function(e){
+  var x;
+  if(e.target.closest('#wgopen'))wgOn();
+  else if(e.target.closest('#wgoff'))wgOff();
+  else if(e.target.closest('#wgcopy'))salinTautan();
+  else if(e.target.closest('#wgics'))bikinIcs();
+  else if((x=e.target.closest('[data-wgimg]')))bikinGambar(x.dataset.wgimg==='share');
+  else if((x=e.target.closest('[data-wg]'))){WSEL=true;wgShow(+x.dataset.wg)}
+});
+rtInit();
+
+/* ===== Aplikasi Android (Capacitor): widget asli dan notifikasi ayat. Tidak aktif di browser biasa. ===== */
+var NATIVE=!!(window.Capacitor&&Capacitor.isNativePlatform&&Capacitor.isNativePlatform());
+if(NATIVE)document.body.classList.add('native');
+function nplug(n){return window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins[n]}
+function dkey(d){return d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate())}
+function nsleep(ms){return new Promise(function(r){setTimeout(r,ms)})}
+/* ayat tiap slot untuk beberapa hari ke depan; aturan pemilihan sama dengan kartu “Hari ini” */
+async function natData(hari,simpan){
+  var out={v:1,days:{}},t0=new Date();
+  for(var o=0;o<hari;o++){
+    var d=new Date(t0.getFullYear(),t0.getMonth(),t0.getDate()+o),day={};
+    for(var i=0;i<3;i++){var r=await ayatSlot(i,o),v=r.S.v[r.a-1];day[i]={a:v.a,t:v.t,r:r.S.nm+' '+r.S.n+':'+r.a};await nsleep(120)}
+    out.days[dkey(d)]=day;
+    if(simpan)await simpan(out);
+  }
+  return out;
+}
+async function natSimpan(data){var W=nplug('TadabburWidget');if(!W)throw new Error('Plugin widget tidak ditemukan');await W.save({json:JSON.stringify(data)})}
+async function natSync(manual){
+  if(!NATIVE)return;
+  var last=ls('natsync',0);if(!manual&&Date.now()-last<6*3600*1000)return;
+  try{
+    wgMsg('Menyimpan ayat 7 hari ke depan untuk widget…');
+    var data=await natData(7,natSimpan);
+    sv('natsync',Date.now());
+    wgMsg('Widget diperbarui: '+Object.keys(data.days).length+' hari tersimpan.');
+    return data;
+  }catch(e){wgMsg('Gagal memperbarui widget: '+(e.message||e)+'. Pastikan internet aktif lalu coba lagi.')}
+}
+async function natPin(){
+  try{var W=nplug('TadabburWidget');if(!W)throw new Error('Plugin widget tidak ditemukan');var r=await W.pin();
+    wgMsg(r&&r.ok?'Ikuti petunjuk di layar untuk menaruh widget.':'Peluncur HP Anda tidak mendukung pemasangan otomatis. Tekan lama layar utama → Widget → Tadabbur Harian.')}
+  catch(e){wgMsg('Gagal memasang widget: '+(e.message||e))}
+}
+/* ===== Pembaruan aplikasi: cek rilis terbaru di GitHub, lalu tawarkan unduhan APK. Versi baru terpasang di atas yang lama, tanpa hapus aplikasi. ===== */
+function verCmp(a,b){a=String(a).replace(/^v/i,'').split('.').map(Number);b=String(b).replace(/^v/i,'').split('.').map(Number);for(var i=0;i<Math.max(a.length,b.length);i++){var x=a[i]||0,y=b[i]||0;if(x!==y)return x>y?1:-1}return 0}
+function updMsg(t){var m=$('updmsg');if(!m)return;m.textContent=t;m.hidden=!t}
+async function cekUpdate(manual){
+  var V=window.APP_VERSION;if(!NATIVE||!V)return;
+  if(!V.repo){if(manual)updMsg('Alamat repositori GitHub belum terisi, jadi pembaruan belum bisa dicek.');return}
+  if(!manual&&Date.now()-ls('updcek',0)<12*3600*1000)return;
+  var ctl=window.AbortController?new AbortController():null,tm=setTimeout(function(){if(ctl)ctl.abort()},10000);
+  try{
+    if(manual)updMsg('Memeriksa pembaruan…');
+    var r=await fetch('https://api.github.com/repos/'+V.repo+'/releases/latest',{headers:{Accept:'application/vnd.github+json'},signal:ctl?ctl.signal:undefined});
+    if(r.status===404)throw new Error('rilis belum ada (atau repositori masih private)');
+    if(!r.ok)throw new Error('GitHub membalas '+r.status);
+    var j=await r.json(),tag=String(j.tag_name||'');sv('updcek',Date.now());
+    if(!tag||verCmp(tag,V.v)<=0){if(manual)updMsg('Aplikasi sudah versi terbaru ('+V.v+').');return}
+    if(!manual&&ls('updskip','')===tag)return;
+    var apk=(j.assets||[]).filter(function(a){return /\.apk$/i.test(a.name||'')})[0],url=apk?apk.browser_download_url:j.html_url;
+    var z=$('upd');z.hidden=false;
+    z.innerHTML='<div class="hd"><b>Pembaruan tersedia</b><span>'+esc(tag.replace(/^v/i,''))+'</span></div><p class="id" style="margin:8px 0 10px">Versi '+esc(tag.replace(/^v/i,''))+' siap diunduh (kamu memakai '+esc(V.v)+'). Setelah unduhan selesai, buka file APK-nya lalu tekan Pasang. Aplikasi lama diperbarui, data favorit tetap aman.</p>'
+      +'<div class="row"><a class="btn" href="'+esc(url)+'" target="_blank" rel="noopener" style="text-decoration:none;display:inline-block">Unduh pembaruan</a><button class="ib" id="updx" data-tag="'+esc(tag)+'">Nanti</button></div>';
+    if(manual)updMsg('');
+  }catch(e){if(manual)updMsg('Gagal memeriksa pembaruan: '+(e.name==='AbortError'?'koneksi terlalu lambat':(e.message||e))+'.')}
+  finally{clearTimeout(tm)}
+}
+if(NATIVE&&window.APP_VERSION){$('verbar').hidden=false;$('vernow').textContent=APP_VERSION.v}
+document.addEventListener('click',function(e){
+  if(e.target.closest('#updbtn'))cekUpdate(true);
+  var x=e.target.closest('#updx');if(x){sv('updskip',x.dataset.tag);$('upd').hidden=true}
+});
+async function natNotif(){
+  try{
+    var LN=nplug('LocalNotifications');if(!LN)throw new Error('Plugin notifikasi tidak ditemukan');
+    var pm=await LN.checkPermissions();if(pm.display!=='granted'){pm=await LN.requestPermissions();if(pm.display!=='granted')throw new Error('Izin notifikasi ditolak')}
+    wgMsg('Menyiapkan notifikasi…');
+    var data=await natData(7,natSimpan);sv('natsync',Date.now());
+    var pend=await LN.getPending();if(pend.notifications&&pend.notifications.length)await LN.cancel({notifications:pend.notifications.map(function(n){return{id:n.id}})});
+    var nm=['Pagi','Siang','Malam'],list=[],now=Date.now();
+    Object.keys(data.days).sort().forEach(function(k,di){
+      var p=k.split('-');
+      for(var i=0;i<3;i++){
+        var hm=String(RT[nm[i]]||'12:00').split(':'),at=new Date(+p[0],+p[1]-1,+p[2],+hm[0],+hm[1],0),o=data.days[k][i];
+        if(at.getTime()<=now)continue;
+        list.push({id:100+di*3+i,title:'Tadabbur '+nm[i],body:o.r+' · '+(o.t.length>140?o.t.slice(0,140)+'…':o.t),schedule:{at:at,allowWhileIdle:true},smallIcon:'ic_stat_tadabbur'});
+      }
+    });
+    if(!list.length)throw new Error('Tidak ada jadwal yang tersisa');
+    await LN.schedule({notifications:list});
+    wgMsg(list.length+' notifikasi ayat dijadwalkan sesuai jam pengingat di atas. Buka aplikasi seminggu sekali agar jadwal diperbarui.');
+  }catch(e){wgMsg('Gagal menjadwalkan notifikasi: '+(e.message||e))}
+}
+document.addEventListener('click',function(e){
+  if(e.target.closest('#natsync'))natSync(true);
+  else if(e.target.closest('#natpin'))natPin();
+  else if(e.target.closest('#natnotif'))natNotif();
+});
+if(NATIVE){var nb=$('natbox');if(nb)nb.hidden=false}
+
+/* kartu ayat */
+function card(S,a,label,c){
+  var v=S.v[a-1],k=S.n+':'+a,f=FAV.indexOf(k)>-1,b=BM&&BM.k===k;
+  return '<article class="card" id="k'+S.n+'-'+a+'" style="--c:var(--'+(c||'teal')+')"><div class="hd"><b>'+esc(label||'')+'</b><span>'+esc(S.nm)+' '+k+'</span></div>'
+  +'<p class="ar" lang="ar">'+esc(v.a)+'</p><p class="id">'+esc(v.t)+'</p>'
+  +(CURM[k]?'<p class="mk"><b>Renungan:</b> '+esc(CURM[k])+'</p>':'')
+  +(AN[k]?'<details><summary>Asbabun nuzul <span class="gd" style="color:'+GR[AN[k].g][1]+'">'+GR[AN[k].g][0]+'</span></summary><p class="tf">'+esc(AN[k].t)+'</p><p class="tf" style="font-size:14.5px"><b>Derajat riwayat:</b> '+esc(AN[k].n)+'</p><p class="tf" style="font-size:14.5px"><b>Rujukan kitab:</b> '+esc(AN[k].r)+'</p></details>':'')
+  +(v.s?'<details><summary>Tafsir Kemenag (ringkas)</summary><p class="tf">'+esc(v.s)+'</p>'+(v.l&&v.l!==v.s?'<details><summary>Tafsir lengkap</summary><p class="tf">'+esc(v.l)+'</p></details>':'')+'</details>':'')
+  +'<details data-tj="'+k+'"><summary>Tajwid: warna dan hukum bacaan</summary><div class="tjb"></div></details>'
+  +'<div class="row r4"><button class="ib" data-p="'+k+'" aria-pressed="false">▶ Dengar</button><button class="ib" data-slow aria-pressed="'+SLOW+'">🐢 Pelan</button><button class="ib" data-f="'+k+'" aria-pressed="'+f+'">'+(f?'★ Favorit':'☆ Favorit')+'</button><button class="ib" data-b="'+k+'" aria-pressed="'+b+'">🔖 Tandai</button></div><p class="err aud-err" style="font-size:14.5px;margin:4px 0 0"></p></article>';
+}
+function fail(e,fn){return '<p class="err">Gagal memuat: '+esc(e.message||e)+'. Server gratis ini membatasi sekitar 10 permintaan per 5 menit; surah yang sudah dibuka tersimpan di perangkat. <button class="ib" onclick="'+fn+'">Coba lagi</button></p>'}
+document.addEventListener('click',function(e){
+  var f=e.target.closest('[data-f]'),b=e.target.closest('[data-b]');
+  if(f){var k=f.dataset.f,i=FAV.indexOf(k);if(i>-1)FAV.splice(i,1);else FAV.push(k);sv('fav',FAV);dirty();
+    Array.prototype.forEach.call(document.querySelectorAll('[data-f="'+k+'"]'),function(x){var on=FAV.indexOf(k)>-1;x.setAttribute('aria-pressed',on);x.textContent=on?'★ Favorit':'☆ Favorit'})}
+  if(b){BM={k:b.dataset.b,t:Date.now()};sv('bm',BM);dirty();
+    Array.prototype.forEach.call(document.querySelectorAll('[data-b]'),function(x){var on=x.dataset.b===BM.k;x.setAttribute('aria-pressed',on)})}
+});
+
+/* tampilan */
+var now=new Date(),h=now.getHours();
+$('tgl').textContent=now.toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+var VW='hari';
+function show(v){VW=v;['hari','cari','quran','doa','simpan'].forEach(function(x){$('v-'+x).hidden=x!==v});
+  Array.prototype.forEach.call($('nav').children,function(b){b.setAttribute('aria-current',b.dataset.v===v)});
+  if(v==='simpan')tersimpan();if(v==='doa')doa();if(v==='quran'&&!$('daftar').children.length)daftar()}
+$('nav').addEventListener('click',function(e){var b=e.target.closest('button');if(b){$('surah').hidden=true;$('daftar').hidden=false;show(b.dataset.v)}});
+
+/* tiga ayat harian: urutan acak tetap (seed tetap) atas 6.236 ayat, tiap hari bergeser 3 posisi, jadi tidak berulang selama ±5,7 tahun */
+function rng(a){return function(){a|=0;a=a+0x6D2B79F5|0;var t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+var TOT=6236,P=[],i,j,r=rng(20260101);for(i=0;i<TOT;i++)P.push(i);for(i=TOT-1;i>0;i--){j=Math.floor(r()*(i+1));var tm=P[i];P[i]=P[j];P[j]=tm}
+function loc(x){var s=0;while(x>=COUNTS[s]){x-=COUNTS[s];s++}return[s+1,x+1]}
+var D=Math.floor((now.getTime()-now.getTimezoneOffset()*60000)/864e5);
+var SL=[['Pagi','gold',h<11],['Siang','teal',h>=11&&h<18],['Malam','dusk',h>=18]];
+async function hari(){
+  var out=$('tiga');out.innerHTML=SL.map(function(s,i){return '<div id="sl'+i+'"><p class="sub">Memuat ayat '+s[0].toLowerCase()+'…</p></div>'}).join('');
+  for(var i=0;i<3;i++){
+    try{
+      var base=(D*3+i)%TOT,S,a;
+      for(var k=0;k<7;k++){var l=loc(P[(base+k*1237)%TOT]);S=await getS(l[0]);a=l[1];if(S.v[a-1].t.length<=420)break}
+      $('sl'+i).innerHTML=card(S,a,SL[i][0]+(SL[i][2]?' (sekarang)':''),SL[i][1]);
+    }catch(e){$('sl'+i).innerHTML=fail(e,'hari()');break}
+  }
+  if(BM){var q=BM.k.split(':');try{var B=await getS(+q[0]);out.insertAdjacentHTML('beforeend','<h2>Lanjutkan membaca</h2><button class="btn o" onclick="buka('+q[0]+','+q[1]+')">'+esc(B.nm)+' '+BM.k+'</button>')}catch(e){}}
+}
+
+/* daftar surah + baca */
+function daftar(){$('daftar').innerHTML=NAMA.map(function(n,i){return '<button onclick="buka('+(i+1)+')">'+(i+1)+'. '+esc(n)+'<small>'+COUNTS[i]+' ayat</small></button>'}).join('')}
+async function buka(n,a){
+  show('quran');$('daftar').hidden=true;var z=$('surah');z.hidden=false;z.innerHTML='<p class="sub">Memuat…</p>';
+  try{var S=await getS(n),o='<div class="row"><button class="btn o" onclick="show(\'quran\');$(\'surah\').hidden=true;$(\'daftar\').hidden=false">‹ Daftar surah</button></div><h2>'+n+'. '+esc(S.nm)+'</h2><p class="sub">'+S.v.length+' ayat</p>';
+    for(var i=1;i<=S.v.length;i++)o+=card(S,i,'Ayat '+i);
+    z.innerHTML=o;if(a){var el=$('k'+n+'-'+a);if(el)el.scrollIntoView()}else window.scrollTo(0,0)
+  }catch(e){z.innerHTML=fail(e,'buka('+n+')')}
+}
+
+/* tersimpan */
+async function tersimpan(){
+  var z=$('simpan'),o=SYNCBOX();z.innerHTML='<p class="sub">Memuat…</p>';
+  if(BM){var q=BM.k.split(':');o+='<h2>Penanda bacaan</h2><button class="btn o" onclick="buka('+q[0]+','+q[1]+')">Lanjutkan di '+esc(NAMA[q[0]-1])+' '+BM.k+'</button>'}
+  o+='<h2>Favorit</h2>';
+  if(!FAV.length)o+='<p class="sub">Belum ada. Tekan ☆ Favorit pada ayat atau doa mana saja.</p>';
+  z.innerHTML=o;
+  for(var i=0;i<FAV.length;i++){if(FAV[i].indexOf('D:')===0){var dd=doaById(FAV[i].slice(2));if(dd)z.insertAdjacentHTML('beforeend',doaCard(dd));continue}var p=FAV[i].split(':');try{var S=await getS(+p[0]);z.insertAdjacentHTML('beforeend',card(S,+p[1],'Favorit'))}catch(e){z.insertAdjacentHTML('beforeend',fail(e,'tersimpan()'));break}}
+}
+
+/* sesuai harimu */
+var CH=Object.keys(FM),sel=null,list=[],pos=0;
+$('chips').innerHTML=CH.map(function(t){return '<button class="chip" aria-pressed="false" data-t="'+t+'">'+t.charAt(0).toUpperCase()+t.slice(1)+'</button>'}).join('');
+function pres(t){Array.prototype.forEach.call(document.querySelectorAll('.chip'),function(b){b.setAttribute('aria-pressed',b.dataset.t===t)})}
+async function cariAyat(t){
+  var ths=FM[t],P2=$('pesan');P2.textContent='Mencari ayat…';$('hasil').innerHTML='';$('lain').hidden=true;
+  try{
+    var need=[],n;for(n=1;n<=114;n++)if(!MEM[n])need.push(n);
+    need.sort(function(){return Math.random()-.5});
+    var loaded=114-need.length,tries=Math.max(0,Math.min(3,6-loaded));
+    for(var i=0;i<tries;i++)await getS(need[i]);
+  }catch(e){if(!Object.keys(MEM).length){$('hasil').innerHTML=fail(e,'cariAyat(\''+t+'\')');P2.textContent='';return}}
+  list=[];
+  Object.keys(MEM).forEach(function(k){var S=MEM[k];S.v.forEach(function(v,i){if(v.t.length>400)return;for(var q=0;q<ths.length;q++)if(TH[ths[q]].test(v.t)){list.push([S.n,i+1]);return}})});
+  if(!list.length){P2.textContent='Belum ada ayat yang cocok di surah yang sudah dimuat. Coba lagi untuk memuat surah lain.';return}
+  list.sort(function(){return Math.random()-.5});pos=0;
+  P2.textContent='Dipilih dari '+list.length+' ayat di '+Object.keys(MEM).length+' surah yang sudah dimuat. Kecocokan tema otomatis dari kata kunci terjemahan, bukan tafsir.';
+  tampil();
+}
+function tampil(){var x=list[pos%list.length],S=MEM[x[0]];$('hasil').innerHTML=card(S,x[1],'Untuk hari ini','gold');$('lain').hidden=list.length<2}
+$('chips').addEventListener('click',function(e){var b=e.target.closest('.chip');if(b){sel=b.dataset.t;pres(sel);cariAyat(sel)}});
+$('cari').addEventListener('click',function(){
+  var x=$('cerita').value.toLowerCase().trim();
+  if(!x){$('pesan').textContent='Tulis sedikit tentang harimu dulu, atau pilih salah satu perasaan di atas.';return}
+  var best=null,sc=0;Object.keys(KW).forEach(function(t){var m=x.match(new RegExp(KW[t].source,'g'));if(m&&m.length>sc){sc=m.length;best=t}});
+  if(!best){$('pesan').textContent='Belum ada kata kunci yang cocok. Coba pilih salah satu perasaan di atas.';return}
+  pres(best);cariAyat(best);
+});
+$('lain').addEventListener('click',function(){pos++;tampil()});
+
+/* sinkronisasi Firebase: hanya dokumen tadabbur/{uid} milik pengguna itu sendiri */
+var CFG={apiKey:"AIzaSyBA9PbBI2xcTgK6lYl8j8-P-MWEoLs9KiE",authDomain:"quranic-daily-life.firebaseapp.com",projectId:"quranic-daily-life",storageBucket:"quranic-daily-life.firebasestorage.app",messagingSenderId:"711268234475",appId:"1:711268234475:web:27c20001e1b125c8677aae"};
+var AUTH=null,FS=null,UID=null,TMR=null,SYNC='Sinkron awan: belum aktif',ACC='';
+function setSync(t){SYNC=t;if($('sync'))$('sync').textContent=t}
+function SYNCBOX(){return '<div class="card" style="--c:var(--dusk)"><div class="hd"><b>Sinkronisasi</b></div><p class="sub" id="sync" style="margin:4px 0">'+esc(SYNC)+'</p><p class="sub" id="akun" style="margin:0 0 8px">'+esc(ACC)+'</p><div class="row"><button class="btn o" id="gbtn" onclick="masukGoogle()"'+(ACC.indexOf('anonim')<0&&ACC?' hidden':'')+'>Masuk dengan Google (sinkron antar-HP)</button></div></div>'}
+function dirty(){sv('dirty',1);clearTimeout(TMR);TMR=setTimeout(push,1200)}
+function push(){if(!FS||!UID)return;FS.collection('tadabbur').doc(UID).set({fav:FAV,bm:BM||null,at:Date.now()}).then(function(){sv('dirty',0);setSync('Sinkron awan: tersimpan')}).catch(function(e){setSync('Sinkron awan: gagal ('+(e.code||e.message)+')')})}
+function pull(){
+  FS.collection('tadabbur').doc(UID).get().then(function(d){
+    var c=d.exists?d.data():null,last=ls('syncUid',null);
+    if(!c){push()}else{
+      var cf=c.fav||[];
+      if(last!==UID){cf.forEach(function(k){if(FAV.indexOf(k)<0)FAV.push(k)});if(c.bm&&(!BM||(c.bm.t||0)>(BM.t||0)))BM=c.bm;sv('fav',FAV);sv('bm',BM);push()}
+      else if(ls('dirty',0)){push()}
+      else{FAV=cf;BM=c.bm||BM;sv('fav',FAV);sv('bm',BM)}
+    }
+    sv('syncUid',UID);setSync('Sinkron awan: aktif');if(VW==='simpan')tersimpan();
+  }).catch(function(e){setSync('Sinkron awan: gagal ('+(e.code||e.message)+')')})
+}
+function akun(u){ACC=u.isAnonymous?'Akun: anonim (data hanya untuk HP ini)':'Akun: '+(u.email||'Google');if($('akun'))$('akun').textContent=ACC;if($('gbtn'))$('gbtn').hidden=!u.isAnonymous}
+function masukGoogle(){try{AUTH.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(function(e){setSync('Masuk Google gagal ('+(e.code||e.message)+')')})}catch(e){setSync('Masuk Google gagal ('+e.message+')')}}
+try{
+  if(typeof firebase!=='undefined'){
+    firebase.initializeApp(CFG);AUTH=firebase.auth();FS=firebase.firestore();
+    AUTH.onAuthStateChanged(function(u){if(u){UID=u.uid;akun(u);setSync('Sinkron awan: menyambung…');pull()}else{AUTH.signInAnonymously().catch(function(e){setSync('Sinkron awan: gagal masuk ('+(e.code||e.message)+')')})}});
+  }else setSync('Sinkron awan: tidak tersedia (sedang offline?)');
+}catch(e){setSync('Sinkron awan: gagal ('+e.message+')')}
+
+if('serviceWorker' in navigator&&!NATIVE&&/^https?:$/.test(location.protocol))window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})});
+showVer();if(/widget/.test(location.hash+location.search))wgOn();else hari();
+if(NATIVE)setTimeout(function(){natSync(false)},4000);
+if(NATIVE)setTimeout(function(){cekUpdate(false)},2500);
+</script>
+</body>
+</html>
