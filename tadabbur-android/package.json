@@ -1,0 +1,14 @@
+{
+  "name": "tadabbur-harian",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Tadabbur Harian: aplikasi Android (Capacitor) dengan widget layar utama",
+  "dependencies": {
+    "@capacitor/android": "^8.0.0",
+    "@capacitor/cli": "^8.0.0",
+    "@capacitor/core": "^8.0.0",
+    "@capacitor/local-notifications": "^8.0.0",
+    "@capacitor-firebase/authentication": "^8.2.0",
+    "firebase": "^12.6.0"
+  }
+}

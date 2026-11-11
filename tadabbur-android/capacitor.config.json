@@ -1,0 +1,17 @@
+{
+  "appId": "id.tadabbur.harian",
+  "appName": "Tadabbur Harian",
+  "webDir": "www",
+  "plugins": {
+    "LocalNotifications": {
+      "smallIcon": "ic_stat_tadabbur",
+      "iconColor": "#12534F"
+    },
+    "FirebaseAuthentication": {
+      "skipNativeAuth": true,
+      "providers": [
+        "google.com"
+      ]
+    }
+  }
+}
