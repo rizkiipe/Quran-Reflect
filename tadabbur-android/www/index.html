@@ -914,18 +914,21 @@ function pull(){
 }
 function akun(u){ACC=u.isAnonymous?'Akun: anonim (data hanya untuk HP ini)':'Akun: '+(u.email||'Google');if($('akun'))$('akun').textContent=ACC;if($('gbtn'))$('gbtn').hidden=!u.isAnonymous}
 async function masukGoogle(){
+  var tahap='mulai';
   try{
-    var FA=NATIVE&&window.Capacitor&&Capacitor.Plugins&&Capacitor.Plugins.FirebaseAuthentication;
+    var FA=nplug('FirebaseAuthentication');
+    if(NATIVE&&!FA){setSync('Masuk Google gagal [plugin]: FirebaseAuthentication tidak ada di APK ini. Plugin yang ada: '+Object.keys((window.Capacitor&&Capacitor.Plugins)||{}).join(', '));return}
     if(FA){
-      setSync('Membuka akun Google…');
+      tahap='akun Google';setSync('Membuka akun Google…');
       var r=await FA.signInWithGoogle(),tok=r&&r.credential&&r.credential.idToken;
       if(!tok)throw new Error('token Google kosong');
+      tahap='Firebase';
+      if(!AUTH)throw new Error('Firebase belum siap (internet mati saat aplikasi dibuka?)');
       await AUTH.signInWithCredential(firebase.auth.GoogleAuthProvider.credential(tok));
       return;
     }
-    if(NATIVE){setSync('Masuk Google belum aktif di APK ini: pengaturan Firebase untuk Android belum terpasang saat build.');return}
     await AUTH.signInWithPopup(new firebase.auth.GoogleAuthProvider());
-  }catch(e){setSync('Masuk Google gagal ('+(e.code||e.message||e)+')')}
+  }catch(e){setSync('Masuk Google gagal ['+tahap+'] kode: '+((e&&e.code)||'-')+' | pesan: '+String((e&&e.message)||e).slice(0,300))}
 }
 try{
   if(typeof firebase!=='undefined'){
