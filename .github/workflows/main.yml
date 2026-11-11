@@ -1,12 +1,23 @@
 name: Build APK
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'tadabbur-android/**'
+permissions:
+  contents: write        # dibutuhkan untuk menerbitkan rilis (tempat APK diunduh oleh aplikasi)
 jobs:
   build:
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: tadabbur-android
+    env:
+      KS_B64: ${{ secrets.KEYSTORE_BASE64 }}
+      KS_PASS: ${{ secrets.KEYSTORE_PASSWORD }}
+      KS_ALIAS: tadabbur
+      GS_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -16,12 +27,53 @@ jobs:
         with:
           distribution: temurin
           java-version: 21
+      - name: Siapkan kunci tanda tangan tetap (jika rahasianya sudah dipasang)
+        run: |
+          if [ -n "$KS_B64" ] && [ -n "$KS_PASS" ]; then
+            echo "$KS_B64" | base64 -d > "$RUNNER_TEMP/tadabbur.jks"
+            echo "KS_FILE=$RUNNER_TEMP/tadabbur.jks" >> "$GITHUB_ENV"
+            echo "KS_PASS=$KS_PASS" >> "$GITHUB_ENV"
+            echo "KS_ALIAS=tadabbur" >> "$GITHUB_ENV"
+            echo "SIGNED=1" >> "$GITHUB_ENV"
+          else
+            echo "::warning::Kunci tanda tangan belum terbaca (secret KEYSTORE_BASE64 / KEYSTORE_PASSWORD kosong). APK debug dibuat."
+          fi
       - run: npm install
       - run: npx cap add android
+      - name: Pasang google-services.json (login Google di aplikasi)
+        run: |
+          if [ -n "$GS_JSON" ]; then
+            printf '%s' "$GS_JSON" > android/app/google-services.json
+          else
+            echo "::warning::Secret GOOGLE_SERVICES_JSON kosong. Tombol Masuk Google tidak akan berfungsi."
+          fi
       - run: python3 tools/setup_android.py
       - run: npx cap sync android
-      - run: cd android && chmod +x gradlew && ./gradlew assembleDebug
+      - name: Periksa plugin login Google terpasang
+        run: |
+          cat android/app/src/main/assets/capacitor.plugins.json
+          grep -q "FirebaseAuthentication" android/app/src/main/assets/capacitor.plugins.json \
+            && echo "OK: plugin FirebaseAuthentication terpasang" \
+            || echo "::error::Plugin FirebaseAuthentication TIDAK terpasang. Periksa package.json di folder tadabbur-android."
+      - name: Build APK
+        run: |
+          cd android && chmod +x gradlew
+          if [ "$SIGNED" = "1" ]; then ./gradlew assembleRelease; else ./gradlew assembleDebug; fi
+      - name: Beri nama berkas
+        run: |
+          V=$(cat VERSION | tr -d '[:space:]')
+          mkdir -p dist
+          if [ "$SIGNED" = "1" ]; then cp android/app/build/outputs/apk/release/app-release.apk "dist/tadabbur-harian-v$V.apk"
+          else cp android/app/build/outputs/apk/debug/app-debug.apk "dist/tadabbur-harian-v$V-debug.apk"; fi
+          echo "VERSI=$V" >> "$GITHUB_ENV"
       - uses: actions/upload-artifact@v4
         with:
           name: tadabbur-harian-apk
-          path: tadabbur-android/android/app/build/outputs/apk/debug/app-debug.apk
+          path: tadabbur-android/dist/*.apk
+      - name: Terbitkan rilis (hanya APK bertanda tangan tetap)
+        if: env.SIGNED == '1'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ env.VERSI }}
+          name: Tadabbur Harian ${{ env.VERSI }}
+          files: tadabbur-android/dist/*.apk
