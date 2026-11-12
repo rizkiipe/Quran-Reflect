@@ -69,6 +69,13 @@ button:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px so
 .note{font-size:14.5px;color:var(--mute);margin-top:36px;border-top:1px solid var(--line);padding-top:12px}
 [hidden]{display:none!important}
 .ks{margin:4px 0 10px 22px;padding:0}.ks li{margin:5px 0}
+html{scroll-behavior:smooth;-webkit-tap-highlight-color:transparent}
+section:not([hidden]){animation:fin .22s ease-out}
+@keyframes fin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}section:not([hidden]){animation:none}}
+.shr{display:flex;justify-content:space-between;align-items:baseline;padding:8px 2px;border-top:1px solid var(--line)}
+.shr.nx{font-weight:700;color:var(--teal)}.shr b{font-variant-numeric:tabular-nums}
+.ib[disabled]{opacity:.45;cursor:not-allowed}
 </style>
 </head>
 <body>
@@ -76,7 +83,7 @@ button:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px so
 <div id="wg" hidden><div class="card" style="--c:var(--gold)"><div class="hd"><b>Tadabbur</b><span id="wgdate"></span></div><div class="chips" id="wgchips" style="margin:10px 0 0"></div><div id="wgbody"></div><div class="row"><button class="btn" id="wgoff">Buka aplikasi</button><button class="ib" data-wgimg="save">🖼 Gambar kunci layar</button></div><p class="pesan wgmsg" aria-live="polite" style="margin:8px 0 0"></p></div></div>
 <header class="hero"><h1>Tadabbur Harian</h1><p class="tgl" id="tgl"></p></header>
 <div id="upd" class="card" style="--c:var(--gold)" hidden></div>
-<nav id="nav"><button data-v="hari" aria-current="true">Hari ini</button><button data-v="cari" aria-current="false">Sesuai harimu</button><button data-v="quran" aria-current="false">Al-Qur’an</button><button data-v="doa" aria-current="false">Doa</button><button data-v="simpan" aria-current="false">Tersimpan</button></nav>
+<nav id="nav"><button data-v="hari" aria-current="true">Hari ini</button><button data-v="sholat" aria-current="false">Sholat</button><button data-v="cari" aria-current="false">Sesuai harimu</button><button data-v="quran" aria-current="false">Al-Qur’an</button><button data-v="doa" aria-current="false">Doa</button><button data-v="simpan" aria-current="false">Tersimpan</button></nav>
 
 <section id="v-hari"><p class="sub">Tiga ayat untuk hari ini. Ayatnya berbeda setiap hari dan tidak berulang dalam siklus ±5 tahun.</p><div id="tiga"></div><div id="kisah"></div><div id="gaya"></div>
 <div class="card" id="panelw" style="--c:var(--dusk)"><div class="hd"><b>Widget dan pengingat</b></div>
@@ -89,6 +96,7 @@ button:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px so
 <details id="natbox" hidden><summary>4. Widget asli dan notifikasi ayat (aplikasi Android)</summary><p class="tf">Widget di layar utama menampilkan ayat pagi, siang, atau malam sesuai jam. Ayat 7 hari ke depan disimpan di HP, jadi widget tetap terisi saat offline. Ketuk widget untuk membuka aplikasi.</p><div class="row"><button class="btn" id="natpin">Pasang widget</button><button class="ib" id="natsync">Perbarui data widget</button></div><p class="tf">Notifikasi ayat dijadwalkan sesuai jam pengingat di atas (isinya nama surah, ayat, dan terjemahan singkat).</p><div class="row"><button class="btn" id="natnotif">Jadwalkan notifikasi ayat</button></div></details>
 <p class="pesan wgmsg" aria-live="polite" style="margin:8px 0 0"></p></div></section>
 
+<section id="v-sholat" hidden><div id="sholat"></div></section>
 <section id="v-cari" hidden>
 <p class="sub">Pilih perasaan atau tema, atau ceritakan harimu dengan kata-katamu sendiri.</p>
 <div class="chips" id="chips"></div>
@@ -753,13 +761,121 @@ document.addEventListener('click',function(e){
   var q=e.target.closest('[data-gaya]');if(q){sv('ar_gaya',q.dataset.gaya);gaya()}
   var x=e.target.closest('#updx');if(x){sv('updskip',x.dataset.tag);$('upd').hidden=true}
 });
+/* ===== Jadwal sholat: dihitung di HP (metode Kemenag RI), lokasi dari GPS/Maps, notifikasi opsional ===== */
+var SHN=[['imsak','Imsak'],['subuh','Subuh'],['syuruq','Syuruq'],['dzuhur','Dzuhur'],['ashar','Ashar'],['maghrib','Maghrib'],['isya','Isya']];
+var SHT={imsak:'Imsak: waktunya berhenti makan sahur.',subuh:'Saatnya menunaikan sholat Subuh.',syuruq:'Matahari terbit; waktu Subuh telah berakhir.',dzuhur:'Saatnya menunaikan sholat Dzuhur.',ashar:'Saatnya menunaikan sholat Ashar.',maghrib:'Saatnya menunaikan sholat Maghrib.',isya:'Saatnya menunaikan sholat Isya.'};
+var shMsg='',shBusy=false;
+function shHitung(d,la,lo){
+  var R=Math.PI/180,sin=function(x){return Math.sin(x*R)},cos=function(x){return Math.cos(x*R)},tan=function(x){return Math.tan(x*R)},
+    asin=function(x){return Math.asin(x)/R},acos=function(x){return Math.acos(x)/R},atan2=function(y,x){return Math.atan2(y,x)/R},acot=function(x){return Math.atan(1/x)/R},
+    fa=function(a){return a-360*Math.floor(a/360)},fh=function(h){return h-24*Math.floor(h/24)};
+  var tz=-d.getTimezoneOffset()/60,base=new Date(d.getFullYear(),d.getMonth(),d.getDate()).getTime(),Y=d.getFullYear(),M=d.getMonth()+1,Dd=d.getDate();
+  if(M<=2){Y-=1;M+=12}
+  var A=Math.floor(Y/100),B=2-A+Math.floor(A/4),jd=Math.floor(365.25*(Y+4716))+Math.floor(30.6001*(M+1))+Dd+B-1524.5-lo/360;
+  function pos(j){var D=j-2451545,g=fa(357.529+.98560028*D),q=fa(280.459+.98564736*D),L=fa(q+1.915*sin(g)+.02*sin(2*g)),e=23.439-3.6e-7*D,RA=fh(atan2(cos(e)*sin(L),cos(L))/15);return{dec:asin(sin(e)*sin(L)),eqt:q/15-RA}}
+  function mid(t){return fh(12-pos(jd+t).eqt)}
+  function ang(a,t,ccw){var dec=pos(jd+t).dec,x=(-sin(a)-sin(dec)*sin(la))/(cos(dec)*cos(la));if(Math.abs(x)>1)return NaN;var h=acos(x)/15;return mid(t)+(ccw?-h:h)}
+  function asr(t){var dec=pos(jd+t).dec;return ang(-acot(1+tan(Math.abs(la-dec))),t)}
+  var T={f:5,s:6,d:12,a:13,m:18,i:18};
+  for(var it=0;it<2;it++){
+    var p=function(k){return T[k]/24};
+    T={f:ang(20,p('f'),1),s:ang(.833,p('s'),1),d:mid(p('d')),a:asr(p('a')),m:ang(.833,p('m')),i:ang(18,p('i'))};
+    for(var k in T)T[k]+=tz-lo/15;
+  }
+  function mnt(h,add,flo){return base+((flo?Math.floor(h*60)-1:Math.ceil(h*60-1e-6))+add)*60000}
+  var sb=mnt(T.f,2);
+  return{imsak:sb-10*60000,subuh:sb,syuruq:mnt(T.s,0,1),dzuhur:mnt(T.d,2),ashar:mnt(T.a,2),maghrib:mnt(T.m,2),isya:mnt(T.i,2)};
+}
+function shJam(ms){var d=new Date(ms);return('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2)}
+function shSet(){var s=ls('sh_set',null)||{};s.on=!!s.on;s.bunyi=s.bunyi||'biasa';s.w=s.w||{imsak:1,subuh:1,syuruq:1,dzuhur:1,ashar:1,maghrib:1,isya:1};return s}
+function shLok(){return ls('sh_lok',null)}
+function shLokBaru(manual){
+  return new Promise(function(ok,gagal){
+    if(!navigator.geolocation){gagal(new Error('Lokasi tidak tersedia di perangkat ini'));return}
+    navigator.geolocation.getCurrentPosition(function(p){ok(p.coords)},function(e){gagal(new Error(e&&e.code===1?'Izin lokasi ditolak. Aktifkan izin Lokasi untuk aplikasi ini di pengaturan HP.':'Lokasi belum didapat. Coba di tempat terbuka dan pastikan Lokasi/GPS aktif.'))},{enableHighAccuracy:false,timeout:25000,maximumAge:manual?0:600000});
+  }).then(async function(c){
+    var o={la:c.latitude,lo:c.longitude,t:Date.now(),nama:''};
+    try{var r=await fetch('https://api.bigdatacloud.net/data/reverse-geocode-client?latitude='+o.la+'&longitude='+o.lo+'&localityLanguage=id'),j=await r.json();o.nama=j.city||j.locality||j.principalSubdivision||''}catch(e){}
+    sv('sh_lok',o);sv('sh_pakai',1);return o});
+}
+async function shRefresh(manual){
+  shMsg='Mengambil lokasi…';shRender();
+  try{await shLokBaru(manual);shMsg='Lokasi diperbarui.';if(shSet().on)await shJadwalkan()}catch(e){shMsg=e.message||String(e)}
+  shRender();
+}
+function shAuto(){var l=shLok();if(ls('sh_pakai',0)&&(!l||Date.now()-l.t>3*36e5))shRefresh(false)}
+async function shJadwalkan(){
+  if(shBusy)return;shBusy=true;
+  try{
+    var LN=nplug('LocalNotifications'),S=shSet(),L=shLok();
+    if(!LN)throw new Error('Notifikasi hanya tersedia di aplikasi Android');
+    var pend=await LN.getPending(),mine=(pend.notifications||[]).filter(function(n){return n.id>=70000});
+    if(mine.length)await LN.cancel({notifications:mine.map(function(n){return{id:n.id}})});
+    if(!S.on||!L)return;
+    var pm=await LN.checkPermissions();if(pm.display!=='granted'){pm=await LN.requestPermissions();if(pm.display!=='granted')throw new Error('Izin notifikasi ditolak')}
+    try{await LN.createChannel({id:'sholat',name:'Waktu sholat',description:'Pengingat waktu sholat',importance:4,vibration:true})}catch(e){}
+    if(window.ADZAN_ADA)try{await LN.createChannel({id:'adzan',name:'Adzan',description:'Suara adzan saat waktu sholat',importance:5,sound:'adzan.mp3',vibration:true})}catch(e){}
+    var list=[],now=Date.now(),adz=S.bunyi==='adzan'&&!!window.ADZAN_ADA;
+    for(var d=0;d<7;d++){
+      var dt=new Date();dt.setDate(dt.getDate()+d);var T=shHitung(dt,L.la,L.lo);
+      SHN.forEach(function(w,i){
+        if(!S.w[w[0]]||T[w[0]]<=now)return;
+        var a=adz&&i!==0&&i!==2;
+        var n={id:70000+d*10+i,title:'Waktu '+w[1]+' · '+shJam(T[w[0]]),body:SHT[w[0]]+(L.nama?' ('+L.nama+')':''),schedule:{at:new Date(T[w[0]]),allowWhileIdle:true},smallIcon:'ic_stat_tadabbur',channelId:a?'adzan':'sholat'};
+        if(a)n.sound='adzan.mp3';
+        list.push(n);
+      });
+    }
+    if(list.length)await LN.schedule({notifications:list});
+  }finally{shBusy=false}
+}
+async function shExact(){
+  try{var LN=nplug('LocalNotifications'),ex=await LN.checkExactNotificationSetting();
+    if(ex&&ex.exact_alarm&&ex.exact_alarm!=='granted'){shMsg='Agar notifikasi tepat waktu, izinkan “Alarm & pengingat” untuk aplikasi ini pada layar yang terbuka.';await LN.changeExactNotificationSetting()}}catch(e){}
+}
+function shRender(){
+  var z=$('sholat');if(!z)return;
+  var L=shLok(),la=L?L.la:-6.2088,lo=L?L.lo:106.8456,S=shSet(),now=Date.now(),T=shHitung(new Date(),la,lo),nx=-1,nxt=0,besok=false;
+  SHN.forEach(function(w,i){if(nx<0&&T[w[0]]>now){nx=i;nxt=T[w[0]]}});
+  if(nx<0){nx=0;besok=true;nxt=shHitung(new Date(now+864e5),la,lo).imsak}
+  var sisa=Math.max(0,Math.round((nxt-now)/60000)),h=Math.floor(sisa/60),mn=sisa%60;
+  var lokTxt=L?esc(L.nama||(L.la.toFixed(3)+', '+L.lo.toFixed(3)))+' · diperbarui '+shJam(L.t):'Belum memakai lokasi HP; sementara memakai Jakarta.';
+  var ib=function(a,txt,on,dis){return '<button class="ib" data-sh="'+a+'" aria-pressed="'+!!on+'"'+(dis?' disabled':'')+'>'+txt+'</button>'};
+  z.innerHTML='<article class="card" style="--c:var(--teal)"><div class="hd"><b>Jadwal sholat</b><span>'+esc(new Date().toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long'}))+'</span></div>'
+   +'<p class="id" style="margin:10px 0 4px"><b>'+esc(SHN[nx][1])+(besok?' (besok)':'')+'</b> '+(besok?shJam(nxt):'pukul '+shJam(nxt))+' · '+(h?h+' jam ':'')+mn+' menit lagi</p>'
+   +SHN.map(function(w,i){return '<div class="shr'+(i===nx&&!besok?' nx':'')+'"><span>'+w[1]+'</span><b>'+shJam(T[w[0]])+'</b></div>'}).join('')
+   +'<p class="mk">Lokasi: '+lokTxt+'</p><div class="row"><button class="btn o" data-sh="lok">Perbarui lokasi sekarang</button></div>'
+   +(shMsg?'<p class="sub" style="margin:8px 0 0">'+esc(shMsg)+'</p>':'')+'</article>'
+   +'<article class="card" style="--c:var(--gold)"><div class="hd"><b>Notifikasi sholat</b></div><div class="chips" style="margin-top:10px">'+ib('on','Notifikasi: '+(S.on?'Aktif':'Mati'),S.on)+'</div>'
+   +'<p class="mk"><b>Suara</b></p><div class="chips">'+ib('bunyi:biasa','Notifikasi biasa',S.bunyi!=='adzan')+ib('bunyi:adzan','Adzan',S.bunyi==='adzan',!window.ADZAN_ADA)+'</div>'
+   +(window.ADZAN_ADA?'<p class="sub" style="margin:0 0 8px">Adzan dipakai untuk lima waktu sholat; Imsak dan Syuruq memakai nada notifikasi biasa.</p>':'<p class="sub" style="margin:0 0 8px">Pilihan Adzan aktif setelah berkas adzan.mp3 dipasang saat build.</p>')
+   +'<p class="mk"><b>Waktu yang diingatkan</b></p><div class="chips">'+SHN.map(function(w){return ib('w:'+w[0],w[1],S.w[w[0]])}).join('')+'</div></article>'
+   +'<p class="note">Waktu dihitung di HP dengan metode Kemenag RI (Subuh 20°, Isya 18°, Ashar mazhab Syafi‘i, ihtiyat 2 menit; Imsak = Subuh − 10 menit). Ini perkiraan, cocokkan dengan jadwal resmi setempat. Lokasi hanya diperbarui otomatis paling cepat tiap 3 jam, saat aplikasi dibuka, agar baterai hemat.</p>';
+}
+document.addEventListener('click',async function(e){
+  var b=e.target.closest('[data-sh]');if(!b||b.disabled)return;var a=b.dataset.sh,S=shSet();
+  try{
+    if(a==='lok'){shRefresh(true);return}
+    if(a==='on'){
+      if(!S.on&&!shLok()){shMsg='Mengambil lokasi…';shRender();await shLokBaru(true)}
+      S.on=!S.on;sv('sh_set',S);shMsg='';
+      try{await shJadwalkan()}catch(x){S.on=false;sv('sh_set',S);throw x}
+      if(S.on){shMsg='Notifikasi aktif untuk 7 hari ke depan; jadwal diperbarui setiap aplikasi dibuka.';await shExact()}else shMsg='Notifikasi sholat dimatikan.';
+    }else if(a.indexOf('bunyi:')===0){S.bunyi=a.slice(6);sv('sh_set',S);if(S.on)await shJadwalkan()}
+    else if(a.indexOf('w:')===0){var k=a.slice(2);S.w[k]=S.w[k]?0:1;sv('sh_set',S);if(S.on)await shJadwalkan()}
+  }catch(x){shMsg=x.message||String(x)}
+  shRender();
+});
+document.addEventListener('visibilitychange',function(){if(!document.hidden)shAuto()});
+setInterval(function(){shAuto();if(VW==='sholat'&&!document.hidden)shRender()},60000);
+setTimeout(function(){shAuto();if(shSet().on)shJadwalkan().catch(function(){})},3500);
 async function natNotif(){
   try{
     var LN=nplug('LocalNotifications');if(!LN)throw new Error('Plugin notifikasi tidak ditemukan');
     var pm=await LN.checkPermissions();if(pm.display!=='granted'){pm=await LN.requestPermissions();if(pm.display!=='granted')throw new Error('Izin notifikasi ditolak')}
     wgMsg('Menyiapkan notifikasi…');
     var data=await natData(7,natSimpan);sv('natsync',Date.now());
-    var pend=await LN.getPending();if(pend.notifications&&pend.notifications.length)await LN.cancel({notifications:pend.notifications.map(function(n){return{id:n.id}})});
+    var pend=await LN.getPending(),ayp=(pend.notifications||[]).filter(function(n){return n.id<70000});if(ayp.length)await LN.cancel({notifications:ayp.map(function(n){return{id:n.id}})});
     var nm=['Pagi','Siang','Malam'],list=[],now=Date.now();
     Object.keys(data.days).sort().forEach(function(k,di){
       var p=k.split('-');
@@ -805,13 +921,13 @@ document.addEventListener('click',function(e){
 var now=new Date(),h=now.getHours();
 $('tgl').textContent=now.toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
 var VW='hari';
-function show(v){VW=v;['hari','cari','quran','doa','simpan'].forEach(function(x){$('v-'+x).hidden=x!==v});
+function show(v){VW=v;['hari','sholat','cari','quran','doa','simpan'].forEach(function(x){$('v-'+x).hidden=x!==v});
   Array.prototype.forEach.call($('nav').children,function(b){b.setAttribute('aria-current',b.dataset.v===v)});
-  if(v==='simpan')tersimpan();if(v==='doa')doa();if(v==='quran'&&!$('daftar').children.length)daftar()}
+  if(v==='sholat')shRender();if(v==='simpan')tersimpan();if(v==='doa')doa();if(v==='quran'&&!$('daftar').children.length)daftar()}
 $('nav').addEventListener('click',function(e){var b=e.target.closest('button');if(b){$('surah').hidden=true;$('daftar').hidden=false;show(b.dataset.v)}});
 /* ===== Geser kanan-kiri untuk pindah menu: geser ke kiri = menu berikutnya, ke kanan = menu sebelumnya ===== */
 (function(){
-  var ORD=['hari','cari','quran','doa','simpan'],sx=0,sy=0,st=0,ok=false;
+  var ORD=['hari','sholat','cari','quran','doa','simpan'],sx=0,sy=0,st=0,ok=false;
   function bolehGeser(el){
     for(var n=el;n&&n!==document.body;n=n.parentElement){
       var t=n.tagName;if(t==='INPUT'||t==='TEXTAREA'||t==='SELECT'||t==='PRE'||t==='TABLE')return false;
