@@ -12,7 +12,7 @@
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-title" content="Tadabbur">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Newsreader:opsz,wght@6..72,400;6..72,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Amiri+Quran&family=Scheherazade+New:wght@400;700&family=Newsreader:opsz,wght@6..72,400;6..72,600&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#E4EFEC;--ink:#10282A;--mute:#4A6561;--card:#FAFCFB;--line:#C3D6D1;--gold:#B07A16;--teal:#23807A;--dusk:#3A5C8E;--mix:#000;--on:#fff;--g1:#0B2E31;--g2:#1F6F69;--g3:#3E9A90;--sh:rgba(16,40,42,.35);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media (prefers-color-scheme:dark){:root{--bg:#0A1618;--ink:#E6EEEA;--mute:#9DB6B0;--card:#122427;--line:#27403F;--gold:#E2AE45;--teal:#5FC0B6;--dusk:#93B4E6;--mix:#fff;--on:#0A1618;--g1:#071F22;--g2:#12534F;--g3:#2A8179;--sh:rgba(0,0,0,.6);color-scheme:dark}}
@@ -31,11 +31,11 @@ nav button[aria-current="true"]{background:linear-gradient(135deg,var(--teal),co
 .card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:7px;background:linear-gradient(180deg,var(--c1),var(--c),var(--c2))}
 .hd{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:15px;color:var(--mute)}
 .hd b{background:linear-gradient(135deg,var(--c),var(--c2));color:var(--on);border-radius:999px;padding:1px 13px;font-size:15.5px;font-weight:600}
-.ar{font:400 clamp(27px,7vw,34px)/2.1 'Amiri','Traditional Arabic',serif;direction:rtl;text-align:right;margin:10px 0 6px;padding:4px 14px;border-radius:12px;background:linear-gradient(135deg,color-mix(in srgb,var(--c) 14%,transparent),color-mix(in srgb,var(--c) 3%,transparent))}
+.ar{font:400 clamp(27px,7vw,34px)/2.1 var(--arf,'Amiri'),'Amiri','Traditional Arabic',serif;direction:rtl;text-align:right;margin:10px 0 6px;padding:4px 14px;border-radius:12px;background:linear-gradient(135deg,color-mix(in srgb,var(--c) 14%,transparent),color-mix(in srgb,var(--c) 3%,transparent))}
 .id{margin:0 0 8px}.mk{margin:0 0 8px;color:var(--mute);font-size:16.5px;border-top:1px solid var(--line);padding-top:8px}
 details{font-size:16.5px;margin:6px 0}summary{cursor:pointer;color:var(--c,var(--teal));font-weight:600}
 .gd{display:inline-block;border:1px solid currentColor;border-radius:999px;padding:0 9px;margin-left:6px;font-size:13px;font-weight:600}
-.tjar{font:400 clamp(26px,6.6vw,32px)/2.2 'Amiri','Traditional Arabic',serif;direction:rtl;text-align:right;margin:6px 0 8px}
+.tjar{font:400 clamp(26px,6.6vw,32px)/2.2 var(--arf,'Amiri'),'Amiri','Traditional Arabic',serif;direction:rtl;text-align:right;margin:6px 0 8px}
 .tjl{list-style:none;margin:0;padding:0}.tjl li{margin:0 0 10px;padding:8px 10px;border:1px solid var(--line);border-radius:12px}
 .tjl b{display:flex;align-items:center;gap:8px;font-size:16px}.sw{width:14px;height:14px;border-radius:4px;display:inline-block;flex:none;border:1px solid var(--line)}
 .tjl p{margin:4px 0 0;font-size:15.5px;color:var(--mute);line-height:1.5}.tjl p.ex{direction:rtl;text-align:right;font:400 26px/1.9 'Amiri',serif;color:var(--ink);margin:2px 0 0}
@@ -78,7 +78,7 @@ button:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px so
 <div id="upd" class="card" style="--c:var(--gold)" hidden></div>
 <nav id="nav"><button data-v="hari" aria-current="true">Hari ini</button><button data-v="cari" aria-current="false">Sesuai harimu</button><button data-v="quran" aria-current="false">Al-Qur’an</button><button data-v="doa" aria-current="false">Doa</button><button data-v="simpan" aria-current="false">Tersimpan</button></nav>
 
-<section id="v-hari"><p class="sub">Tiga ayat untuk hari ini. Ayatnya berbeda setiap hari dan tidak berulang dalam siklus ±5 tahun.</p><div id="tiga"></div><div id="kisah"></div>
+<section id="v-hari"><p class="sub">Tiga ayat untuk hari ini. Ayatnya berbeda setiap hari dan tidak berulang dalam siklus ±5 tahun.</p><div id="tiga"></div><div id="kisah"></div><div id="gaya"></div>
 <div class="card" id="panelw" style="--c:var(--dusk)"><div class="hd"><b>Widget dan pengingat</b></div>
 <p class="sub" style="margin:6px 0">Halaman web tidak bisa membuat widget asli di layar utama HP. Tiga cara ini bisa dipakai sebagai gantinya.</p>
 <details><summary>1. Tampilan widget (ayat sesuai waktu)</summary><p class="tf">Halaman ringkas berisi ayat pagi, siang, atau malam sesuai jam sekarang. Buka tampilan ini, lalu di Chrome Android pilih menu ⋮ → Tambahkan ke layar utama agar ikonnya ada di layar utama.</p><div class="row"><button class="btn" id="wgopen">Buka tampilan widget</button><button class="ib" id="wgcopy">Salin tautan</button></div></details>
@@ -750,6 +750,7 @@ if(NATIVE&&window.APP_VERSION){$('verbar').hidden=false;$('vernow').textContent=
 document.addEventListener('click',function(e){
   if(e.target.closest('#updbtn'))cekUpdate(true);
   var g=e.target.closest('#updgo');if(g)pasangUpd(g.dataset.url,g);
+  var q=e.target.closest('[data-gaya]');if(q){sv('ar_gaya',q.dataset.gaya);gaya()}
   var x=e.target.closest('#updx');if(x){sv('updskip',x.dataset.tag);$('upd').hidden=true}
 });
 async function natNotif(){
@@ -852,8 +853,18 @@ function kisah(){
     +'<p class="mk">Sumber: '+esc(x.s)+'</p>'
     +'<div class="row"><button class="btn o" onclick="KP++;kisah()">Kisah lain</button></div></article>';
 }
+var GAYA=[['std','Standar Indonesia',"'Amiri'"],['utsmani','Utsmani',"'Scheherazade New'"],['madani','Madani',"'Amiri Quran'"]];
+function gaya(){
+  var g=ls('ar_gaya','std'),x=GAYA.filter(function(a){return a[0]===g})[0]||GAYA[0];
+  document.documentElement.style.setProperty('--arf',x[2]);
+  var z=$('gaya');if(!z)return;
+  z.innerHTML='<article class="card" style="--c:var(--gold)"><div class="hd"><b>Gaya tulisan Arab</b></div>'
+    +'<div class="chips" style="margin-top:10px">'+GAYA.map(function(a){return '<button class="ib" data-gaya="'+a[0]+'" aria-pressed="'+(a[0]===x[0])+'">'+a[1]+'</button>'}).join('')+'</div>'
+    +'<p class="ar" lang="ar">بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ</p>'
+    +'<p class="mk">Huruf: '+x[2].split("'").join('')+'. Ini pendekatan tampilan huruf, bukan font resmi mushaf; teks Arabnya tetap dari sumber data yang sama. Perlu internet saat pertama kali memilih gaya.</p></article>';
+}
 async function hari(){
-  kisah();var out=$('tiga');out.innerHTML=SL.map(function(s,i){return '<div id="sl'+i+'"><p class="sub">Memuat ayat '+s[0].toLowerCase()+'…</p></div>'}).join('');
+  gaya();kisah();var out=$('tiga');out.innerHTML=SL.map(function(s,i){return '<div id="sl'+i+'"><p class="sub">Memuat ayat '+s[0].toLowerCase()+'…</p></div>'}).join('');
   for(var i=0;i<3;i++){
     try{
       var base=(D*3+i)%TOT,S,a;
