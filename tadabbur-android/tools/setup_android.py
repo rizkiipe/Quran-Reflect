@@ -26,10 +26,18 @@ for sub in ('layout', 'xml', 'drawable', 'values'):
     for f in os.listdir(os.path.join(native, 'res', sub)):
         shutil.copy(os.path.join(native, 'res', sub, f), os.path.join(dst, f))
 
+# 2b) suara adzan (opsional): taruh berkas pendek tools/native/res/raw/adzan.mp3 agar pilihan "Adzan" aktif
+ADZAN = os.path.isfile(os.path.join(native, 'res', 'raw', 'adzan.mp3'))
+if ADZAN:
+    os.makedirs(os.path.join(main, 'res', 'raw'), exist_ok=True)
+    shutil.copy(os.path.join(native, 'res', 'raw', 'adzan.mp3'), os.path.join(main, 'res', 'raw', 'adzan.mp3'))
+
 # 3) AndroidManifest: izin notifikasi + receiver widget (aman dijalankan berulang)
 mp = os.path.join(main, 'AndroidManifest.xml')
 m = open(mp, encoding='utf-8').read()
-for perm in ('android.permission.POST_NOTIFICATIONS', 'android.permission.RECEIVE_BOOT_COMPLETED', 'android.permission.REQUEST_INSTALL_PACKAGES'):
+for perm in ('android.permission.POST_NOTIFICATIONS', 'android.permission.RECEIVE_BOOT_COMPLETED', 'android.permission.REQUEST_INSTALL_PACKAGES',
+             'android.permission.ACCESS_COARSE_LOCATION', 'android.permission.ACCESS_FINE_LOCATION',
+             'android.permission.SCHEDULE_EXACT_ALARM', 'android.permission.USE_EXACT_ALARM'):
     if perm not in m:
         m = m.replace('<application', '<uses-permission android:name="%s" />\n    <application' % perm, 1)
 if 'AyatWidget' not in m:
@@ -219,9 +227,9 @@ if not repo:
     except Exception:
         repo = ''
 open(os.path.join(root, 'www', 'app-version.js'), 'w', encoding='utf-8').write(
-    '/* Dibuat otomatis oleh tools/setup_android.py */\nwindow.APP_VERSION={v:"%s",code:%d,repo:"%s"};\n' % (nama_versi, kode_versi, repo))
+    '/* Dibuat otomatis oleh tools/setup_android.py */\nwindow.APP_VERSION={v:"%s",code:%d,repo:"%s"};\nwindow.ADZAN_ADA=%s;\n' % (nama_versi, kode_versi, repo, 'true' if ADZAN else 'false'))
 print('Versi aplikasi:', nama_versi, '(versionCode %d)' % kode_versi, '| repositori pembaruan:', repo or '(belum terisi)',
-      '| tanda tangan tetap:', 'ya' if os.environ.get('KS_FILE') else 'tidak (APK debug)',
+      '| suara adzan:', 'ya' if ADZAN else 'tidak (tools/native/res/raw/adzan.mp3 belum ada)', '| tanda tangan tetap:', 'ya' if os.environ.get('KS_FILE') else 'tidak (APK debug)',
       '| login Google native:', 'ya' if os.path.isfile(os.path.join(main, '..', '..', 'google-services.json')) else 'tidak (google-services.json belum ada)')
 
 print('Selesai. Paket aplikasi:', app_id)
