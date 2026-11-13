@@ -26,11 +26,13 @@ for sub in ('layout', 'xml', 'drawable', 'values'):
     for f in os.listdir(os.path.join(native, 'res', sub)):
         shutil.copy(os.path.join(native, 'res', sub, f), os.path.join(dst, f))
 
-# 2b) suara adzan (opsional): taruh berkas pendek tools/native/res/raw/adzan.mp3 agar pilihan "Adzan" aktif
+# 2b) suara adzan: res/raw/adzan.mp3 (waktu biasa) dan res/raw/adzan_subuh.mp3 (khusus Subuh); keduanya opsional
 ADZAN = os.path.isfile(os.path.join(native, 'res', 'raw', 'adzan.mp3'))
-if ADZAN:
-    os.makedirs(os.path.join(main, 'res', 'raw'), exist_ok=True)
-    shutil.copy(os.path.join(native, 'res', 'raw', 'adzan.mp3'), os.path.join(main, 'res', 'raw', 'adzan.mp3'))
+ADZAN_SUBUH = os.path.isfile(os.path.join(native, 'res', 'raw', 'adzan_subuh.mp3'))
+for nm, ada in (('adzan.mp3', ADZAN), ('adzan_subuh.mp3', ADZAN_SUBUH)):
+    if ada:
+        os.makedirs(os.path.join(main, 'res', 'raw'), exist_ok=True)
+        shutil.copy(os.path.join(native, 'res', 'raw', nm), os.path.join(main, 'res', 'raw', nm))
 
 # 3) AndroidManifest: izin notifikasi + receiver widget (aman dijalankan berulang)
 mp = os.path.join(main, 'AndroidManifest.xml')
@@ -42,7 +44,7 @@ for perm in ('android.permission.POST_NOTIFICATIONS', 'android.permission.RECEIV
         m = m.replace('<application', '<uses-permission android:name="%s" />\n    <application' % perm, 1)
 if 'AyatWidget' not in m:
     receiver = '''
-        <receiver android:name=".AyatWidget" android:exported="true">
+        <receiver android:name=".AyatWidget" android:label="Ayat Tadabbur" android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
@@ -50,6 +52,16 @@ if 'AyatWidget' not in m:
         </receiver>
 '''
     m = re.sub(r'</application>', receiver + '    </application>', m, count=1)
+if 'SholatWidget' not in m:
+    receiver2 = '''
+        <receiver android:name=".SholatWidget" android:label="Jadwal Sholat" android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/sholat_widget_info" />
+        </receiver>
+'''
+    m = re.sub(r'</application>', receiver2 + '    </application>', m, count=1)
 open(mp, 'w', encoding='utf-8').write(m)
 # 3b) FileProvider bawaan Capacitor harus mengizinkan folder cache (tempat APK pembaruan diunduh)
 fp = os.path.join(main, 'res', 'xml', 'file_paths.xml')
@@ -227,9 +239,9 @@ if not repo:
     except Exception:
         repo = ''
 open(os.path.join(root, 'www', 'app-version.js'), 'w', encoding='utf-8').write(
-    '/* Dibuat otomatis oleh tools/setup_android.py */\nwindow.APP_VERSION={v:"%s",code:%d,repo:"%s"};\nwindow.ADZAN_ADA=%s;\n' % (nama_versi, kode_versi, repo, 'true' if ADZAN else 'false'))
+    '/* Dibuat otomatis oleh tools/setup_android.py */\nwindow.APP_VERSION={v:"%s",code:%d,repo:"%s"};\nwindow.ADZAN_ADA=%s;\nwindow.ADZAN_SUBUH_ADA=%s;\n' % (nama_versi, kode_versi, repo, 'true' if ADZAN else 'false', 'true' if ADZAN_SUBUH else 'false'))
 print('Versi aplikasi:', nama_versi, '(versionCode %d)' % kode_versi, '| repositori pembaruan:', repo or '(belum terisi)',
-      '| suara adzan:', 'ya' if ADZAN else 'tidak (tools/native/res/raw/adzan.mp3 belum ada)', '| tanda tangan tetap:', 'ya' if os.environ.get('KS_FILE') else 'tidak (APK debug)',
+      '| suara adzan:', ('reguler ' + ('ya' if ADZAN else 'tidak') + ', subuh ' + ('ya' if ADZAN_SUBUH else 'tidak')), '| tanda tangan tetap:', 'ya' if os.environ.get('KS_FILE') else 'tidak (APK debug)',
       '| login Google native:', 'ya' if os.path.isfile(os.path.join(main, '..', '..', 'google-services.json')) else 'tidak (google-services.json belum ada)')
 
 print('Selesai. Paket aplikasi:', app_id)

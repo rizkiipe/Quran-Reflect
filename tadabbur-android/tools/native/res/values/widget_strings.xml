@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="widget_desc">Ayat tadabbur pagi, siang, dan malam</string>
+    <string name="widget_desc">Ayat tadabbur pagi, siang, dan malam; latar mengikuti waktu dan cuaca</string>
+    <string name="widget_desc_sholat">Jadwal sholat, imsak, dan syuruq; latar mengikuti waktu dan cuaca</string>
 </resources>

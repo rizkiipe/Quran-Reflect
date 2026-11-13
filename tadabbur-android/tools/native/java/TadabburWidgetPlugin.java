@@ -38,6 +38,23 @@ public class TadabburWidgetPlugin extends Plugin {
         call.resolve();
     }
 
+    /** Simpan jadwal sholat 7 hari (dan lokasi) untuk widget, lalu segarkan widget dan ambil cuaca di latar belakang. */
+    @PluginMethod
+    public void saveSholat(PluginCall call) {
+        String json = call.getString("json");
+        if (json == null || json.isEmpty()) {
+            call.reject("Data jadwal kosong");
+            return;
+        }
+        Context c = getContext();
+        c.getSharedPreferences(AyatWidget.PREFS, Context.MODE_PRIVATE)
+            .edit().putString("sholat", json).apply();
+        SholatWidget.updateAll(c);
+        AyatWidget.updateAll(c);
+        WidgetTema.segarkanLalu(null, c.getApplicationContext());
+        call.resolve();
+    }
+
     @PluginMethod
     public void refresh(PluginCall call) {
         AyatWidget.updateAll(getContext());
