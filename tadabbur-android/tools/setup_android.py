@@ -19,6 +19,21 @@ for f in os.listdir(os.path.join(native, 'java')):
     src = open(os.path.join(native, 'java', f), encoding='utf-8').read().replace('__APPID__', app_id)
     open(os.path.join(jdir, f), 'w', encoding='utf-8').write(src)
 
+# 1b) daftarkan plugin buatan sendiri di MainActivity (pembaca teks Asma'ul Husna dan alarm adzan); harus sebelum super.onCreate
+for cls in ('TadabburTts', 'AdzanPlugin'):
+    if not os.path.isfile(os.path.join(native, 'java', cls + '.java')):
+        continue
+    for f in os.listdir(jdir):
+        if f.startswith('MainActivity.'):
+            mpth = os.path.join(jdir, f)
+            ms = open(mpth, encoding='utf-8').read()
+            if cls + '.class' not in ms:
+                ms2 = re.sub(r'(\n[ \t]*)super\.onCreate\(', r'\1registerPlugin(' + cls + r'.class);\1super.onCreate(', ms, count=1)
+                if ms2 == ms:
+                    print('PERINGATAN: super.onCreate tidak ditemukan di MainActivity; daftarkan sendiri: registerPlugin(%s.class);' % cls)
+                else:
+                    open(mpth, 'w', encoding='utf-8').write(ms2)
+
 # 2) resource: layout, xml, drawable, values
 for sub in ('layout', 'xml', 'drawable', 'values'):
     dst = os.path.join(main, 'res', sub)
@@ -39,9 +54,24 @@ mp = os.path.join(main, 'AndroidManifest.xml')
 m = open(mp, encoding='utf-8').read()
 for perm in ('android.permission.POST_NOTIFICATIONS', 'android.permission.RECEIVE_BOOT_COMPLETED', 'android.permission.REQUEST_INSTALL_PACKAGES',
              'android.permission.ACCESS_COARSE_LOCATION', 'android.permission.ACCESS_FINE_LOCATION',
-             'android.permission.SCHEDULE_EXACT_ALARM', 'android.permission.USE_EXACT_ALARM'):
+             'android.permission.SCHEDULE_EXACT_ALARM', 'android.permission.USE_EXACT_ALARM',
+             'android.permission.FOREGROUND_SERVICE', 'android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK', 'android.permission.WAKE_LOCK'):
     if perm not in m:
         m = m.replace('<application', '<uses-permission android:name="%s" />\n    <application' % perm, 1)
+if 'TTS_SERVICE' not in m:   # Android 11+ wajib mendeklarasikan akses ke mesin Text-to-Speech
+    m = m.replace('<application', '<queries>\n        <intent>\n            <action android:name="android.intent.action.TTS_SERVICE" />\n        </intent>\n    </queries>\n    <application', 1)
+if 'AdzanReceiver' not in m and os.path.isfile(os.path.join(native, 'java', 'AdzanReceiver.java')):
+    adz = '''
+        <receiver android:name=".AdzanReceiver" android:exported="false" />
+        <receiver android:name=".AdzanBoot" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
+        <service android:name=".AdzanService" android:exported="false" android:foregroundServiceType="mediaPlayback" />
+'''
+    m = re.sub(r'</application>', adz + '    </application>', m, count=1)
 if 'AyatWidget' not in m:
     receiver = '''
         <receiver android:name=".AyatWidget" android:label="Ayat Tadabbur" android:exported="true">
