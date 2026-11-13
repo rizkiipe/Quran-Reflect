@@ -6,16 +6,8 @@
             <corners android:radius="22dp" />
         </shape>
     </item>
-    <item android:gravity="top|end" android:end="24dp" android:top="12dp">
-        <shape android:shape="oval">
-            <size android:width="96dp" android:height="34dp" />
-            <solid android:color="#33FFFFFF" />
-        </shape>
-    </item>
-    <item android:gravity="top|end" android:end="70dp" android:top="30dp">
-        <shape android:shape="oval">
-            <size android:width="72dp" android:height="26dp" />
-            <solid android:color="#33FFFFFF" />
-        </shape>
-    </item>
+    <!-- awan jauh (kecil, lebih pudar) -->
+    <item android:drawable="@drawable/widget_awan_berawan_malam_b" android:gravity="top|end" android:end="104dp" android:top="14dp" android:width="68dp" android:height="42dp" />
+    <!-- awan dekat (besar) -->
+    <item android:drawable="@drawable/widget_awan_berawan_malam_a" android:gravity="top|end" android:end="12dp" android:top="2dp" android:width="124dp" android:height="78dp" />
 </layer-list>
