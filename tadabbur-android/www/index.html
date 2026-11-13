@@ -76,6 +76,7 @@ section:not([hidden]){animation:fin .22s ease-out}
 .shr{display:flex;justify-content:space-between;align-items:baseline;padding:8px 2px;border-top:1px solid var(--line)}
 .shr.nx{font-weight:700;color:var(--teal)}.shr b{font-variant-numeric:tabular-nums}
 .ib[disabled]{opacity:.45;cursor:not-allowed}
+.shs{align-items:center;gap:8px}.shs .chips{margin:0;gap:6px;flex-wrap:nowrap}.shs .ib{padding:4px 10px;font-size:13px}
 </style>
 </head>
 <body>
@@ -787,7 +788,13 @@ function shHitung(d,la,lo){
   return{imsak:sb-10*60000,subuh:sb,syuruq:mnt(T.s,0,1),dzuhur:mnt(T.d,2),ashar:mnt(T.a,2),maghrib:mnt(T.m,2),isya:mnt(T.i,2)};
 }
 function shJam(ms){var d=new Date(ms);return('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2)}
-function shSet(){var s=ls('sh_set',null)||{};s.on=!!s.on;s.bunyi=s.bunyi||'biasa';s.w=s.w||{imsak:1,subuh:1,syuruq:1,dzuhur:1,ashar:1,maghrib:1,isya:1};return s}
+function shFile(i){if(i===0||i===2)return '';if(i===1&&window.ADZAN_SUBUH_ADA)return 'adzan_subuh';return window.ADZAN_ADA?'adzan':''}
+function shSet(){
+  var s=ls('sh_set',null)||{};s.on=!!s.on;
+  if(!s.v2){var w=s.w||{},adz=s.bunyi==='adzan';s.w={};
+    SHN.forEach(function(x,i){var k=x[0],on=(k in w)?w[k]:1;s.w[k]=on?((adz&&i!==0&&i!==2)?2:1):0});
+    s.v2=1;delete s.bunyi}
+  return s}
 function shLok(){return ls('sh_lok',null)}
 function shLokBaru(manual){
   return new Promise(function(ok,gagal){
@@ -798,9 +805,16 @@ function shLokBaru(manual){
     try{var r=await fetch('https://api.bigdatacloud.net/data/reverse-geocode-client?latitude='+o.la+'&longitude='+o.lo+'&localityLanguage=id'),j=await r.json();o.nama=j.city||j.locality||j.principalSubdivision||''}catch(e){}
     sv('sh_lok',o);sv('sh_pakai',1);return o});
 }
+function shSimpanWidget(){
+  var W=nplug('TadabburWidget'),L=shLok();if(!W||!W.saveSholat||!L)return;
+  var days={};
+  for(var d=0;d<7;d++){var dt=new Date();dt.setDate(dt.getDate()+d);var T=shHitung(dt,L.la,L.lo);
+    days[dt.getFullYear()+'-'+('0'+(dt.getMonth()+1)).slice(-2)+'-'+('0'+dt.getDate()).slice(-2)]=SHN.map(function(w){return T[w[0]]})}
+  W.saveSholat({json:JSON.stringify({la:L.la,lo:L.lo,nama:L.nama||'',days:days})}).catch(function(){});
+}
 async function shRefresh(manual){
   shMsg='Mengambil lokasi…';shRender();
-  try{await shLokBaru(manual);shMsg='Lokasi diperbarui.';if(shSet().on)await shJadwalkan()}catch(e){shMsg=e.message||String(e)}
+  try{await shLokBaru(manual);shMsg='Lokasi diperbarui.';shSimpanWidget();if(shSet().on)await shJadwalkan()}catch(e){shMsg=e.message||String(e)}
   shRender();
 }
 function shAuto(){var l=shLok();if(ls('sh_pakai',0)&&(!l||Date.now()-l.t>3*36e5))shRefresh(false)}
@@ -815,14 +829,15 @@ async function shJadwalkan(){
     var pm=await LN.checkPermissions();if(pm.display!=='granted'){pm=await LN.requestPermissions();if(pm.display!=='granted')throw new Error('Izin notifikasi ditolak')}
     try{await LN.createChannel({id:'sholat',name:'Waktu sholat',description:'Pengingat waktu sholat',importance:4,vibration:true})}catch(e){}
     if(window.ADZAN_ADA)try{await LN.createChannel({id:'adzan',name:'Adzan',description:'Suara adzan saat waktu sholat',importance:5,sound:'adzan.mp3',vibration:true})}catch(e){}
-    var list=[],now=Date.now(),adz=S.bunyi==='adzan'&&!!window.ADZAN_ADA;
+    if(window.ADZAN_SUBUH_ADA)try{await LN.createChannel({id:'adzan_subuh',name:'Adzan Subuh',description:'Suara adzan khusus waktu Subuh',importance:5,sound:'adzan_subuh.mp3',vibration:true})}catch(e){}
+    var list=[],now=Date.now();
     for(var d=0;d<7;d++){
       var dt=new Date();dt.setDate(dt.getDate()+d);var T=shHitung(dt,L.la,L.lo);
       SHN.forEach(function(w,i){
         if(!S.w[w[0]]||T[w[0]]<=now)return;
-        var a=adz&&i!==0&&i!==2;
-        var n={id:70000+d*10+i,title:'Waktu '+w[1]+' · '+shJam(T[w[0]]),body:SHT[w[0]]+(L.nama?' ('+L.nama+')':''),schedule:{at:new Date(T[w[0]]),allowWhileIdle:true},smallIcon:'ic_stat_tadabbur',channelId:a?'adzan':'sholat'};
-        if(a)n.sound='adzan.mp3';
+        var fl=S.w[w[0]]===2?shFile(i):'',a=fl!=='';
+        var n={id:70000+d*10+i,title:'Waktu '+w[1]+' · '+shJam(T[w[0]]),body:SHT[w[0]]+(L.nama?' ('+L.nama+')':''),schedule:{at:new Date(T[w[0]]),allowWhileIdle:true},smallIcon:'ic_stat_tadabbur',channelId:a?fl:'sholat'};
+        if(a)n.sound=fl+'.mp3';
         list.push(n);
       });
     }
@@ -847,9 +862,10 @@ function shRender(){
    +'<p class="mk">Lokasi: '+lokTxt+'</p><div class="row"><button class="btn o" data-sh="lok">Perbarui lokasi sekarang</button></div>'
    +(shMsg?'<p class="sub" style="margin:8px 0 0">'+esc(shMsg)+'</p>':'')+'</article>'
    +'<article class="card" style="--c:var(--gold)"><div class="hd"><b>Notifikasi sholat</b></div><div class="chips" style="margin-top:10px">'+ib('on','Notifikasi: '+(S.on?'Aktif':'Mati'),S.on)+'</div>'
-   +'<p class="mk"><b>Suara</b></p><div class="chips">'+ib('bunyi:biasa','Notifikasi biasa',S.bunyi!=='adzan')+ib('bunyi:adzan','Adzan',S.bunyi==='adzan',!window.ADZAN_ADA)+'</div>'
-   +(window.ADZAN_ADA?'<p class="sub" style="margin:0 0 8px">Adzan dipakai untuk lima waktu sholat; Imsak dan Syuruq memakai nada notifikasi biasa.</p>':'<p class="sub" style="margin:0 0 8px">Pilihan Adzan aktif setelah berkas adzan.mp3 dipasang saat build.</p>')
-   +'<p class="mk"><b>Waktu yang diingatkan</b></p><div class="chips">'+SHN.map(function(w){return ib('w:'+w[0],w[1],S.w[w[0]])}).join('')+'</div></article>'
+   +'<p class="mk"><b>Pengaturan tiap waktu</b></p>'
+   +SHN.map(function(w,i){var v=S.w[w[0]];return '<div class="shr shs"><span>'+w[1]+'</span><span class="chips">'+ib('w:'+w[0]+':0','Mati',v===0)+ib('w:'+w[0]+':1','Biasa',v===1)+(i===0||i===2?'':ib('w:'+w[0]+':2','Adzan',v===2,!shFile(i)))+'</span></div>'}).join('')
+   +'<div class="chips" style="margin-top:10px">'+ib('all:1','Semua: notifikasi biasa',false)+((window.ADZAN_ADA||window.ADZAN_SUBUH_ADA)?ib('all:2','Lima waktu sholat: adzan',false):'')+'</div>'
+   +'<p class="sub" style="margin:8px 0 0">Imsak dan Syuruq hanya bisa Mati atau notifikasi biasa.'+(window.ADZAN_SUBUH_ADA?' Subuh memakai adzan tersendiri.':'')+(!(window.ADZAN_ADA||window.ADZAN_SUBUH_ADA)?' Pilihan Adzan aktif setelah berkas adzan dipasang saat build.':'')+'</p></article>'
    +'<p class="note">Waktu dihitung di HP dengan metode Kemenag RI (Subuh 20°, Isya 18°, Ashar mazhab Syafi‘i, ihtiyat 2 menit; Imsak = Subuh − 10 menit). Ini perkiraan, cocokkan dengan jadwal resmi setempat. Lokasi hanya diperbarui otomatis paling cepat tiap 3 jam, saat aplikasi dibuka, agar baterai hemat.</p>';
 }
 document.addEventListener('click',async function(e){
@@ -861,14 +877,14 @@ document.addEventListener('click',async function(e){
       S.on=!S.on;sv('sh_set',S);shMsg='';
       try{await shJadwalkan()}catch(x){S.on=false;sv('sh_set',S);throw x}
       if(S.on){shMsg='Notifikasi aktif untuk 7 hari ke depan; jadwal diperbarui setiap aplikasi dibuka.';await shExact()}else shMsg='Notifikasi sholat dimatikan.';
-    }else if(a.indexOf('bunyi:')===0){S.bunyi=a.slice(6);sv('sh_set',S);if(S.on)await shJadwalkan()}
-    else if(a.indexOf('w:')===0){var k=a.slice(2);S.w[k]=S.w[k]?0:1;sv('sh_set',S);if(S.on)await shJadwalkan()}
+    }else if(a.indexOf('w:')===0){var pp=a.split(':');S.w[pp[1]]=+pp[2];sv('sh_set',S);if(S.on)await shJadwalkan()}
+    else if(a.indexOf('all:')===0){var v2=+a.slice(4);SHN.forEach(function(w,i){if(v2===1)S.w[w[0]]=1;else if(shFile(i))S.w[w[0]]=2});sv('sh_set',S);if(S.on)await shJadwalkan()}
   }catch(x){shMsg=x.message||String(x)}
   shRender();
 });
-document.addEventListener('visibilitychange',function(){if(!document.hidden)shAuto()});
+document.addEventListener('visibilitychange',function(){if(!document.hidden){shAuto();shSimpanWidget()}});
 setInterval(function(){shAuto();if(VW==='sholat'&&!document.hidden)shRender()},60000);
-setTimeout(function(){shAuto();if(shSet().on)shJadwalkan().catch(function(){})},3500);
+setTimeout(function(){shAuto();shSimpanWidget();if(shSet().on)shJadwalkan().catch(function(){})},3500);
 async function natNotif(){
   try{
     var LN=nplug('LocalNotifications');if(!LN)throw new Error('Plugin notifikasi tidak ditemukan');
