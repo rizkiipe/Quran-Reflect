@@ -63,17 +63,17 @@ jobs:
         run: |
           V=$(cat VERSION | tr -d '[:space:]')
           mkdir -p dist
-          if [ "$SIGNED" = "1" ]; then cp android/app/build/outputs/apk/release/app-release.apk "dist/tadabbur-harian-v$V.apk"
-          else cp android/app/build/outputs/apk/debug/app-debug.apk "dist/tadabbur-harian-v$V-debug.apk"; fi
+          if [ "$SIGNED" = "1" ]; then cp android/app/build/outputs/apk/release/app-release.apk "dist/quran-reflect-v$V.apk"
+          else cp android/app/build/outputs/apk/debug/app-debug.apk "dist/quran-reflect-v$V-debug.apk"; fi
           echo "VERSI=$V" >> "$GITHUB_ENV"
       - uses: actions/upload-artifact@v4
         with:
-          name: tadabbur-harian-apk
+          name: quran-reflect-apk
           path: tadabbur-android/dist/*.apk
       - name: Terbitkan rilis (hanya APK bertanda tangan tetap)
         if: env.SIGNED == '1'
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ env.VERSI }}
-          name: Tadabbur Harian ${{ env.VERSI }}
+          name: Quran Reflect ${{ env.VERSI }}
           files: tadabbur-android/dist/*.apk
