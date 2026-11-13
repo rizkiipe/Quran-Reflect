@@ -6,11 +6,11 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0B2E31">
-<title>Tadabbur Harian</title>
+<title>Quran Reflect</title>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-180.png">
-<meta name="apple-mobile-web-app-title" content="Tadabbur">
+<meta name="apple-mobile-web-app-title" content="Quran Reflect">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Amiri+Quran&family=Scheherazade+New:wght@400;700&family=Newsreader:opsz,wght@6..72,400;6..72,600&display=swap" rel="stylesheet">
 <style>
@@ -82,7 +82,7 @@ section:not([hidden]){animation:fin .22s ease-out}
 <body>
 <main>
 <div id="wg" hidden><div class="card" style="--c:var(--gold)"><div class="hd"><b>Tadabbur</b><span id="wgdate"></span></div><div class="chips" id="wgchips" style="margin:10px 0 0"></div><div id="wgbody"></div><div class="row"><button class="btn" id="wgoff">Buka aplikasi</button><button class="ib" data-wgimg="save">🖼 Gambar kunci layar</button></div><p class="pesan wgmsg" aria-live="polite" style="margin:8px 0 0"></p></div></div>
-<header class="hero"><h1>Tadabbur Harian</h1><p class="tgl" id="tgl"></p></header>
+<header class="hero"><h1>Quran Reflect</h1><p class="tgl" id="tgl"></p></header>
 <div id="upd" class="card" style="--c:var(--gold)" hidden></div>
 <nav id="nav"><button data-v="hari" aria-current="true">Hari ini</button><button data-v="sholat" aria-current="false">Sholat</button><button data-v="cari" aria-current="false">Sesuai harimu</button><button data-v="quran" aria-current="false">Al-Qur’an</button><button data-v="doa" aria-current="false">Doa</button><button data-v="simpan" aria-current="false">Tersimpan</button></nav>
 
@@ -654,12 +654,12 @@ function hms(d){return p2(d.getHours())+p2(d.getMinutes())+'00'}
 function makeIcs(times){
   var link=/^https?:$/.test(location.protocol)?location.origin+location.pathname+'#widget':'',now=new Date();
   var stamp=now.getUTCFullYear()+p2(now.getUTCMonth()+1)+p2(now.getUTCDate())+'T'+p2(now.getUTCHours())+p2(now.getUTCMinutes())+p2(now.getUTCSeconds())+'Z';
-  var L=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Tadabbur Harian//ID','CALSCALE:GREGORIAN'];
+  var L=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Quran Reflect//ID','CALSCALE:GREGORIAN'];
   Object.keys(times).forEach(function(n){
     var hm=times[n].split(':'),st=new Date();st.setHours(+hm[0],+hm[1],0,0);if(st<=now)st.setDate(st.getDate()+1);
     var en=new Date(st.getTime()+15*60000);
     L.push('BEGIN:VEVENT','UID:tadabbur-'+n.toLowerCase()+'@tadabbur-harian','DTSTAMP:'+stamp,'DTSTART:'+ymd(st)+'T'+hms(st),'DTEND:'+ymd(en)+'T'+hms(en),'RRULE:FREQ=DAILY','SUMMARY:'+icsEsc('Tadabbur '+n),
-      'DESCRIPTION:'+icsEsc('Waktunya tadabbur '+n.toLowerCase()+'. Buka Tadabbur Harian untuk membaca ayat hari ini.'+(link?'\n'+link:'')));
+      'DESCRIPTION:'+icsEsc('Waktunya tadabbur '+n.toLowerCase()+'. Buka Quran Reflect untuk membaca ayat hari ini.'+(link?'\n'+link:'')));
     if(link)L.push('URL:'+link);
     L.push('BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:'+icsEsc('Tadabbur '+n),'TRIGGER:PT0S','END:VALARM','END:VEVENT');
   });
@@ -719,7 +719,7 @@ async function natSync(manual){
 }
 async function natPin(){
   try{var W=nplug('TadabburWidget');if(!W)throw new Error('Plugin widget tidak ditemukan');var r=await W.pin();
-    wgMsg(r&&r.ok?'Ikuti petunjuk di layar untuk menaruh widget.':'Peluncur HP Anda tidak mendukung pemasangan otomatis. Tekan lama layar utama → Widget → Tadabbur Harian.')}
+    wgMsg(r&&r.ok?'Ikuti petunjuk di layar untuk menaruh widget.':'Peluncur HP Anda tidak mendukung pemasangan otomatis. Tekan lama layar utama → Widget → Ayat Tadabbur.')}
   catch(e){wgMsg('Gagal memasang widget: '+(e.message||e))}
 }
 /* ===== Pembaruan aplikasi: cek rilis terbaru di GitHub, lalu tawarkan unduhan APK. Versi baru terpasang di atas yang lama, tanpa hapus aplikasi. ===== */
@@ -731,7 +731,7 @@ async function pasangUpd(url,btn){
   btn.disabled=true;st.textContent='Menyiapkan unduhan…';
   var tm=setInterval(async function(){try{var r=await W.dlProgress();if(r&&r.pct)st.textContent='Mengunduh… '+r.pct+'%'}catch(e){}},700);
   try{await W.installApk({url:url});st.textContent='Unduhan selesai. Tekan Pasang pada layar Android yang muncul.'}
-  catch(e){st.textContent=(e&&e.code==='IZIN')?'Aktifkan “Izinkan dari sumber ini” untuk Tadabbur Harian di layar yang terbuka, kembali ke aplikasi, lalu tekan Unduh dan pasang lagi.':'Gagal: '+String((e&&e.message)||e)+'. Coba lagi atau pakai tombol Lewat browser.'}
+  catch(e){st.textContent=(e&&e.code==='IZIN')?'Aktifkan “Izinkan dari sumber ini” untuk Quran Reflect di layar yang terbuka, kembali ke aplikasi, lalu tekan Unduh dan pasang lagi.':'Gagal: '+String((e&&e.message)||e)+'. Coba lagi atau pakai tombol Lewat browser.'}
   finally{clearInterval(tm);btn.disabled=false}
 }
 async function cekUpdate(manual){

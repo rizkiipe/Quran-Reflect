@@ -103,7 +103,7 @@ public class SholatWidget extends AppWidgetProvider {
         }
         String next;
         if (h == null) {
-            next = "Buka aplikasi, tab Sholat, lalu ambil lokasi.";
+            next = "Buka aplikasi \u203A Sholat \u203A ambil lokasi";
         } else if (nx >= 0) {
             next = NAMA[nx] + " " + f.format(new Date(h[nx])) + "  \u00B7  " + sisa(h[nx] - now);
         } else {
@@ -116,11 +116,10 @@ public class SholatWidget extends AppWidgetProvider {
         int kedua = WidgetTema.kedua(cu, tema);
         RemoteViews v = new RemoteViews(context.getPackageName(), R.layout.widget_sholat);
         String nama = WidgetTema.namaLokasi(context);
-        v.setTextViewText(R.id.sh_judul, "Jadwal Sholat" + (nama.isEmpty() ? "" : "  \u00B7  " + nama));
-        v.setTextViewText(R.id.sh_cuaca, WidgetTema.cuacaTeks(context));
+        String ct = WidgetTema.cuacaTeks(context);
+        v.setTextViewText(R.id.sh_cuaca, nama.isEmpty() ? ct : (ct.isEmpty() ? nama : nama + "  \u00B7  " + ct));
         v.setTextViewText(R.id.sh_next, next);
         v.setInt(R.id.sh_root, "setBackgroundResource", WidgetTema.latar(cu, tema));
-        v.setTextColor(R.id.sh_judul, aksen);
         v.setTextColor(R.id.sh_cuaca, kedua);
         v.setTextColor(R.id.sh_next, utama);
         for (int i = 0; i < 7; i++) {

@@ -1,6 +1,6 @@
 {
   "appId": "id.tadabbur.harian",
-  "appName": "Tadabbur Harian",
+  "appName": "Quran Reflect",
   "webDir": "www",
   "plugins": {
     "LocalNotifications": {

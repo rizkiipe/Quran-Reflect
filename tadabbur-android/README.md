@@ -1,4 +1,4 @@
-# Tadabbur Harian untuk Android (dengan widget layar utama)
+# Quran Reflect untuk Android (dengan widget layar utama)
 
 Isi paket: aplikasi web Anda (`www/index.html`) dibungkus Capacitor, ditambah widget Android asli,
 jembatan data widget, dan notifikasi ayat terjadwal. Belum pernah dibuild atau dijalankan di perangkat.
@@ -8,7 +8,7 @@ jembatan data widget, dan notifikasi ayat terjadwal. Belum pernah dibuild atau d
 2. Unggah SEMUA isi folder ini, termasuk folder tersembunyi `.github`.
    Setelah itu pastikan file `.github/workflows/build-apk.yml` benar-benar ada di repositori.
 3. Buka tab **Actions** → **Build APK** → **Run workflow**. Tunggu sekitar 5–15 menit sampai hijau.
-4. Buka hasil build tadi, unduh **tadabbur-harian-apk** (berupa zip berisi `app-debug.apk`).
+4. Buka hasil build tadi, unduh **quran-reflect-apk** (berupa zip berisi `app-debug.apk`).
 5. Kirim `app-debug.apk` ke HP, buka, lalu izinkan "Pasang dari sumber tidak dikenal" bila diminta.
 
 ## Cara B: build lokal (Android Studio)
@@ -24,7 +24,7 @@ npx cap open android      # lalu Run di Android Studio, atau Build > Build APK
 ## Memakai widget
 1. Buka aplikasi dengan internet aktif. Dalam beberapa detik ayat 7 hari ke depan disimpan untuk widget.
 2. Di kartu **Widget dan pengingat** (tab Hari ini) buka bagian **4**, lalu tekan **Pasang widget**.
-   Cara lain: tekan lama layar utama → **Widget** → **Tadabbur Harian**.
+   Cara lain: tekan lama layar utama → **Widget** → **Ayat Tadabbur**.
 3. **Jadwalkan notifikasi ayat** membuat notifikasi 7 hari ke depan sesuai jam pengingat.
    Buka aplikasi seminggu sekali agar data dan jadwal diperbarui.
 
@@ -34,7 +34,7 @@ Supaya APK baru bisa dipasang di atas yang lama, semua versi harus ditandatangan
 1. Di repositori GitHub: Settings → Secrets and variables → Actions → New repository secret.
 2. Buat secret `KEYSTORE_PASSWORD` (isi: sandi dari file `KUNCI-RAHASIA-JANGAN-DIBAGIKAN.txt`).
 3. Buat secret `KEYSTORE_BASE64` (isi: seluruh teks di `keystore_base64.txt`).
-4. Jalankan Build APK. Hasilnya muncul di tab **Releases** sebagai `tadabbur-harian-v1.1.apk`.
+4. Jalankan Build APK. Hasilnya muncul di tab **Releases** sebagai `quran-reflect-v1.1.apk`.
 5. Pemasangan pertama kali tetap harus hapus aplikasi lama (tanda tangannya beda). Setelah itu tidak perlu lagi.
 
 **Setiap kali mau update:**
