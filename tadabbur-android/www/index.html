@@ -837,27 +837,29 @@ function shAuto(){var l=shLok();if(ls('sh_pakai',0)&&(!l||Date.now()-l.t>3*36e5)
 async function shJadwalkan(){
   if(shBusy)return;shBusy=true;
   try{
-    var LN=nplug('LocalNotifications'),S=shSet(),L=shLok();
+    var LN=nplug('LocalNotifications'),AD=nplug('TadabburAdzan'),S=shSet(),L=shLok();
     if(!LN)throw new Error('Notifikasi hanya tersedia di aplikasi Android');
     var pend=await LN.getPending(),mine=(pend.notifications||[]).filter(function(n){return n.id>=70000});
     if(mine.length)await LN.cancel({notifications:mine.map(function(n){return{id:n.id}})});
-    if(!S.on||!L)return;
+    if(!S.on||!L){if(AD)try{await AD.jadwal({items:[]})}catch(e){}return}
     var pm=await LN.checkPermissions();if(pm.display!=='granted'){pm=await LN.requestPermissions();if(pm.display!=='granted')throw new Error('Izin notifikasi ditolak')}
     try{await LN.createChannel({id:'sholat',name:'Waktu sholat',description:'Pengingat waktu sholat',importance:4,vibration:true})}catch(e){}
     if(window.ADZAN_ADA)try{await LN.createChannel({id:'adzan',name:'Adzan',description:'Suara adzan saat waktu sholat',importance:5,sound:'adzan.mp3',vibration:true})}catch(e){}
     if(window.ADZAN_SUBUH_ADA)try{await LN.createChannel({id:'adzan_subuh',name:'Adzan Subuh',description:'Suara adzan khusus waktu Subuh',importance:5,sound:'adzan_subuh.mp3',vibration:true})}catch(e){}
-    var list=[],now=Date.now();
+    var list=[],alarm=[],now=Date.now();
     for(var d=0;d<7;d++){
       var dt=new Date();dt.setDate(dt.getDate()+d);var T=shHitung(dt,L.la,L.lo);
       SHN.forEach(function(w,i){
         if(!S.w[w[0]]||T[w[0]]<=now)return;
         var fl=S.w[w[0]]===2?shFile(i):'',a=fl!=='';
+        if(a&&AD){alarm.push({id:70000+d*10+i,at:T[w[0]],file:fl,judul:'Waktu '+w[1]+' · '+shJam(T[w[0]]),isi:SHT[w[0]]+(L.nama?' ('+L.nama+')':'')});return}
         var n={id:70000+d*10+i,title:'Waktu '+w[1]+' · '+shJam(T[w[0]]),body:SHT[w[0]]+(L.nama?' ('+L.nama+')':''),schedule:{at:new Date(T[w[0]]),allowWhileIdle:true},smallIcon:'ic_stat_tadabbur',channelId:a?fl:'sholat'};
         if(a)n.sound=fl+'.mp3';
         list.push(n);
       });
     }
     if(list.length)await LN.schedule({notifications:list});
+    if(AD)await AD.jadwal({items:alarm});
   }finally{shBusy=false}
 }
 async function shExact(){
@@ -881,6 +883,7 @@ function shRender(){
    +'<p class="mk"><b>Pengaturan tiap waktu</b></p>'
    +SHN.map(function(w,i){var v=S.w[w[0]];return '<div class="shr shs"><span>'+w[1]+'</span><span class="chips">'+ib('w:'+w[0]+':0','Mati',v===0)+ib('w:'+w[0]+':1','Biasa',v===1)+(i===0||i===2?'':ib('w:'+w[0]+':2','Adzan',v===2,!shFile(i)))+'</span></div>'}).join('')
    +'<div class="chips" style="margin-top:10px">'+ib('all:1','Semua: notifikasi biasa',false)+((window.ADZAN_ADA||window.ADZAN_SUBUH_ADA)?ib('all:2','Lima waktu sholat: adzan',false):'')+'</div>'
+   +(nplug('TadabburAdzan')&&(window.ADZAN_ADA||window.ADZAN_SUBUH_ADA)?'<p class="sub" style="margin:8px 0 0"><b>Adzan</b> diputar lewat volume alarm, jadi tetap berbunyi saat HP silent atau getar (selama volume alarm tidak 0 dan mode Jangan Ganggu mengizinkan alarm). <b>Biasa</b> mengikuti setelan notifikasi HP.</p><div class="row" style="margin-top:8px"><button class="btn o" data-sh="uji">▶ Uji adzan</button><button class="btn o" data-sh="ujistop">■ Hentikan</button></div>':'')
    +'<p class="sub" style="margin:8px 0 0">Imsak dan Syuruq hanya bisa Mati atau notifikasi biasa.'+(window.ADZAN_SUBUH_ADA?' Subuh memakai adzan tersendiri.':'')+(!(window.ADZAN_ADA||window.ADZAN_SUBUH_ADA)?' Pilihan Adzan aktif setelah berkas adzan dipasang saat build.':'')+'</p></article>'
    +'<p class="note">Waktu dihitung di HP dengan metode Kemenag RI (Subuh 20°, Isya 18°, Ashar mazhab Syafi‘i, ihtiyat 2 menit; Imsak = Subuh − 10 menit). Ini perkiraan, cocokkan dengan jadwal resmi setempat. Lokasi hanya diperbarui otomatis paling cepat tiap 3 jam, saat aplikasi dibuka, agar baterai hemat.</p>';
 }
@@ -888,6 +891,7 @@ document.addEventListener('click',async function(e){
   var b=e.target.closest('[data-sh]');if(!b||b.disabled)return;var a=b.dataset.sh,S=shSet();
   try{
     if(a==='lok'){shRefresh(true);return}
+    if(a==='uji'||a==='ujistop'){var AD2=nplug('TadabburAdzan');if(!AD2)throw new Error('Fitur adzan volume alarm hanya ada di aplikasi Android versi terbaru');if(a==='uji'){await AD2.uji({file:window.ADZAN_ADA?'adzan':'adzan_subuh'});shMsg='Adzan uji diputar lewat volume alarm. Ketuk Hentikan untuk berhenti.'}else{await AD2.berhenti();shMsg='Adzan dihentikan.'}shRender();return}
     if(a==='on'){
       if(!S.on&&!shLok()){shMsg='Mengambil lokasi…';shRender();await shLokBaru(true)}
       S.on=!S.on;sv('sh_set',S);shMsg='';
@@ -1220,13 +1224,17 @@ var AH=[
 ['Ash-Shabur','الصَّبُورُ','Maha Sabar','Tidak tergesa menghukum orang yang berbuat maksiat; memberi kesempatan hingga waktunya.']
 ];
 
-var AHI=-1,AHRUN=false,AHSLOW=false,AHFA=null,AHBUILT=false;
+var AHI=-1,AHRUN=false,AHSLOW=false,AHFA=null,AHBUILT=false,AHTT=null;
+function ahMode(){return AHTT?'native':(window.speechSynthesis&&window.SpeechSynthesisUtterance?'web':'')}
+var AHPESAN_ARAB='Suara Arab belum terpasang di HP. Buka Pengaturan, cari “Teks ke ucapan” (Text-to-speech), pilih Layanan Google, lalu unduh data suara bahasa Arab.';
 function ahNorm(s){return String(s).toLowerCase().replace(/[’'`\-]/g,'').replace(/\s+/g,' ')}
 function asma(){
   if(!AHBUILT){
     AHBUILT=true;
     $('ahlist').innerHTML=AH.map(function(n,i){return '<div class="card ah" id="ah'+i+'" data-i="'+i+'" style="--c:var(--teal)"><div class="hd"><b>'+(i+1)+'</b><button class="ib" data-ahp="'+i+'" aria-label="Dengar '+esc(n[0])+'">▶ Dengar</button></div><div class="ar" lang="ar">'+n[1]+'</div><p class="dt">'+esc(n[0])+'</p><p class="arti">'+esc(n[2])+'</p><p class="mk">'+esc(n[3])+'</p></div>'}).join('');
-    if(!('speechSynthesis' in window)){$('ahmsg').textContent='Perangkat ini belum mendukung suara pembaca teks. Teks dan artinya tetap bisa dibaca.';$('ahall').disabled=true}
+    AHTT=(typeof NATIVE!=='undefined'&&NATIVE)?nplug('TadabburTts'):null;
+    if(!ahMode()){$('ahmsg').textContent='Perangkat ini belum mendukung suara pembaca teks. Teks dan artinya tetap bisa dibaca.';$('ahall').disabled=true}
+    else if(AHTT){AHTT.cek().then(function(r){if(!r||!r.ada)$('ahmsg').textContent='Mesin suara (Text-to-speech) belum aktif di HP ini. Aktifkan di Pengaturan, “Teks ke ucapan”.';else if(!r.arab)$('ahmsg').textContent=AHPESAN_ARAB;else $('ahmsg').textContent=''}).catch(function(){})}
     fetch('asmaul-husna.mp3',{method:'HEAD'}).then(function(r){if(r.ok)$('ahfile').hidden=false}).catch(function(){});
   }
 }
@@ -1236,25 +1244,37 @@ function ahMark(i){
   Array.prototype.forEach.call(document.querySelectorAll('[data-ahp]'),function(b){var on=+b.dataset.ahp===i&&i>=0;b.setAttribute('aria-pressed',on);b.textContent=on?'■ Berhenti':'▶ Dengar'});
   $('ahstop').hidden=!(AHRUN||i>=0||(AHFA&&!AHFA.paused));$('ahfile').textContent=(AHFA&&!AHFA.paused)?'■ Berhenti':'▶ Putar nada (rekaman)';$('ahall').hidden=AHRUN;
 }
+function ahStopSuara(){try{if(AHTT)AHTT.berhenti();else if(window.speechSynthesis)speechSynthesis.cancel()}catch(e){}}
+function ahSelesai(i,lanjut){
+  if(AHI!==i)return;
+  if(AHRUN&&lanjut&&i<AH.length-1)setTimeout(function(){if(AHRUN&&AHI===i)ahSay(i+1,true)},650);
+  else{AHRUN=false;AHI=-1;ahMark(-1)}
+}
+function ahGagal(i,pesan){if(AHI!==i)return;if(pesan)$('ahmsg').textContent=pesan;AHRUN=false;AHI=-1;ahMark(-1)}
 function ahSay(i,lanjut){
-  if(!('speechSynthesis' in window))return;
-  speechSynthesis.cancel();
+  if(!ahMode())return;
+  ahStopSuara();
   if(AHFA){AHFA.pause();AHFA=null}
   if(typeof AU!=='undefined'&&AU)AU.pause();
   AHI=i;ahMark(i);
+  if(AHTT){
+    AHTT.bicara({teks:AH[i][1],lang:'ar',rate:AHSLOW?0.6:0.85}).then(function(r){
+      if(r&&r.ok===false&&r.alasan==='arab')return ahGagal(i,AHPESAN_ARAB);
+      if(r&&r.ok===false&&r.alasan==='mesin')return ahGagal(i,'Mesin suara (Text-to-speech) di HP ini belum aktif atau gagal. Periksa Pengaturan, “Teks ke ucapan”.');
+      if(r&&r.ok===false)return;
+      $('ahmsg').textContent='';ahSelesai(i,lanjut);
+    }).catch(function(){ahGagal(i,'')});
+    return;
+  }
   var u=new SpeechSynthesisUtterance(AH[i][1]);u.lang='ar-SA';u.rate=AHSLOW?0.55:0.8;
-  try{var v=speechSynthesis.getVoices().filter(function(x){return /^ar/i.test(x.lang)})[0];if(v){u.voice=v;$('ahmsg').textContent=''}else $('ahmsg').textContent='Suara Arab belum terpasang di perangkat. Pasang data suara Arab di pengaturan Text-to-speech HP agar pelafalannya benar.'}catch(e){}
-  u.onend=function(){
-    if(AHI!==i)return;
-    if(AHRUN&&lanjut&&i<AH.length-1)setTimeout(function(){if(AHRUN&&AHI===i)ahSay(i+1,true)},650);
-    else{AHRUN=false;AHI=-1;ahMark(-1)}
-  };
-  u.onerror=function(){if(AHI===i){AHRUN=false;AHI=-1;ahMark(-1)}};
+  try{var v=speechSynthesis.getVoices().filter(function(x){return /^ar/i.test(x.lang)})[0];if(v){u.voice=v;$('ahmsg').textContent=''}else $('ahmsg').textContent=AHPESAN_ARAB}catch(e){}
+  u.onend=function(){ahSelesai(i,lanjut)};
+  u.onerror=function(){ahGagal(i,'')};
   speechSynthesis.speak(u);
 }
 function ahStop(){
   AHRUN=false;AHI=-1;
-  try{if('speechSynthesis' in window)speechSynthesis.cancel()}catch(e){}
+  ahStopSuara();
   if(AHFA){AHFA.pause();AHFA=null}
   if($('ahstop'))ahMark(-1);
 }
@@ -1276,7 +1296,7 @@ $('ahq').addEventListener('input',function(){
   var q=ahNorm(this.value.trim());
   AH.forEach(function(n,i){var t=(i+1)+' '+ahNorm(n[0]+' '+n[2]+' '+n[3]);$('ah'+i).hidden=!!q&&t.indexOf(q)<0})
 });
-if('speechSynthesis' in window&&speechSynthesis.addEventListener)speechSynthesis.addEventListener('voiceschanged',function(){});
+if(window.speechSynthesis&&speechSynthesis.addEventListener)speechSynthesis.addEventListener('voiceschanged',function(){});
 if('serviceWorker' in navigator&&!NATIVE&&/^https?:$/.test(location.protocol))window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})});
 showVer();if(/widget/.test(location.hash+location.search))wgOn();else hari();
 if(NATIVE)setTimeout(function(){natSync(false)},4000);
