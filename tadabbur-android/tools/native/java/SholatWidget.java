@@ -7,6 +7,8 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.util.TypedValue;
 import android.widget.RemoteViews;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -114,6 +116,8 @@ public class SholatWidget extends AppWidgetProvider {
         int aksen = WidgetTema.aksen(cu, tema);
         int utama = WidgetTema.utama(cu, tema);
         int kedua = WidgetTema.kedua(cu, tema);
+        // waktu yang akan masuk: merah (lebih gelap di latar terang) dan lebih besar; ukuran dp, jadi tidak ikut pengaturan font HP
+        int merah = WidgetTema.terang(cu, tema) ? Color.parseColor("#C62828") : Color.parseColor("#FF5252");
         RemoteViews v = new RemoteViews(context.getPackageName(), R.layout.widget_sholat);
         String nama = WidgetTema.namaLokasi(context);
         String ct = WidgetTema.cuacaTeks(context);
@@ -126,8 +130,10 @@ public class SholatWidget extends AppWidgetProvider {
             boolean sorot = i == nx;
             v.setTextViewText(ID_N[i], NAMA[i]);
             v.setTextViewText(ID_T[i], h == null ? "--:--" : f.format(new Date(h[i])));
-            v.setTextColor(ID_N[i], sorot ? aksen : kedua);
-            v.setTextColor(ID_T[i], sorot ? aksen : utama);
+            v.setTextColor(ID_N[i], sorot ? merah : kedua);
+            v.setTextColor(ID_T[i], sorot ? merah : utama);
+            v.setTextViewTextSize(ID_N[i], TypedValue.COMPLEX_UNIT_DIP, sorot ? 11f : 10f);
+            v.setTextViewTextSize(ID_T[i], TypedValue.COMPLEX_UNIT_DIP, sorot ? 16f : 13f);
         }
         Intent buka = context.getPackageManager().getLaunchIntentForPackage(context.getPackageName());
         if (buka != null) {
