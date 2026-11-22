@@ -213,20 +213,23 @@ public class HariIniWidget extends AppWidgetProvider {
         v.setTextColor(R.id.hi_arti, utama);
         v.setTextColor(R.id.hi_ref, pudar);
 
-        // jadwal: waktu yang sedang berlangsung dicetak tebal dan terang, yang lain redup
-        int sekarang = -1;
+        // jadwal: waktu sholat yang akan datang dicetak tebal dan terang, yang lain redup
+        int berikut = -1;
         if (h != null) {
             for (int i = 0; i < 6; i++) {
-                if (h[IDX[i]] <= now) sekarang = i;
+                if (h[IDX[i]] > now) {
+                    berikut = i;
+                    break;
+                }
             }
-            if (sekarang < 0) sekarang = 5;   // sebelum subuh: masih waktu Isya semalam
+            if (berikut < 0) berikut = 0;   // semua sudah lewat: berikutnya Subuh besok
         }
         for (int i = 0; i < 6; i++) {
             String t = NAMA[i] + " " + (h == null ? "--:--" : f.format(new Date(h[IDX[i]])));
             SpannableString sp = new SpannableString(t);
-            if (i == sekarang) sp.setSpan(new StyleSpan(Typeface.BOLD), 0, t.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            if (i == berikut) sp.setSpan(new StyleSpan(Typeface.BOLD), 0, t.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             v.setTextViewText(ID_S[i], sp);
-            v.setTextColor(ID_S[i], i == sekarang ? utama : pudar);
+            v.setTextColor(ID_S[i], i == berikut ? utama : pudar);
         }
 
         // Ishraq, Istiwa, Isfirar
