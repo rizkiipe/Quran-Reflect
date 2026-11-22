@@ -269,6 +269,27 @@ android {
     open(gp, 'w', encoding='utf-8').write(g)
     return nama, kode
 
+# 5b) Cermin Maven Central milik Google: repo.maven.apache.org sering membalas 429 (Too Many Requests) ke server GitHub Actions.
+# Cermin dipasang sebelum mavenCentral(), jadi bila cermin tidak punya berkasnya Gradle tetap mencoba Maven Central.
+def pasang_cermin(main):
+    akar = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(main))), 'build.gradle')   # android/build.gradle
+    if not os.path.isfile(akar):
+        print('PERINGATAN: android/build.gradle tidak ditemukan, cermin Maven tidak dipasang.')
+        return
+    r = open(akar, encoding='utf-8').read()
+    if 'maven-central.storage-download.googleapis.com' in r:
+        return
+    cermin = "maven { url 'https://maven-central.storage-download.googleapis.com/maven2/' }"
+    r2 = re.sub(r'(\n[ \t]*)mavenCentral\(\)', lambda mm: mm.group(1) + cermin + mm.group(1) + 'mavenCentral()', r)
+    if r2 != r:
+        open(akar, 'w', encoding='utf-8').write(r2)
+        print('Cermin Maven Central Google dipasang di android/build.gradle')
+
+try:
+    pasang_cermin(main)
+except Exception as e:
+    print('PERINGATAN: cermin Maven tidak dipasang:', e)
+
 nama_versi, kode_versi = pasang_versi_dan_ttd(main)
 
 # berkas versi untuk web app: dipakai fitur "Cek pembaruan" di dalam aplikasi
