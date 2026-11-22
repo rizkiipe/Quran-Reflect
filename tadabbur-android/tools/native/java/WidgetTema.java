@@ -157,6 +157,11 @@ public class WidgetTema {
 
     /** Ambil cuaca terbaru dari Open-Meteo (tanpa kunci API) bila data lebih tua dari 45 menit. Panggil dari thread latar belakang. */
     static boolean segarkanCuaca(Context c) {
+        return segarkanCuaca(c, false);
+    }
+
+    /** paksa = true: abaikan batas 45 menit (dipakai tombol refresh). */
+    static boolean segarkanCuaca(Context c, boolean paksa) {
         try {
             SharedPreferences sp = c.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
             String raw = sp.getString("sholat", null);
@@ -164,7 +169,7 @@ public class WidgetTema {
             JSONObject s = new JSONObject(raw);
             if (!s.has("la") || !s.has("lo")) return false;
             String lama = sp.getString("cuaca", null);
-            if (lama != null && System.currentTimeMillis() - new JSONObject(lama).optLong("t") < 45 * 60000L) return false;
+            if (!paksa && lama != null && System.currentTimeMillis() - new JSONObject(lama).optLong("t") < 45 * 60000L) return false;
             String u = String.format(Locale.US,
                 "https://api.open-meteo.com/v1/forecast?latitude=%.4f&longitude=%.4f&current=temperature_2m,weather_code&timezone=auto",
                 s.getDouble("la"), s.getDouble("lo"));
@@ -191,13 +196,18 @@ public class WidgetTema {
 
     /** Segarkan cuaca di thread terpisah lalu perbarui kedua widget. pr boleh null. */
     static void segarkanLalu(final BroadcastReceiver.PendingResult pr, final Context app) {
+        segarkanLalu(pr, app, false);
+    }
+
+    static void segarkanLalu(final BroadcastReceiver.PendingResult pr, final Context app, final boolean paksa) {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    if (segarkanCuaca(app)) {
+                    if (segarkanCuaca(app, paksa)) {
                         AyatWidget.updateAll(app);
                         SholatWidget.updateAll(app);
+                        HariIniWidget.updateAll(app);
                     }
                 } catch (Exception ignored) {
                     // gagal: widget memakai data cuaca terakhir
