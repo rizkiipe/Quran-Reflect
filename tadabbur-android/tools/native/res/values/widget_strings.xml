@@ -2,4 +2,5 @@
 <resources>
     <string name="widget_desc">Ayat tadabbur pagi, siang, dan malam; latar mengikuti waktu dan cuaca</string>
     <string name="widget_desc_sholat">Jadwal sholat, imsak, dan syuruq; latar mengikuti waktu dan cuaca</string>
+    <string name="widget_desc_hariini">Tanggal Hijriah, jam, ayat tadabbur, dan jadwal sholat; latar mengikuti waktu dan cuaca</string>
 </resources>
