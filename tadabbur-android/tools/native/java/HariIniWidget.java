@@ -12,6 +12,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.StyleSpan;
 import android.graphics.Typeface;
+import android.view.View;
 import android.widget.RemoteViews;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -156,18 +157,27 @@ public class HariIniWidget extends AppWidgetProvider {
         v.setTextViewText(R.id.hi_hijri, "\u263E " + hj[0] + " " + BULAN[Math.max(0, Math.min(11, hj[1] - 1))] + " " + hj[2] + " H");
         v.setTextColor(R.id.hi_hijri, pudar);
 
-        // terbit atau terbenam matahari, paling kanan atas
+        // terbit atau terbenam matahari, paling kanan atas: simbol setengah lingkaran dengan panah, lalu jamnya
         String mat = "";
+        boolean terbit = true;
         if (h != null) {
-            if (now < h[2]) mat = "\uD83C\uDF05 Terbit " + f.format(new Date(h[2]));
-            else if (now < h[5]) mat = "\uD83C\uDF07 Terbenam " + f.format(new Date(h[5]));
-            else {
+            if (now < h[2]) {
+                mat = f.format(new Date(h[2]));
+            } else if (now < h[5]) {
+                mat = f.format(new Date(h[5]));
+                terbit = false;
+            } else {
                 long[] b = WidgetTema.waktu(c, now, 1);
-                mat = b != null ? "\uD83C\uDF05 Terbit besok " + f.format(new Date(b[2])) : "";
+                mat = b != null ? f.format(new Date(b[2])) : "";
             }
         }
+        v.setViewVisibility(R.id.hi_pill, mat.isEmpty() ? View.GONE : View.VISIBLE);
         v.setTextViewText(R.id.hi_matahari, mat);
         v.setTextColor(R.id.hi_matahari, utama);
+        v.setImageViewResource(R.id.hi_ikon, terbit ? R.drawable.hi_ic_terbit : R.drawable.hi_ic_terbenam);
+        v.setInt(R.id.hi_ikon, "setColorFilter", utama);
+        // latar tipis di belakang jam matahari supaya tetap terbaca di atas gambar awan
+        v.setInt(R.id.hi_pill, "setBackgroundResource", WidgetTema.terang(cu, tema) ? R.drawable.hi_chip_terang : R.drawable.hi_chip_gelap);
 
         // jam dan tanggal
         v.setTextColor(R.id.hi_jam, utama);
