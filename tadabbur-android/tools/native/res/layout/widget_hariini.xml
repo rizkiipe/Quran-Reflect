@@ -147,5 +147,5 @@
         android:gravity="center"
         android:maxLines="1"
         android:fontFamily="serif"
-        android:textSize="8dp" />
+        android:textSize="6dp" />
 </LinearLayout>
