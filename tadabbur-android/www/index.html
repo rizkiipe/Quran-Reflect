@@ -1299,6 +1299,12 @@ $('ahq').addEventListener('input',function(){
 if(window.speechSynthesis&&speechSynthesis.addEventListener)speechSynthesis.addEventListener('voiceschanged',function(){});
 if('serviceWorker' in navigator&&!NATIVE&&/^https?:$/.test(location.protocol))window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})});
 showVer();if(/widget/.test(location.hash+location.search))wgOn();else hari();
+/* widget 4x3: ketuk jadwal sholat atau ayat membuka menu yang sesuai */
+if(NATIVE){var NV=nplug('TadabburNav');if(NV){
+  var keTab=function(t){if(t!=='sholat'&&t!=='hari')return;var b=document.querySelector('#nav button[data-v="'+t+'"]');if(b)b.click()};
+  try{NV.addListener('tab',function(e){keTab(e&&e.tab)})}catch(e){}
+  setTimeout(function(){try{NV.ambil().then(function(r){if(r&&r.tab)keTab(r.tab)}).catch(function(){})}catch(e){}},400);
+}}
 if(NATIVE)setTimeout(function(){natSync(false)},4000);
 if(NATIVE)setTimeout(function(){cekUpdate(false)},2500);
 </script>
