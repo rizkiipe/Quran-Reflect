@@ -97,7 +97,7 @@
             android:gravity="center"
             android:maxLines="2"
             android:ellipsize="end"
-            android:textSize="22dp" />
+            android:textSize="18dp" />
         <TextView
             android:id="@+id/hi_arti"
             android:layout_width="match_parent"
@@ -108,7 +108,7 @@
             android:ellipsize="end"
             android:fontFamily="serif"
             android:textStyle="bold"
-            android:textSize="9dp" />
+            android:textSize="8dp" />
         <TextView
             android:id="@+id/hi_ref"
             android:layout_width="match_parent"
@@ -116,7 +116,7 @@
             android:gravity="center"
             android:maxLines="1"
             android:fontFamily="serif"
-            android:textSize="7dp" />
+            android:textSize="6dp" />
     </LinearLayout>
 
     <!-- jadwal sholat: 3 kolom x 2 baris -->
