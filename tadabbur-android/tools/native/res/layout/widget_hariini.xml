@@ -95,7 +95,7 @@
             android:gravity="center"
             android:maxLines="2"
             android:ellipsize="end"
-            android:textSize="18dp" />
+            android:textSize="20dp" />
         <TextView
             android:id="@+id/hi_arti"
             android:layout_width="match_parent"
