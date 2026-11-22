@@ -149,6 +149,17 @@ public class HariIniWidget extends AppWidgetProvider {
         }
     }
 
+    /** Latar khusus widget 4x3: awan berawan/hujan diletakkan di bawah baris atas. Cerah memakai latar bawaan. */
+    private static int latarHi(int cu, int tema) {
+        if (cu == WidgetTema.BERAWAN) {
+            return tema == 0 ? R.drawable.widget_bg_hi_berawan_pagi : (tema == 1 ? R.drawable.widget_bg_hi_berawan_siang : R.drawable.widget_bg_hi_berawan_malam);
+        }
+        if (cu == WidgetTema.HUJAN) {
+            return tema == 0 ? R.drawable.widget_bg_hi_hujan_pagi : (tema == 1 ? R.drawable.widget_bg_hi_hujan_siang : R.drawable.widget_bg_hi_hujan_malam);
+        }
+        return WidgetTema.latar(cu, tema);
+    }
+
     private static int redup(int warna) {
         return (warna & 0x00FFFFFF) | 0xB3000000;
     }
@@ -165,7 +176,7 @@ public class HariIniWidget extends AppWidgetProvider {
         int pudar = redup(utama);
 
         RemoteViews v = new RemoteViews(c.getPackageName(), R.layout.widget_hariini);
-        v.setInt(R.id.hi_root, "setBackgroundResource", WidgetTema.latar(cu, tema));
+        v.setInt(R.id.hi_root, "setBackgroundResource", latarHi(cu, tema));
 
         // tanggal Hijriah
         int[] hj = hijriah(cal);
