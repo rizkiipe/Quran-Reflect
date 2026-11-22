@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <gradient android:angle="270" android:startColor="#0B1120" android:centerColor="#161F33" android:endColor="#232E47" />
+            <corners android:radius="22dp" />
+        </shape>
+    </item>
+    <!-- khusus widget 4x3: awan di bawah baris atas supaya tidak menimpa tulisan -->
+    <!-- awan jauh (kecil, lebih pudar) -->
+    <item android:drawable="@drawable/widget_awan_hujan_malam_b" android:gravity="top|end" android:end="92dp" android:top="46dp" android:width="56dp" android:height="35dp" />
+    <!-- awan dekat (besar) -->
+    <item android:drawable="@drawable/widget_awan_hujan_malam_a" android:gravity="top|end" android:end="12dp" android:top="34dp" android:width="104dp" android:height="65dp" />
+</layer-list>
