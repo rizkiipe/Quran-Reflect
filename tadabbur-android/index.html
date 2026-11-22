@@ -6,13 +6,13 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="theme-color" content="#0B2E31">
-<title>Tadabbur Harian</title>
+<title>Quran Reflect</title>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-180.png">
-<meta name="apple-mobile-web-app-title" content="Tadabbur">
+<meta name="apple-mobile-web-app-title" content="Quran Reflect">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Newsreader:opsz,wght@6..72,400;6..72,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Amiri+Quran&family=Scheherazade+New:wght@400;700&family=Newsreader:opsz,wght@6..72,400;6..72,600&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#E4EFEC;--ink:#10282A;--mute:#4A6561;--card:#FAFCFB;--line:#C3D6D1;--gold:#B07A16;--teal:#23807A;--dusk:#3A5C8E;--mix:#000;--on:#fff;--g1:#0B2E31;--g2:#1F6F69;--g3:#3E9A90;--sh:rgba(16,40,42,.35);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media (prefers-color-scheme:dark){:root{--bg:#0A1618;--ink:#E6EEEA;--mute:#9DB6B0;--card:#122427;--line:#27403F;--gold:#E2AE45;--teal:#5FC0B6;--dusk:#93B4E6;--mix:#fff;--on:#0A1618;--g1:#071F22;--g2:#12534F;--g3:#2A8179;--sh:rgba(0,0,0,.6);color-scheme:dark}}
@@ -31,11 +31,11 @@ nav button[aria-current="true"]{background:linear-gradient(135deg,var(--teal),co
 .card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:7px;background:linear-gradient(180deg,var(--c1),var(--c),var(--c2))}
 .hd{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:15px;color:var(--mute)}
 .hd b{background:linear-gradient(135deg,var(--c),var(--c2));color:var(--on);border-radius:999px;padding:1px 13px;font-size:15.5px;font-weight:600}
-.ar{font:400 clamp(27px,7vw,34px)/2.1 'Amiri','Traditional Arabic',serif;direction:rtl;text-align:right;margin:10px 0 6px;padding:4px 14px;border-radius:12px;background:linear-gradient(135deg,color-mix(in srgb,var(--c) 14%,transparent),color-mix(in srgb,var(--c) 3%,transparent))}
+.ar{font:400 clamp(27px,7vw,34px)/2.1 var(--arf,'Amiri'),'Amiri','Traditional Arabic',serif;direction:rtl;text-align:right;margin:10px 0 6px;padding:4px 14px;border-radius:12px;background:linear-gradient(135deg,color-mix(in srgb,var(--c) 14%,transparent),color-mix(in srgb,var(--c) 3%,transparent))}
 .id{margin:0 0 8px}.mk{margin:0 0 8px;color:var(--mute);font-size:16.5px;border-top:1px solid var(--line);padding-top:8px}
 details{font-size:16.5px;margin:6px 0}summary{cursor:pointer;color:var(--c,var(--teal));font-weight:600}
 .gd{display:inline-block;border:1px solid currentColor;border-radius:999px;padding:0 9px;margin-left:6px;font-size:13px;font-weight:600}
-.tjar{font:400 clamp(26px,6.6vw,32px)/2.2 'Amiri','Traditional Arabic',serif;direction:rtl;text-align:right;margin:6px 0 8px}
+.tjar{font:400 clamp(26px,6.6vw,32px)/2.2 var(--arf,'Amiri'),'Amiri','Traditional Arabic',serif;direction:rtl;text-align:right;margin:6px 0 8px}
 .tjl{list-style:none;margin:0;padding:0}.tjl li{margin:0 0 10px;padding:8px 10px;border:1px solid var(--line);border-radius:12px}
 .tjl b{display:flex;align-items:center;gap:8px;font-size:16px}.sw{width:14px;height:14px;border-radius:4px;display:inline-block;flex:none;border:1px solid var(--line)}
 .tjl p{margin:4px 0 0;font-size:15.5px;color:var(--mute);line-height:1.5}.tjl p.ex{direction:rtl;text-align:right;font:400 26px/1.9 'Amiri',serif;color:var(--ink);margin:2px 0 0}
@@ -69,16 +69,27 @@ button:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px so
 .note{font-size:14.5px;color:var(--mute);margin-top:36px;border-top:1px solid var(--line);padding-top:12px}
 [hidden]{display:none!important}
 .ks{margin:4px 0 10px 22px;padding:0}.ks li{margin:5px 0}
+html{scroll-behavior:smooth;-webkit-tap-highlight-color:transparent}
+section:not([hidden]){animation:fin .22s ease-out}
+@keyframes fin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}section:not([hidden]){animation:none}}
+.shr{display:flex;justify-content:space-between;align-items:baseline;padding:8px 2px;border-top:1px solid var(--line)}
+.shr.nx{font-weight:700;color:var(--teal)}.shr b{font-variant-numeric:tabular-nums}
+.ib[disabled]{opacity:.45;cursor:not-allowed}
+.shs{align-items:center;gap:8px}.shs .chips{margin:0;gap:6px;flex-wrap:nowrap}.shs .ib{padding:4px 10px;font-size:13px}
+.ah.on{outline:2px solid var(--gold);outline-offset:2px}
+.ah .hd .ib{padding:3px 12px;font-size:14px}
+.ah .arti{font-weight:700;margin:0 0 6px;color:var(--c)}
 </style>
 </head>
 <body>
 <main>
 <div id="wg" hidden><div class="card" style="--c:var(--gold)"><div class="hd"><b>Tadabbur</b><span id="wgdate"></span></div><div class="chips" id="wgchips" style="margin:10px 0 0"></div><div id="wgbody"></div><div class="row"><button class="btn" id="wgoff">Buka aplikasi</button><button class="ib" data-wgimg="save">🖼 Gambar kunci layar</button></div><p class="pesan wgmsg" aria-live="polite" style="margin:8px 0 0"></p></div></div>
-<header class="hero"><h1>Tadabbur Harian</h1><p class="tgl" id="tgl"></p></header>
+<header class="hero"><h1>Quran Reflect</h1><p class="tgl" id="tgl"></p></header>
 <div id="upd" class="card" style="--c:var(--gold)" hidden></div>
-<nav id="nav"><button data-v="hari" aria-current="true">Hari ini</button><button data-v="cari" aria-current="false">Sesuai harimu</button><button data-v="quran" aria-current="false">Al-Qur’an</button><button data-v="doa" aria-current="false">Doa</button><button data-v="simpan" aria-current="false">Tersimpan</button></nav>
+<nav id="nav"><button data-v="hari" aria-current="true">Hari ini</button><button data-v="sholat" aria-current="false">Sholat</button><button data-v="cari" aria-current="false">Sesuai harimu</button><button data-v="quran" aria-current="false">Al-Qur’an</button><button data-v="doa" aria-current="false">Doa</button><button data-v="asma" aria-current="false">Asma’ul Husna</button><button data-v="simpan" aria-current="false">Tersimpan</button></nav>
 
-<section id="v-hari"><p class="sub">Tiga ayat untuk hari ini. Ayatnya berbeda setiap hari dan tidak berulang dalam siklus ±5 tahun.</p><div id="tiga"></div><div id="kisah"></div>
+<section id="v-hari"><p class="sub">Tiga ayat untuk hari ini. Ayatnya berbeda setiap hari dan tidak berulang dalam siklus ±5 tahun.</p><div id="tiga"></div><div id="kisah"></div><div id="gaya"></div>
 <div class="card" id="panelw" style="--c:var(--dusk)"><div class="hd"><b>Widget dan pengingat</b></div>
 <p class="sub" style="margin:6px 0">Halaman web tidak bisa membuat widget asli di layar utama HP. Tiga cara ini bisa dipakai sebagai gantinya.</p>
 <details><summary>1. Tampilan widget (ayat sesuai waktu)</summary><p class="tf">Halaman ringkas berisi ayat pagi, siang, atau malam sesuai jam sekarang. Buka tampilan ini, lalu di Chrome Android pilih menu ⋮ → Tambahkan ke layar utama agar ikonnya ada di layar utama.</p><div class="row"><button class="btn" id="wgopen">Buka tampilan widget</button><button class="ib" id="wgcopy">Salin tautan</button></div></details>
@@ -89,6 +100,7 @@ button:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px so
 <details id="natbox" hidden><summary>4. Widget asli dan notifikasi ayat (aplikasi Android)</summary><p class="tf">Widget di layar utama menampilkan ayat pagi, siang, atau malam sesuai jam. Ayat 7 hari ke depan disimpan di HP, jadi widget tetap terisi saat offline. Ketuk widget untuk membuka aplikasi.</p><div class="row"><button class="btn" id="natpin">Pasang widget</button><button class="ib" id="natsync">Perbarui data widget</button></div><p class="tf">Notifikasi ayat dijadwalkan sesuai jam pengingat di atas (isinya nama surah, ayat, dan terjemahan singkat).</p><div class="row"><button class="btn" id="natnotif">Jadwalkan notifikasi ayat</button></div></details>
 <p class="pesan wgmsg" aria-live="polite" style="margin:8px 0 0"></p></div></section>
 
+<section id="v-sholat" hidden><div id="sholat"></div></section>
 <section id="v-cari" hidden>
 <p class="sub">Pilih perasaan atau tema, atau ceritakan harimu dengan kata-katamu sendiri.</p>
 <div class="chips" id="chips"></div>
@@ -105,6 +117,19 @@ button:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px so
 <div class="row" style="margin:0 0 10px"><button class="chip" id="latbtn" aria-pressed="true">Tampilkan Latin</button></div>
 <div id="doalist"></div>
 <p class="sub" style="font-size:14.5px;margin-top:14px">Terjemahan doa dari hadis ditulis penyusun aplikasi berdasarkan makna lafaznya; ayat Al-Qur’an memakai terjemahan Kemenag seperti di bagian Al-Qur’an. Tulisan Latin hanya alat bantu baca, bukan pengganti belajar membaca huruf Arab.</p>
+</section>
+<section id="v-asma" hidden>
+<p class="sub">99 nama Allah yang indah: tulisan Arab, Latin, arti, dan penjelasan maknanya. Ketuk ▶ untuk mendengar satu nama, atau putar semuanya dari nama pertama sampai terakhir.</p>
+<input id="ahq" type="search" placeholder="Cari nama, arti, atau nomor…" aria-label="Cari Asma’ul Husna" autocomplete="off" style="width:100%;padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;margin:0 0 10px">
+<div class="row" style="margin:0 0 6px;align-items:center">
+<button class="btn" id="ahall">▶ Putar 1–99</button>
+<button class="btn o" id="ahstop" hidden>■ Berhenti</button>
+<button class="chip" id="ahslow" aria-pressed="false">Pelan</button>
+<button class="btn" id="ahfile" hidden>▶ Putar nada (rekaman)</button>
+</div>
+<p class="pesan" id="ahmsg" aria-live="polite" style="margin:4px 0 10px"></p>
+<div id="ahlist"></div>
+<p class="sub" style="font-size:14.5px;margin-top:14px">Dasar: hadis “Allah memiliki sembilan puluh sembilan nama; siapa yang menghafalnya (ahsha-ha) akan masuk surga” (Shahih al-Bukhari no. 2736; Shahih Muslim no. 2677). Daftar rincian 99 nama yang dikenal luas bersumber dari riwayat At-Tirmidzi no. 3507; sebagian ulama hadis menilai rincian daftar itu sisipan dari perawi, dan nama-nama Allah lain juga disebut dalam Al-Qur’an dan hadis sahih. Susunan nama mengikuti daftar yang lazim di Indonesia. Arti dan penjelasan makna ditulis ringkas oleh penyusun aplikasi; untuk kajian mendalam rujuklah kitab penjelasan Asma’ul Husna dari ulama. Tombol ▶ Dengar dan ▶ Putar 1–99 memakai pembaca teks (text-to-speech) perangkat, jadi bukan rekaman qari dan tidak bernada lagu. Tombol “Putar nada” memutar rekaman Asma’ul Husna berirama (sumber: TVRI Nasional, berkas dari penyusun aplikasi); hak cipta rekaman itu tetap milik pemegang hak aslinya.</p>
 </section>
 <section id="v-simpan" hidden><div id="simpan"></div></section>
 
@@ -645,12 +670,12 @@ function hms(d){return p2(d.getHours())+p2(d.getMinutes())+'00'}
 function makeIcs(times){
   var link=/^https?:$/.test(location.protocol)?location.origin+location.pathname+'#widget':'',now=new Date();
   var stamp=now.getUTCFullYear()+p2(now.getUTCMonth()+1)+p2(now.getUTCDate())+'T'+p2(now.getUTCHours())+p2(now.getUTCMinutes())+p2(now.getUTCSeconds())+'Z';
-  var L=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Tadabbur Harian//ID','CALSCALE:GREGORIAN'];
+  var L=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Quran Reflect//ID','CALSCALE:GREGORIAN'];
   Object.keys(times).forEach(function(n){
     var hm=times[n].split(':'),st=new Date();st.setHours(+hm[0],+hm[1],0,0);if(st<=now)st.setDate(st.getDate()+1);
     var en=new Date(st.getTime()+15*60000);
     L.push('BEGIN:VEVENT','UID:tadabbur-'+n.toLowerCase()+'@tadabbur-harian','DTSTAMP:'+stamp,'DTSTART:'+ymd(st)+'T'+hms(st),'DTEND:'+ymd(en)+'T'+hms(en),'RRULE:FREQ=DAILY','SUMMARY:'+icsEsc('Tadabbur '+n),
-      'DESCRIPTION:'+icsEsc('Waktunya tadabbur '+n.toLowerCase()+'. Buka Tadabbur Harian untuk membaca ayat hari ini.'+(link?'\n'+link:'')));
+      'DESCRIPTION:'+icsEsc('Waktunya tadabbur '+n.toLowerCase()+'. Buka Quran Reflect untuk membaca ayat hari ini.'+(link?'\n'+link:'')));
     if(link)L.push('URL:'+link);
     L.push('BEGIN:VALARM','ACTION:DISPLAY','DESCRIPTION:'+icsEsc('Tadabbur '+n),'TRIGGER:PT0S','END:VALARM','END:VEVENT');
   });
@@ -710,7 +735,7 @@ async function natSync(manual){
 }
 async function natPin(){
   try{var W=nplug('TadabburWidget');if(!W)throw new Error('Plugin widget tidak ditemukan');var r=await W.pin();
-    wgMsg(r&&r.ok?'Ikuti petunjuk di layar untuk menaruh widget.':'Peluncur HP Anda tidak mendukung pemasangan otomatis. Tekan lama layar utama → Widget → Tadabbur Harian.')}
+    wgMsg(r&&r.ok?'Ikuti petunjuk di layar untuk menaruh widget.':'Peluncur HP Anda tidak mendukung pemasangan otomatis. Tekan lama layar utama → Widget → Ayat Tadabbur.')}
   catch(e){wgMsg('Gagal memasang widget: '+(e.message||e))}
 }
 /* ===== Pembaruan aplikasi: cek rilis terbaru di GitHub, lalu tawarkan unduhan APK. Versi baru terpasang di atas yang lama, tanpa hapus aplikasi. ===== */
@@ -722,7 +747,7 @@ async function pasangUpd(url,btn){
   btn.disabled=true;st.textContent='Menyiapkan unduhan…';
   var tm=setInterval(async function(){try{var r=await W.dlProgress();if(r&&r.pct)st.textContent='Mengunduh… '+r.pct+'%'}catch(e){}},700);
   try{await W.installApk({url:url});st.textContent='Unduhan selesai. Tekan Pasang pada layar Android yang muncul.'}
-  catch(e){st.textContent=(e&&e.code==='IZIN')?'Aktifkan “Izinkan dari sumber ini” untuk Tadabbur Harian di layar yang terbuka, kembali ke aplikasi, lalu tekan Unduh dan pasang lagi.':'Gagal: '+String((e&&e.message)||e)+'. Coba lagi atau pakai tombol Lewat browser.'}
+  catch(e){st.textContent=(e&&e.code==='IZIN')?'Aktifkan “Izinkan dari sumber ini” untuk Quran Reflect di layar yang terbuka, kembali ke aplikasi, lalu tekan Unduh dan pasang lagi.':'Gagal: '+String((e&&e.message)||e)+'. Coba lagi atau pakai tombol Lewat browser.'}
   finally{clearInterval(tm);btn.disabled=false}
 }
 async function cekUpdate(manual){
@@ -750,15 +775,143 @@ if(NATIVE&&window.APP_VERSION){$('verbar').hidden=false;$('vernow').textContent=
 document.addEventListener('click',function(e){
   if(e.target.closest('#updbtn'))cekUpdate(true);
   var g=e.target.closest('#updgo');if(g)pasangUpd(g.dataset.url,g);
+  var q=e.target.closest('[data-gaya]');if(q){sv('ar_gaya',q.dataset.gaya);gaya()}
   var x=e.target.closest('#updx');if(x){sv('updskip',x.dataset.tag);$('upd').hidden=true}
 });
+/* ===== Jadwal sholat: dihitung di HP (metode Kemenag RI), lokasi dari GPS/Maps, notifikasi opsional ===== */
+var SHN=[['imsak','Imsak'],['subuh','Subuh'],['syuruq','Syuruq'],['dzuhur','Dzuhur'],['ashar','Ashar'],['maghrib','Maghrib'],['isya','Isya']];
+var SHT={imsak:'Imsak: waktunya berhenti makan sahur.',subuh:'Saatnya menunaikan sholat Subuh.',syuruq:'Matahari terbit; waktu Subuh telah berakhir.',dzuhur:'Saatnya menunaikan sholat Dzuhur.',ashar:'Saatnya menunaikan sholat Ashar.',maghrib:'Saatnya menunaikan sholat Maghrib.',isya:'Saatnya menunaikan sholat Isya.'};
+var shMsg='',shBusy=false;
+function shHitung(d,la,lo){
+  var R=Math.PI/180,sin=function(x){return Math.sin(x*R)},cos=function(x){return Math.cos(x*R)},tan=function(x){return Math.tan(x*R)},
+    asin=function(x){return Math.asin(x)/R},acos=function(x){return Math.acos(x)/R},atan2=function(y,x){return Math.atan2(y,x)/R},acot=function(x){return Math.atan(1/x)/R},
+    fa=function(a){return a-360*Math.floor(a/360)},fh=function(h){return h-24*Math.floor(h/24)};
+  var tz=-d.getTimezoneOffset()/60,base=new Date(d.getFullYear(),d.getMonth(),d.getDate()).getTime(),Y=d.getFullYear(),M=d.getMonth()+1,Dd=d.getDate();
+  if(M<=2){Y-=1;M+=12}
+  var A=Math.floor(Y/100),B=2-A+Math.floor(A/4),jd=Math.floor(365.25*(Y+4716))+Math.floor(30.6001*(M+1))+Dd+B-1524.5-lo/360;
+  function pos(j){var D=j-2451545,g=fa(357.529+.98560028*D),q=fa(280.459+.98564736*D),L=fa(q+1.915*sin(g)+.02*sin(2*g)),e=23.439-3.6e-7*D,RA=fh(atan2(cos(e)*sin(L),cos(L))/15);return{dec:asin(sin(e)*sin(L)),eqt:q/15-RA}}
+  function mid(t){return fh(12-pos(jd+t).eqt)}
+  function ang(a,t,ccw){var dec=pos(jd+t).dec,x=(-sin(a)-sin(dec)*sin(la))/(cos(dec)*cos(la));if(Math.abs(x)>1)return NaN;var h=acos(x)/15;return mid(t)+(ccw?-h:h)}
+  function asr(t){var dec=pos(jd+t).dec;return ang(-acot(1+tan(Math.abs(la-dec))),t)}
+  var T={f:5,s:6,d:12,a:13,m:18,i:18};
+  for(var it=0;it<2;it++){
+    var p=function(k){return T[k]/24};
+    T={f:ang(20,p('f'),1),s:ang(.833,p('s'),1),d:mid(p('d')),a:asr(p('a')),m:ang(.833,p('m')),i:ang(18,p('i'))};
+    for(var k in T)T[k]+=tz-lo/15;
+  }
+  function mnt(h,add,flo){return base+((flo?Math.floor(h*60)-1:Math.ceil(h*60-1e-6))+add)*60000}
+  var sb=mnt(T.f,2);
+  return{imsak:sb-10*60000,subuh:sb,syuruq:mnt(T.s,0,1),dzuhur:mnt(T.d,2),ashar:mnt(T.a,2),maghrib:mnt(T.m,2),isya:mnt(T.i,2)};
+}
+function shJam(ms){var d=new Date(ms);return('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2)}
+function shFile(i){if(i===0||i===2)return '';if(i===1&&window.ADZAN_SUBUH_ADA)return 'adzan_subuh';return window.ADZAN_ADA?'adzan':''}
+function shSet(){
+  var s=ls('sh_set',null)||{};s.on=!!s.on;
+  if(!s.v2){var w=s.w||{},adz=s.bunyi==='adzan';s.w={};
+    SHN.forEach(function(x,i){var k=x[0],on=(k in w)?w[k]:1;s.w[k]=on?((adz&&i!==0&&i!==2)?2:1):0});
+    s.v2=1;delete s.bunyi}
+  return s}
+function shLok(){return ls('sh_lok',null)}
+function shLokBaru(manual){
+  return new Promise(function(ok,gagal){
+    if(!navigator.geolocation){gagal(new Error('Lokasi tidak tersedia di perangkat ini'));return}
+    navigator.geolocation.getCurrentPosition(function(p){ok(p.coords)},function(e){gagal(new Error(e&&e.code===1?'Izin lokasi ditolak. Aktifkan izin Lokasi untuk aplikasi ini di pengaturan HP.':'Lokasi belum didapat. Coba di tempat terbuka dan pastikan Lokasi/GPS aktif.'))},{enableHighAccuracy:false,timeout:25000,maximumAge:manual?0:600000});
+  }).then(async function(c){
+    var o={la:c.latitude,lo:c.longitude,t:Date.now(),nama:''};
+    try{var r=await fetch('https://api.bigdatacloud.net/data/reverse-geocode-client?latitude='+o.la+'&longitude='+o.lo+'&localityLanguage=id'),j=await r.json();o.nama=j.city||j.locality||j.principalSubdivision||''}catch(e){}
+    sv('sh_lok',o);sv('sh_pakai',1);return o});
+}
+function shSimpanWidget(){
+  var W=nplug('TadabburWidget'),L=shLok();if(!W||!W.saveSholat||!L)return;
+  var days={};
+  for(var d=0;d<7;d++){var dt=new Date();dt.setDate(dt.getDate()+d);var T=shHitung(dt,L.la,L.lo);
+    days[dt.getFullYear()+'-'+('0'+(dt.getMonth()+1)).slice(-2)+'-'+('0'+dt.getDate()).slice(-2)]=SHN.map(function(w){return T[w[0]]})}
+  W.saveSholat({json:JSON.stringify({la:L.la,lo:L.lo,nama:L.nama||'',days:days})}).catch(function(){});
+}
+async function shRefresh(manual){
+  shMsg='Mengambil lokasi…';shRender();
+  try{await shLokBaru(manual);shMsg='Lokasi diperbarui.';shSimpanWidget();if(shSet().on)await shJadwalkan()}catch(e){shMsg=e.message||String(e)}
+  shRender();
+}
+function shAuto(){var l=shLok();if(ls('sh_pakai',0)&&(!l||Date.now()-l.t>3*36e5))shRefresh(false)}
+async function shJadwalkan(){
+  if(shBusy)return;shBusy=true;
+  try{
+    var LN=nplug('LocalNotifications'),AD=nplug('TadabburAdzan'),S=shSet(),L=shLok();
+    if(!LN)throw new Error('Notifikasi hanya tersedia di aplikasi Android');
+    var pend=await LN.getPending(),mine=(pend.notifications||[]).filter(function(n){return n.id>=70000});
+    if(mine.length)await LN.cancel({notifications:mine.map(function(n){return{id:n.id}})});
+    if(!S.on||!L){if(AD)try{await AD.jadwal({items:[]})}catch(e){}return}
+    var pm=await LN.checkPermissions();if(pm.display!=='granted'){pm=await LN.requestPermissions();if(pm.display!=='granted')throw new Error('Izin notifikasi ditolak')}
+    try{await LN.createChannel({id:'sholat',name:'Waktu sholat',description:'Pengingat waktu sholat',importance:4,vibration:true})}catch(e){}
+    if(window.ADZAN_ADA)try{await LN.createChannel({id:'adzan',name:'Adzan',description:'Suara adzan saat waktu sholat',importance:5,sound:'adzan.mp3',vibration:true})}catch(e){}
+    if(window.ADZAN_SUBUH_ADA)try{await LN.createChannel({id:'adzan_subuh',name:'Adzan Subuh',description:'Suara adzan khusus waktu Subuh',importance:5,sound:'adzan_subuh.mp3',vibration:true})}catch(e){}
+    var list=[],alarm=[],now=Date.now();
+    for(var d=0;d<7;d++){
+      var dt=new Date();dt.setDate(dt.getDate()+d);var T=shHitung(dt,L.la,L.lo);
+      SHN.forEach(function(w,i){
+        if(!S.w[w[0]]||T[w[0]]<=now)return;
+        var fl=S.w[w[0]]===2?shFile(i):'',a=fl!=='';
+        if(a&&AD){alarm.push({id:70000+d*10+i,at:T[w[0]],file:fl,judul:'Waktu '+w[1]+' · '+shJam(T[w[0]]),isi:SHT[w[0]]+(L.nama?' ('+L.nama+')':'')});return}
+        var n={id:70000+d*10+i,title:'Waktu '+w[1]+' · '+shJam(T[w[0]]),body:SHT[w[0]]+(L.nama?' ('+L.nama+')':''),schedule:{at:new Date(T[w[0]]),allowWhileIdle:true},smallIcon:'ic_stat_tadabbur',channelId:a?fl:'sholat'};
+        if(a)n.sound=fl+'.mp3';
+        list.push(n);
+      });
+    }
+    if(list.length)await LN.schedule({notifications:list});
+    if(AD)await AD.jadwal({items:alarm});
+  }finally{shBusy=false}
+}
+async function shExact(){
+  try{var LN=nplug('LocalNotifications'),ex=await LN.checkExactNotificationSetting();
+    if(ex&&ex.exact_alarm&&ex.exact_alarm!=='granted'){shMsg='Agar notifikasi tepat waktu, izinkan “Alarm & pengingat” untuk aplikasi ini pada layar yang terbuka.';await LN.changeExactNotificationSetting()}}catch(e){}
+}
+function shRender(){
+  var z=$('sholat');if(!z)return;
+  var L=shLok(),la=L?L.la:-6.2088,lo=L?L.lo:106.8456,S=shSet(),now=Date.now(),T=shHitung(new Date(),la,lo),nx=-1,nxt=0,besok=false;
+  SHN.forEach(function(w,i){if(nx<0&&T[w[0]]>now){nx=i;nxt=T[w[0]]}});
+  if(nx<0){nx=0;besok=true;nxt=shHitung(new Date(now+864e5),la,lo).imsak}
+  var sisa=Math.max(0,Math.round((nxt-now)/60000)),h=Math.floor(sisa/60),mn=sisa%60;
+  var lokTxt=L?esc(L.nama||(L.la.toFixed(3)+', '+L.lo.toFixed(3)))+' · diperbarui '+shJam(L.t):'Belum memakai lokasi HP; sementara memakai Jakarta.';
+  var ib=function(a,txt,on,dis){return '<button class="ib" data-sh="'+a+'" aria-pressed="'+!!on+'"'+(dis?' disabled':'')+'>'+txt+'</button>'};
+  z.innerHTML='<article class="card" style="--c:var(--teal)"><div class="hd"><b>Jadwal sholat</b><span>'+esc(new Date().toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long'}))+'</span></div>'
+   +'<p class="id" style="margin:10px 0 4px"><b>'+esc(SHN[nx][1])+(besok?' (besok)':'')+'</b> '+(besok?shJam(nxt):'pukul '+shJam(nxt))+' · '+(h?h+' jam ':'')+mn+' menit lagi</p>'
+   +SHN.map(function(w,i){return '<div class="shr'+(i===nx&&!besok?' nx':'')+'"><span>'+w[1]+'</span><b>'+shJam(T[w[0]])+'</b></div>'}).join('')
+   +'<p class="mk">Lokasi: '+lokTxt+'</p><div class="row"><button class="btn o" data-sh="lok">Perbarui lokasi sekarang</button></div>'
+   +(shMsg?'<p class="sub" style="margin:8px 0 0">'+esc(shMsg)+'</p>':'')+'</article>'
+   +'<article class="card" style="--c:var(--gold)"><div class="hd"><b>Notifikasi sholat</b></div><div class="chips" style="margin-top:10px">'+ib('on','Notifikasi: '+(S.on?'Aktif':'Mati'),S.on)+'</div>'
+   +'<p class="mk"><b>Pengaturan tiap waktu</b></p>'
+   +SHN.map(function(w,i){var v=S.w[w[0]];return '<div class="shr shs"><span>'+w[1]+'</span><span class="chips">'+ib('w:'+w[0]+':0','Mati',v===0)+ib('w:'+w[0]+':1','Biasa',v===1)+(i===0||i===2?'':ib('w:'+w[0]+':2','Adzan',v===2,!shFile(i)))+'</span></div>'}).join('')
+   +'<div class="chips" style="margin-top:10px">'+ib('all:1','Semua: notifikasi biasa',false)+((window.ADZAN_ADA||window.ADZAN_SUBUH_ADA)?ib('all:2','Lima waktu sholat: adzan',false):'')+'</div>'
+   +(nplug('TadabburAdzan')&&(window.ADZAN_ADA||window.ADZAN_SUBUH_ADA)?'<p class="sub" style="margin:8px 0 0"><b>Adzan</b> diputar lewat volume alarm, jadi tetap berbunyi saat HP silent atau getar (selama volume alarm tidak 0 dan mode Jangan Ganggu mengizinkan alarm). <b>Biasa</b> mengikuti setelan notifikasi HP.</p><div class="row" style="margin-top:8px"><button class="btn o" data-sh="uji">▶ Uji adzan</button><button class="btn o" data-sh="ujistop">■ Hentikan</button></div>':'')
+   +'<p class="sub" style="margin:8px 0 0">Imsak dan Syuruq hanya bisa Mati atau notifikasi biasa.'+(window.ADZAN_SUBUH_ADA?' Subuh memakai adzan tersendiri.':'')+(!(window.ADZAN_ADA||window.ADZAN_SUBUH_ADA)?' Pilihan Adzan aktif setelah berkas adzan dipasang saat build.':'')+'</p></article>'
+   +'<p class="note">Waktu dihitung di HP dengan metode Kemenag RI (Subuh 20°, Isya 18°, Ashar mazhab Syafi‘i, ihtiyat 2 menit; Imsak = Subuh − 10 menit). Ini perkiraan, cocokkan dengan jadwal resmi setempat. Lokasi hanya diperbarui otomatis paling cepat tiap 3 jam, saat aplikasi dibuka, agar baterai hemat.</p>';
+}
+document.addEventListener('click',async function(e){
+  var b=e.target.closest('[data-sh]');if(!b||b.disabled)return;var a=b.dataset.sh,S=shSet();
+  try{
+    if(a==='lok'){shRefresh(true);return}
+    if(a==='uji'||a==='ujistop'){var AD2=nplug('TadabburAdzan');if(!AD2)throw new Error('Fitur adzan volume alarm hanya ada di aplikasi Android versi terbaru');if(a==='uji'){await AD2.uji({file:window.ADZAN_ADA?'adzan':'adzan_subuh'});shMsg='Adzan uji diputar lewat volume alarm. Ketuk Hentikan untuk berhenti.'}else{await AD2.berhenti();shMsg='Adzan dihentikan.'}shRender();return}
+    if(a==='on'){
+      if(!S.on&&!shLok()){shMsg='Mengambil lokasi…';shRender();await shLokBaru(true)}
+      S.on=!S.on;sv('sh_set',S);shMsg='';
+      try{await shJadwalkan()}catch(x){S.on=false;sv('sh_set',S);throw x}
+      if(S.on){shMsg='Notifikasi aktif untuk 7 hari ke depan; jadwal diperbarui setiap aplikasi dibuka.';await shExact()}else shMsg='Notifikasi sholat dimatikan.';
+    }else if(a.indexOf('w:')===0){var pp=a.split(':');S.w[pp[1]]=+pp[2];sv('sh_set',S);if(S.on)await shJadwalkan()}
+    else if(a.indexOf('all:')===0){var v2=+a.slice(4);SHN.forEach(function(w,i){if(v2===1)S.w[w[0]]=1;else if(shFile(i))S.w[w[0]]=2});sv('sh_set',S);if(S.on)await shJadwalkan()}
+  }catch(x){shMsg=x.message||String(x)}
+  shRender();
+});
+document.addEventListener('visibilitychange',function(){if(!document.hidden){shAuto();shSimpanWidget()}});
+setInterval(function(){shAuto();if(VW==='sholat'&&!document.hidden)shRender()},60000);
+setTimeout(function(){shAuto();shSimpanWidget();if(shSet().on)shJadwalkan().catch(function(){})},3500);
 async function natNotif(){
   try{
     var LN=nplug('LocalNotifications');if(!LN)throw new Error('Plugin notifikasi tidak ditemukan');
     var pm=await LN.checkPermissions();if(pm.display!=='granted'){pm=await LN.requestPermissions();if(pm.display!=='granted')throw new Error('Izin notifikasi ditolak')}
     wgMsg('Menyiapkan notifikasi…');
     var data=await natData(7,natSimpan);sv('natsync',Date.now());
-    var pend=await LN.getPending();if(pend.notifications&&pend.notifications.length)await LN.cancel({notifications:pend.notifications.map(function(n){return{id:n.id}})});
+    var pend=await LN.getPending(),ayp=(pend.notifications||[]).filter(function(n){return n.id<70000});if(ayp.length)await LN.cancel({notifications:ayp.map(function(n){return{id:n.id}})});
     var nm=['Pagi','Siang','Malam'],list=[],now=Date.now();
     Object.keys(data.days).sort().forEach(function(k,di){
       var p=k.split('-');
@@ -804,13 +957,13 @@ document.addEventListener('click',function(e){
 var now=new Date(),h=now.getHours();
 $('tgl').textContent=now.toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
 var VW='hari';
-function show(v){VW=v;['hari','cari','quran','doa','simpan'].forEach(function(x){$('v-'+x).hidden=x!==v});
+function show(v){VW=v;['hari','sholat','cari','quran','doa','asma','simpan'].forEach(function(x){$('v-'+x).hidden=x!==v});if(v!=='asma')ahStop();
   Array.prototype.forEach.call($('nav').children,function(b){b.setAttribute('aria-current',b.dataset.v===v)});
-  if(v==='simpan')tersimpan();if(v==='doa')doa();if(v==='quran'&&!$('daftar').children.length)daftar()}
+  if(v==='sholat')shRender();if(v==='simpan')tersimpan();if(v==='doa')doa();if(v==='asma')asma();if(v==='quran'&&!$('daftar').children.length)daftar()}
 $('nav').addEventListener('click',function(e){var b=e.target.closest('button');if(b){$('surah').hidden=true;$('daftar').hidden=false;show(b.dataset.v)}});
 /* ===== Geser kanan-kiri untuk pindah menu: geser ke kiri = menu berikutnya, ke kanan = menu sebelumnya ===== */
 (function(){
-  var ORD=['hari','cari','quran','doa','simpan'],sx=0,sy=0,st=0,ok=false;
+  var ORD=['hari','sholat','cari','quran','doa','asma','simpan'],sx=0,sy=0,st=0,ok=false;
   function bolehGeser(el){
     for(var n=el;n&&n!==document.body;n=n.parentElement){
       var t=n.tagName;if(t==='INPUT'||t==='TEXTAREA'||t==='SELECT'||t==='PRE'||t==='TABLE')return false;
@@ -852,8 +1005,18 @@ function kisah(){
     +'<p class="mk">Sumber: '+esc(x.s)+'</p>'
     +'<div class="row"><button class="btn o" onclick="KP++;kisah()">Kisah lain</button></div></article>';
 }
+var GAYA=[['std','Standar Indonesia',"'Amiri'"],['utsmani','Utsmani',"'Scheherazade New'"],['madani','Madani',"'Amiri Quran'"]];
+function gaya(){
+  var g=ls('ar_gaya','std'),x=GAYA.filter(function(a){return a[0]===g})[0]||GAYA[0];
+  document.documentElement.style.setProperty('--arf',x[2]);
+  var z=$('gaya');if(!z)return;
+  z.innerHTML='<article class="card" style="--c:var(--gold)"><div class="hd"><b>Gaya tulisan Arab</b></div>'
+    +'<div class="chips" style="margin-top:10px">'+GAYA.map(function(a){return '<button class="ib" data-gaya="'+a[0]+'" aria-pressed="'+(a[0]===x[0])+'">'+a[1]+'</button>'}).join('')+'</div>'
+    +'<p class="ar" lang="ar">بِسْمِ ٱللَّهِ ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ</p>'
+    +'<p class="mk">Huruf: '+x[2].split("'").join('')+'. Ini pendekatan tampilan huruf, bukan font resmi mushaf; teks Arabnya tetap dari sumber data yang sama. Perlu internet saat pertama kali memilih gaya.</p></article>';
+}
 async function hari(){
-  kisah();var out=$('tiga');out.innerHTML=SL.map(function(s,i){return '<div id="sl'+i+'"><p class="sub">Memuat ayat '+s[0].toLowerCase()+'…</p></div>'}).join('');
+  gaya();kisah();var out=$('tiga');out.innerHTML=SL.map(function(s,i){return '<div id="sl'+i+'"><p class="sub">Memuat ayat '+s[0].toLowerCase()+'…</p></div>'}).join('');
   for(var i=0;i<3;i++){
     try{
       var base=(D*3+i)%TOT,S,a;
@@ -958,8 +1121,190 @@ try{
   }else setSync('Sinkron awan: tidak tersedia (sedang offline?)');
 }catch(e){setSync('Sinkron awan: gagal ('+e.message+')')}
 
+/* ===== Asma’ul Husna: 99 nama (Arab, Latin, arti, makna); pemutar berurutan lewat text-to-speech perangkat ===== */
+var AH=[
+['Ar-Rahman','الرَّحْمَٰنُ','Maha Pengasih','Kasih-Nya luas meliputi seluruh makhluk di dunia, yang beriman maupun tidak.'],
+['Ar-Rahim','الرَّحِيمُ','Maha Penyayang','Kasih sayang-Nya khusus dilimpahkan kepada orang beriman, terutama di akhirat.'],
+['Al-Malik','الْمَلِكُ','Maha Merajai','Pemilik kerajaan dan kekuasaan mutlak atas semesta; semua makhluk tunduk kepada-Nya.'],
+['Al-Quddus','الْقُدُّوسُ','Maha Suci','Suci dari segala kekurangan, cela, dan sifat yang tidak layak bagi-Nya.'],
+['As-Salam','السَّلَامُ','Maha Memberi Kesejahteraan','Selamat dari segala kekurangan, dan sumber keselamatan serta kedamaian bagi hamba-Nya.'],
+['Al-Mu’min','الْمُؤْمِنُ','Maha Memberi Keamanan','Memberi rasa aman kepada hamba-Nya dan membenarkan janji serta rasul-rasul-Nya.'],
+['Al-Muhaimin','الْمُهَيْمِنُ','Maha Mengawasi','Menjaga dan mengawasi segala sesuatu; tidak ada yang luput dari pengawasan-Nya.'],
+['Al-‘Aziz','الْعَزِيزُ','Maha Perkasa','Mahakuat dan tidak terkalahkan; tidak ada yang dapat mengalahkan kehendak-Nya.'],
+['Al-Jabbar','الْجَبَّارُ','Maha Perkasa Memaksakan Kehendak','Kehendak-Nya pasti berlaku; juga Yang memperbaiki keadaan hamba yang patah dan lemah.'],
+['Al-Mutakabbir','الْمُتَكَبِّرُ','Maha Megah','Memiliki kebesaran sejati; kesombongan hanya pantas bagi-Nya, tidak bagi makhluk.'],
+['Al-Khaliq','الْخَالِقُ','Maha Pencipta','Menciptakan segala sesuatu dari ketiadaan menurut ukuran dan kehendak-Nya.'],
+['Al-Bari’','الْبَارِئُ','Maha Mengadakan','Mengadakan makhluk dengan sempurna, bebas dari cacat dan ketidakseimbangan.'],
+['Al-Mushawwir','الْمُصَوِّرُ','Maha Membentuk Rupa','Membentuk rupa setiap makhluk dengan bentuk yang khas dan indah.'],
+['Al-Ghaffar','الْغَفَّارُ','Maha Pengampun','Terus-menerus menutupi dan mengampuni dosa hamba yang kembali kepada-Nya.'],
+['Al-Qahhar','الْقَهَّارُ','Maha Menundukkan','Menundukkan segala sesuatu di bawah kekuasaan-Nya; semua makhluk tunduk kepada-Nya.'],
+['Al-Wahhab','الْوَهَّابُ','Maha Pemberi Karunia','Memberi tanpa henti dan tanpa mengharap balasan.'],
+['Ar-Razzaq','الرَّزَّاقُ','Maha Pemberi Rezeki','Menjamin dan memberikan rezeki bagi seluruh makhluk, jasmani maupun rohani.'],
+['Al-Fattah','الْفَتَّاحُ','Maha Pembuka','Membuka pintu rahmat dan rezeki, membuka jalan keluar dari kesulitan, serta memutuskan perkara dengan adil.'],
+['Al-‘Alim','الْعَلِيمُ','Maha Mengetahui','Ilmu-Nya meliputi segala sesuatu, yang tampak maupun tersembunyi, yang lalu dan yang akan datang.'],
+['Al-Qabidh','الْقَابِضُ','Maha Menyempitkan','Menyempitkan rezeki atau menggenggam sesuatu sesuai hikmah-Nya.'],
+['Al-Basith','الْبَاسِطُ','Maha Melapangkan','Melapangkan rezeki dan hati hamba-Nya sesuai hikmah-Nya.'],
+['Al-Khafidh','الْخَافِضُ','Maha Merendahkan','Merendahkan derajat siapa pun yang Dia kehendaki, misalnya orang yang durhaka.'],
+['Ar-Rafi’','الرَّافِعُ','Maha Meninggikan','Meninggikan derajat orang beriman dan berilmu sesuai kehendak-Nya.'],
+['Al-Mu’izz','الْمُعِزُّ','Maha Memuliakan','Memberi kemuliaan dan kekuatan kepada siapa yang Dia kehendaki.'],
+['Al-Mudzill','الْمُذِلُّ','Maha Menghinakan','Menghinakan siapa yang menyimpang dari jalan-Nya, sesuai keadilan-Nya.'],
+['As-Sami’','السَّمِيعُ','Maha Mendengar','Mendengar semua suara dan doa, yang lirih maupun yang keras, bahkan bisikan hati.'],
+['Al-Bashir','الْبَصِيرُ','Maha Melihat','Melihat segala sesuatu, sekecil apa pun, tanpa terhalang gelap atau jarak.'],
+['Al-Hakam','الْحَكَمُ','Maha Menetapkan Hukum','Hakim yang memutuskan perkara dengan adil; keputusan-Nya tidak dapat ditolak.'],
+['Al-‘Adl','الْعَدْلُ','Maha Adil','Menempatkan segala sesuatu pada tempatnya dan tidak pernah berlaku zalim.'],
+['Al-Lathif','اللَّطِيفُ','Maha Lembut','Mengetahui hal-hal yang halus dan menyampaikan kebaikan dengan cara yang lembut tanpa disadari.'],
+['Al-Khabir','الْخَبِيرُ','Maha Mengetahui Rahasia','Mengetahui hakikat dan rahasia terdalam segala sesuatu.'],
+['Al-Halim','الْحَلِيمُ','Maha Penyantun','Tidak tergesa menghukum meski hamba berbuat dosa; memberi waktu untuk bertobat.'],
+['Al-‘Azhim','الْعَظِيمُ','Maha Agung','Memiliki keagungan yang tak terjangkau akal; tidak ada yang menyamai-Nya.'],
+['Al-Ghafur','الْغَفُورُ','Maha Pengampun','Mengampuni dosa-dosa hamba, besar maupun kecil, bagi yang bertobat.'],
+['Asy-Syakur','الشَّكُورُ','Maha Mensyukuri','Membalas amal kecil dengan pahala yang berlipat; menghargai kebaikan hamba-Nya.'],
+['Al-‘Aliyy','الْعَلِيُّ','Maha Tinggi','Maha tinggi dalam zat, kedudukan, dan kekuasaan di atas semua makhluk.'],
+['Al-Kabir','الْكَبِيرُ','Maha Besar','Besar dalam zat dan sifat-Nya; segala yang lain kecil di hadapan-Nya.'],
+['Al-Hafizh','الْحَفِيظُ','Maha Menjaga','Menjaga alam semesta, amal hamba, dan hamba-Nya dari kebinasaan.'],
+['Al-Muqit','الْمُقِيتُ','Maha Pemberi Kecukupan','Memberi makhluk apa yang menjadi kebutuhan dan menjaga kelangsungan hidupnya.'],
+['Al-Hasib','الْحَسِيبُ','Maha Membuat Perhitungan','Menghitung amal hamba dengan teliti dan Dia cukup bagi hamba yang bertawakal.'],
+['Al-Jalil','الْجَلِيلُ','Maha Luhur','Memiliki sifat-sifat kebesaran dan kemuliaan yang sempurna.'],
+['Al-Karim','الْكَرِيمُ','Maha Mulia','Pemurah dan mulia; memberi tanpa diminta dan melebihi harapan.'],
+['Ar-Raqib','الرَّقِيبُ','Maha Mengawasi','Mengawasi setiap gerak dan niat hamba; tidak ada yang tersembunyi dari-Nya.'],
+['Al-Mujib','الْمُجِيبُ','Maha Mengabulkan','Mengabulkan doa dan permohonan hamba yang berdoa kepada-Nya.'],
+['Al-Wasi’','الْوَاسِعُ','Maha Luas','Luas rahmat, ilmu, dan karunia-Nya meliputi segala sesuatu.'],
+['Al-Hakim','الْحَكِيمُ','Maha Bijaksana','Setiap ciptaan dan ketetapan-Nya mengandung hikmah dan ditempatkan secara tepat.'],
+['Al-Wadud','الْوَدُودُ','Maha Mengasihi','Mencintai hamba-Nya yang taat dan dicintai oleh hamba-hamba-Nya yang saleh.'],
+['Al-Majid','الْمَجِيدُ','Maha Mulia','Memiliki kemuliaan dan kebesaran yang luas serta kemurahan yang agung.'],
+['Al-Ba’its','الْبَاعِثُ','Maha Membangkitkan','Membangkitkan manusia dari kubur pada hari kiamat dan mengutus para rasul.'],
+['Asy-Syahid','الشَّهِيدُ','Maha Menyaksikan','Menyaksikan segala sesuatu secara langsung; tidak ada yang tersembunyi dari-Nya.'],
+['Al-Haqq','الْحَقُّ','Maha Benar','Wujud-Nya pasti dan benar; firman dan janji-Nya adalah kebenaran.'],
+['Al-Wakil','الْوَكِيلُ','Maha Memelihara','Tempat bersandar dan menyerahkan urusan; Dia mengurus semua urusan hamba yang bertawakal.'],
+['Al-Qawiyy','الْقَوِيُّ','Maha Kuat','Memiliki kekuatan sempurna yang tidak pernah berkurang atau lelah.'],
+['Al-Matin','الْمَتِينُ','Maha Kokoh','Sangat kokoh dan teguh; kekuatan-Nya tidak tergoyahkan.'],
+['Al-Waliyy','الْوَلِيُّ','Maha Melindungi','Pelindung dan penolong orang-orang beriman; mengurus urusan mereka.'],
+['Al-Hamid','الْحَمِيدُ','Maha Terpuji','Terpuji pada zat, sifat, dan perbuatan-Nya; segala pujian layak bagi-Nya.'],
+['Al-Muhshi','الْمُحْصِي','Maha Menghitung','Menghitung segala sesuatu dengan tepat, termasuk amal dan nikmat hamba.'],
+['Al-Mubdi’','الْمُبْدِئُ','Maha Memulai','Memulai penciptaan makhluk tanpa contoh sebelumnya.'],
+['Al-Mu’id','الْمُعِيدُ','Maha Mengembalikan','Mengembalikan makhluk kepada-Nya setelah kematian untuk dihisab.'],
+['Al-Muhyi','الْمُحْيِي','Maha Menghidupkan','Menghidupkan yang mati, baik jasad maupun hati, dan memberi kehidupan kepada makhluk.'],
+['Al-Mumit','الْمُمِيتُ','Maha Mematikan','Menetapkan ajal dan mencabut nyawa makhluk pada waktu yang telah ditentukan.'],
+['Al-Hayy','الْحَيُّ','Maha Hidup','Hidup sempurna, tidak diawali ketiadaan dan tidak diakhiri kematian.'],
+['Al-Qayyum','الْقَيُّومُ','Maha Berdiri Sendiri','Berdiri sendiri tanpa bergantung pada apa pun dan menegakkan seluruh makhluk.'],
+['Al-Wajid','الْوَاجِدُ','Maha Menemukan','Tidak kekurangan apa pun; Dia mendapatkan apa saja yang Dia kehendaki.'],
+['Al-Maajid','الْمَاجِدُ','Maha Mulia','Memiliki kemuliaan yang sempurna dan kemurahan yang luas.'],
+['Al-Wahid','الْوَاحِدُ','Maha Esa','Esa dalam zat, sifat, dan perbuatan-Nya; tiada sekutu bagi-Nya.'],
+['Al-Ahad','الْأَحَدُ','Maha Tunggal','Tunggal, tidak ada yang serupa dan tidak terbagi-bagi.'],
+['Ash-Shamad','الصَّمَدُ','Maha Dibutuhkan','Tempat bergantung semua makhluk, sementara Dia tidak membutuhkan siapa pun.'],
+['Al-Qadir','الْقَادِرُ','Maha Kuasa','Mampu berbuat apa saja yang Dia kehendaki.'],
+['Al-Muqtadir','الْمُقْتَدِرُ','Maha Berkuasa','Kekuasaan-Nya sempurna dan menyeluruh atas segala sesuatu.'],
+['Al-Muqaddim','الْمُقَدِّمُ','Maha Mendahulukan','Mendahulukan siapa atau apa yang Dia kehendaki sesuai hikmah-Nya.'],
+['Al-Mu’akhkhir','الْمُؤَخِّرُ','Maha Mengakhirkan','Mengakhirkan atau menunda siapa atau apa yang Dia kehendaki sesuai hikmah-Nya.'],
+['Al-Awwal','الْأَوَّلُ','Maha Awal','Tidak ada sesuatu pun sebelum-Nya; Dia ada sebelum segala sesuatu.'],
+['Al-Akhir','الْآخِرُ','Maha Akhir','Tidak ada sesuatu pun setelah-Nya; Dia tetap ada setelah segala sesuatu binasa.'],
+['Azh-Zhahir','الظَّاهِرُ','Maha Nyata','Tidak ada sesuatu di atas-Nya; bukti keberadaan-Nya tampak jelas pada ciptaan-Nya.'],
+['Al-Bathin','الْبَاطِنُ','Maha Tersembunyi','Tidak ada sesuatu yang lebih dekat dari-Nya; Dia mengetahui yang tersembunyi.'],
+['Al-Wali','الْوَالِي','Maha Memerintah','Mengurus dan menguasai seluruh urusan makhluk.'],
+['Al-Muta’ali','الْمُتَعَالِي','Maha Tinggi','Maha tinggi, jauh di atas segala kekurangan dan persamaan dengan makhluk.'],
+['Al-Barr','الْبَرُّ','Maha Dermawan','Melimpahkan kebaikan dan kebajikan kepada hamba-Nya.'],
+['At-Tawwab','التَّوَّابُ','Maha Penerima Tobat','Menerima tobat hamba berulang-ulang dan memberi taufik untuk bertobat.'],
+['Al-Muntaqim','الْمُنْتَقِمُ','Maha Menyiksa','Menjatuhkan hukuman kepada pelaku kezaliman dan kemaksiatan yang terus-menerus.'],
+['Al-‘Afuww','الْعَفُوُّ','Maha Pemaaf','Menghapus dosa hingga tidak berbekas dan tidak menuntutnya lagi.'],
+['Ar-Ra’uf','الرَّءُوفُ','Maha Pengasih Lagi Lembut','Kasih sayang yang sangat lembut, menghindarkan hamba dari kesulitan.'],
+['Malikul Mulk','مَالِكُ الْمُلْكِ','Penguasa Kerajaan','Pemilik seluruh kerajaan; Dia memberi dan mencabut kekuasaan kepada siapa pun yang Dia kehendaki.'],
+['Dzul Jalali wal Ikram','ذُو الْجَلَالِ وَالْإِكْرَامِ','Pemilik Keagungan dan Kemuliaan','Memiliki kebesaran sekaligus kemurahan; Dia agung dan memuliakan hamba-Nya.'],
+['Al-Muqsith','الْمُقْسِطُ','Maha Adil','Menegakkan keadilan, membela yang terzalimi, dan membalas yang zalim.'],
+['Al-Jami’','الْجَامِعُ','Maha Mengumpulkan','Mengumpulkan seluruh makhluk pada hari kiamat dan menghimpun hal-hal yang berbeda.'],
+['Al-Ghaniyy','الْغَنِيُّ','Maha Kaya','Kaya mutlak, tidak membutuhkan siapa pun; semua makhluk membutuhkan-Nya.'],
+['Al-Mughni','الْمُغْنِي','Maha Memberi Kekayaan','Memberi kecukupan dan kekayaan kepada siapa yang Dia kehendaki.'],
+['Al-Mani’','الْمَانِعُ','Maha Mencegah','Mencegah sesuatu dari siapa yang Dia kehendaki sesuai hikmah-Nya.'],
+['Adh-Dharr','الضَّارُّ','Maha Memberi Mudarat','Menimpakan kemudaratan sesuai takdir dan hikmah-Nya; tidak ada yang mendatangkannya kecuali dengan izin-Nya.'],
+['An-Nafi’','النَّافِعُ','Maha Memberi Manfaat','Mendatangkan manfaat dan kebaikan; tidak ada yang memberi manfaat kecuali dengan izin-Nya.'],
+['An-Nur','النُّورُ','Maha Bercahaya','Pemberi cahaya bagi langit dan bumi serta petunjuk bagi hati hamba-Nya.'],
+['Al-Hadi','الْهَادِي','Maha Pemberi Petunjuk','Memberi hidayah kepada makhluk menuju kebaikan dan kebenaran.'],
+['Al-Badi’','الْبَدِيعُ','Maha Pencipta Tanpa Contoh','Menciptakan sesuatu yang baru tanpa contoh sebelumnya dengan sangat indah.'],
+['Al-Baqi','الْبَاقِي','Maha Kekal','Tetap ada selama-lamanya, tidak akan binasa.'],
+['Al-Warits','الْوَارِثُ','Maha Mewarisi','Tetap ada setelah seluruh makhluk binasa; kepada-Nya segala sesuatu kembali.'],
+['Ar-Rasyid','الرَّشِيدُ','Maha Pandai','Pemberi bimbingan; segala urusan-Nya mengarah pada kebenaran dan kebaikan.'],
+['Ash-Shabur','الصَّبُورُ','Maha Sabar','Tidak tergesa menghukum orang yang berbuat maksiat; memberi kesempatan hingga waktunya.']
+];
+
+var AHI=-1,AHRUN=false,AHSLOW=false,AHFA=null,AHBUILT=false,AHTT=null;
+function ahMode(){return AHTT?'native':(window.speechSynthesis&&window.SpeechSynthesisUtterance?'web':'')}
+var AHPESAN_ARAB='Suara Arab belum terpasang di HP. Buka Pengaturan, cari “Teks ke ucapan” (Text-to-speech), pilih Layanan Google, lalu unduh data suara bahasa Arab.';
+function ahNorm(s){return String(s).toLowerCase().replace(/[’'`\-]/g,'').replace(/\s+/g,' ')}
+function asma(){
+  if(!AHBUILT){
+    AHBUILT=true;
+    $('ahlist').innerHTML=AH.map(function(n,i){return '<div class="card ah" id="ah'+i+'" data-i="'+i+'" style="--c:var(--teal)"><div class="hd"><b>'+(i+1)+'</b><button class="ib" data-ahp="'+i+'" aria-label="Dengar '+esc(n[0])+'">▶ Dengar</button></div><div class="ar" lang="ar">'+n[1]+'</div><p class="dt">'+esc(n[0])+'</p><p class="arti">'+esc(n[2])+'</p><p class="mk">'+esc(n[3])+'</p></div>'}).join('');
+    AHTT=(typeof NATIVE!=='undefined'&&NATIVE)?nplug('TadabburTts'):null;
+    if(!ahMode()){$('ahmsg').textContent='Perangkat ini belum mendukung suara pembaca teks. Teks dan artinya tetap bisa dibaca.';$('ahall').disabled=true}
+    else if(AHTT){AHTT.cek().then(function(r){if(!r||!r.ada)$('ahmsg').textContent='Mesin suara (Text-to-speech) belum aktif di HP ini. Aktifkan di Pengaturan, “Teks ke ucapan”.';else if(!r.arab)$('ahmsg').textContent=AHPESAN_ARAB;else $('ahmsg').textContent=''}).catch(function(){})}
+    fetch('asmaul-husna.mp3',{method:'HEAD'}).then(function(r){if(r.ok)$('ahfile').hidden=false}).catch(function(){});
+  }
+}
+function ahMark(i){
+  Array.prototype.forEach.call(document.querySelectorAll('.ah.on'),function(x){x.classList.remove('on')});
+  var el=i>=0?$('ah'+i):null;if(el){el.classList.add('on');if(el.scrollIntoView)el.scrollIntoView({block:'center',behavior:'smooth'})}
+  Array.prototype.forEach.call(document.querySelectorAll('[data-ahp]'),function(b){var on=+b.dataset.ahp===i&&i>=0;b.setAttribute('aria-pressed',on);b.textContent=on?'■ Berhenti':'▶ Dengar'});
+  $('ahstop').hidden=!(AHRUN||i>=0||(AHFA&&!AHFA.paused));$('ahfile').textContent=(AHFA&&!AHFA.paused)?'■ Berhenti':'▶ Putar nada (rekaman)';$('ahall').hidden=AHRUN;
+}
+function ahStopSuara(){try{if(AHTT)AHTT.berhenti();else if(window.speechSynthesis)speechSynthesis.cancel()}catch(e){}}
+function ahSelesai(i,lanjut){
+  if(AHI!==i)return;
+  if(AHRUN&&lanjut&&i<AH.length-1)setTimeout(function(){if(AHRUN&&AHI===i)ahSay(i+1,true)},650);
+  else{AHRUN=false;AHI=-1;ahMark(-1)}
+}
+function ahGagal(i,pesan){if(AHI!==i)return;if(pesan)$('ahmsg').textContent=pesan;AHRUN=false;AHI=-1;ahMark(-1)}
+function ahSay(i,lanjut){
+  if(!ahMode())return;
+  ahStopSuara();
+  if(AHFA){AHFA.pause();AHFA=null}
+  if(typeof AU!=='undefined'&&AU)AU.pause();
+  AHI=i;ahMark(i);
+  if(AHTT){
+    AHTT.bicara({teks:AH[i][1],lang:'ar',rate:AHSLOW?0.6:0.85}).then(function(r){
+      if(r&&r.ok===false&&r.alasan==='arab')return ahGagal(i,AHPESAN_ARAB);
+      if(r&&r.ok===false&&r.alasan==='mesin')return ahGagal(i,'Mesin suara (Text-to-speech) di HP ini belum aktif atau gagal. Periksa Pengaturan, “Teks ke ucapan”.');
+      if(r&&r.ok===false)return;
+      $('ahmsg').textContent='';ahSelesai(i,lanjut);
+    }).catch(function(){ahGagal(i,'')});
+    return;
+  }
+  var u=new SpeechSynthesisUtterance(AH[i][1]);u.lang='ar-SA';u.rate=AHSLOW?0.55:0.8;
+  try{var v=speechSynthesis.getVoices().filter(function(x){return /^ar/i.test(x.lang)})[0];if(v){u.voice=v;$('ahmsg').textContent=''}else $('ahmsg').textContent=AHPESAN_ARAB}catch(e){}
+  u.onend=function(){ahSelesai(i,lanjut)};
+  u.onerror=function(){ahGagal(i,'')};
+  speechSynthesis.speak(u);
+}
+function ahStop(){
+  AHRUN=false;AHI=-1;
+  ahStopSuara();
+  if(AHFA){AHFA.pause();AHFA=null}
+  if($('ahstop'))ahMark(-1);
+}
+document.addEventListener('click',function(e){
+  var p=e.target.closest('[data-ahp]');
+  if(p){var i=+p.dataset.ahp;if(AHI===i&&!AHRUN){ahStop()}else{AHRUN=false;ahSay(i,false)}return}
+  if(e.target.closest('#ahall')){AHRUN=true;ahSay(0,true);return}
+  if(e.target.closest('#ahstop')){ahStop();return}
+  if(e.target.closest('#ahslow')){AHSLOW=!AHSLOW;$('ahslow').setAttribute('aria-pressed',AHSLOW);return}
+  if(e.target.closest('#ahfile')){
+    if(AHFA&&!AHFA.paused){ahStop();return}
+    ahStop();if(typeof AU!=='undefined'&&AU)AU.pause();
+    AHFA=new Audio('asmaul-husna.mp3');AHFA.onended=function(){AHFA=null;ahMark(-1);$('ahfile').textContent='▶ Putar nada (rekaman)'};
+    AHFA.onerror=function(){AHFA=null;$('ahmsg').textContent='Rekaman belum bisa diputar.'};
+    AHFA.play().then(function(){$('ahfile').textContent='■ Berhenti';$('ahstop').hidden=false}).catch(function(){});
+  }
+});
+$('ahq').addEventListener('input',function(){
+  var q=ahNorm(this.value.trim());
+  AH.forEach(function(n,i){var t=(i+1)+' '+ahNorm(n[0]+' '+n[2]+' '+n[3]);$('ah'+i).hidden=!!q&&t.indexOf(q)<0})
+});
+if(window.speechSynthesis&&speechSynthesis.addEventListener)speechSynthesis.addEventListener('voiceschanged',function(){});
 if('serviceWorker' in navigator&&!NATIVE&&/^https?:$/.test(location.protocol))window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})});
 showVer();if(/widget/.test(location.hash+location.search))wgOn();else hari();
+/* widget 4x3: ketuk jadwal sholat atau ayat membuka menu yang sesuai */
+if(NATIVE){var NV=nplug('TadabburNav');if(NV){
+  var keTab=function(t){if(t!=='sholat'&&t!=='hari')return;var b=document.querySelector('#nav button[data-v="'+t+'"]');if(b)b.click()};
+  try{NV.addListener('tab',function(e){keTab(e&&e.tab)})}catch(e){}
+  setTimeout(function(){try{NV.ambil().then(function(r){if(r&&r.tab)keTab(r.tab)}).catch(function(){})}catch(e){}},400);
+}}
 if(NATIVE)setTimeout(function(){natSync(false)},4000);
 if(NATIVE)setTimeout(function(){cekUpdate(false)},2500);
 </script>
