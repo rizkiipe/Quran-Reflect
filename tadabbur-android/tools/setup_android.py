@@ -20,7 +20,7 @@ for f in os.listdir(os.path.join(native, 'java')):
     open(os.path.join(jdir, f), 'w', encoding='utf-8').write(src)
 
 # 1b) daftarkan plugin buatan sendiri di MainActivity (pembaca teks Asma'ul Husna dan alarm adzan); harus sebelum super.onCreate
-for cls in ('TadabburTts', 'AdzanPlugin'):
+for cls in ('TadabburTts', 'AdzanPlugin', 'NavPlugin'):
     if not os.path.isfile(os.path.join(native, 'java', cls + '.java')):
         continue
     for f in os.listdir(jdir):
