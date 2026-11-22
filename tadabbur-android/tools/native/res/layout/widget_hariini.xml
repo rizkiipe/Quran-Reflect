@@ -24,7 +24,7 @@
             android:maxLines="1"
             android:ellipsize="end"
             android:fontFamily="serif"
-            android:textSize="12dp" />
+            android:textSize="10dp" />
         <TextView
             android:id="@+id/hi_refresh"
             android:layout_width="wrap_content"
@@ -70,7 +70,7 @@
         android:format12Hour="HH:mm"
         android:format24Hour="HH:mm"
         android:fontFamily="sans-serif-thin"
-        android:textSize="48dp" />
+        android:textSize="60dp" />
     <TextClock
         android:id="@+id/hi_tgl"
         android:layout_width="wrap_content"
@@ -106,7 +106,7 @@
             android:ellipsize="end"
             android:fontFamily="serif"
             android:textStyle="bold"
-            android:textSize="11dp" />
+            android:textSize="9dp" />
         <TextView
             android:id="@+id/hi_ref"
             android:layout_width="match_parent"
@@ -114,7 +114,7 @@
             android:gravity="center"
             android:maxLines="1"
             android:fontFamily="serif"
-            android:textSize="10dp" />
+            android:textSize="9dp" />
     </LinearLayout>
 
     <!-- jadwal sholat: 3 kolom x 2 baris -->
