@@ -82,6 +82,16 @@ if 'AyatWidget' not in m:
         </receiver>
 '''
     m = re.sub(r'</application>', receiver + '    </application>', m, count=1)
+if 'HariIniWidget' not in m and os.path.isfile(os.path.join(native, 'java', 'HariIniWidget.java')):
+    receiver3 = '''
+        <receiver android:name=".HariIniWidget" android:label="Hari Ini 4x3" android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/hariini_widget_info" />
+        </receiver>
+'''
+    m = re.sub(r'</application>', receiver3 + '    </application>', m, count=1)
 if 'SholatWidget' not in m:
     receiver2 = '''
         <receiver android:name=".SholatWidget" android:label="Jadwal Sholat" android:exported="true">
