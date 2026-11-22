@@ -8,6 +8,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.provider.AlarmClock;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.StyleSpan;
@@ -39,6 +40,20 @@ public class HariIniWidget extends AppWidgetProvider {
     private static PendingIntent tickIntent(Context c) {
         Intent i = new Intent(c, HariIniWidget.class).setAction(ACTION_TICK);
         return PendingIntent.getBroadcast(c, 3, i, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
+    /** Buka aplikasi langsung di menu tertentu (sholat atau hari). Tiap tujuan memakai kode permintaan sendiri. */
+    private static PendingIntent bukaTab(Context c, String tab, int kode) {
+        Intent i = c.getPackageManager().getLaunchIntentForPackage(c.getPackageName());
+        if (i == null) return null;
+        i.putExtra("tadabbur_tab", tab);
+        return PendingIntent.getActivity(c, kode, i, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
+    /** Buka aplikasi jam/alarm bawaan HP. */
+    private static PendingIntent bukaJam(Context c) {
+        Intent i = new Intent(AlarmClock.ACTION_SHOW_ALARMS).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        return PendingIntent.getActivity(c, 12, i, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     private static PendingIntent refreshIntent(Context c) {
@@ -229,6 +244,15 @@ public class HariIniWidget extends AppWidgetProvider {
         v.setTextColor(R.id.hi_refresh, utama);
 
         v.setOnClickPendingIntent(R.id.hi_refresh, refreshIntent(c));
+        // jam -> aplikasi jam HP; ayat -> Tadabbur Harian; jadwal sholat -> menu Sholat; bagian lain -> beranda aplikasi
+        v.setOnClickPendingIntent(R.id.hi_jam, bukaJam(c));
+        PendingIntent keHari = bukaTab(c, "hari", 11), keSholat = bukaTab(c, "sholat", 10);
+        if (keHari != null) v.setOnClickPendingIntent(R.id.hi_ayat, keHari);
+        if (keSholat != null) {
+            v.setOnClickPendingIntent(R.id.hi_baris1, keSholat);
+            v.setOnClickPendingIntent(R.id.hi_baris2, keSholat);
+            v.setOnClickPendingIntent(R.id.hi_extra, keSholat);
+        }
         Intent buka = c.getPackageManager().getLaunchIntentForPackage(c.getPackageName());
         if (buka != null) {
             PendingIntent pi = PendingIntent.getActivity(c, 0, buka, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
