@@ -79,7 +79,7 @@
         android:format12Hour="EEE, d MMM"
         android:format24Hour="EEE, d MMM"
         android:fontFamily="sans-serif-medium"
-        android:textSize="13dp" />
+        android:textSize="16dp" />
 
     <!-- ayat: mengisi sisa tinggi widget; bila ayat panjang, bagian ini yang terpotong, bukan jadwal sholat -->
     <LinearLayout
