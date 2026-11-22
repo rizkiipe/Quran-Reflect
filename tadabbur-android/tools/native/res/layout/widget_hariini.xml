@@ -84,6 +84,7 @@
 
     <!-- ayat: mengisi sisa tinggi widget; bila ayat panjang, bagian ini yang terpotong, bukan jadwal sholat -->
     <LinearLayout
+        android:id="@+id/hi_ayat"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -120,6 +121,7 @@
 
     <!-- jadwal sholat: 3 kolom x 2 baris -->
     <LinearLayout
+        android:id="@+id/hi_baris1" 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
@@ -129,6 +131,7 @@
         <TextView android:id="@+id/hi_s2" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:gravity="right" android:maxLines="1" android:fontFamily="serif" android:textSize="10dp" />
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/hi_baris2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
