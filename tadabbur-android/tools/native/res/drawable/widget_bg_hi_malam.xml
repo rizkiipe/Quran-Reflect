@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- khusus widget 4x3, cuaca cerah malam: bulan dan bintang dipindah ke area kosong di kanan jam besar, tidak di belakang tulisan -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <gradient android:angle="270" android:startColor="#050A1C" android:endColor="#12305A" />
+            <corners android:radius="22dp" />
+        </shape>
+    </item>
+    <!-- cahaya bulan -->
+    <item android:gravity="top|end" android:end="15dp" android:top="21dp">
+        <shape android:shape="oval">
+            <size android:width="84dp" android:height="84dp" />
+            <gradient android:type="radial" android:gradientRadius="42dp" android:centerColor="#55F6F1D8" android:endColor="#00F6F1D8" />
+        </shape>
+    </item>
+    <!-- bulan -->
+    <item android:gravity="top|end" android:end="40dp" android:top="46dp">
+        <shape android:shape="oval">
+            <size android:width="34dp" android:height="34dp" />
+            <solid android:color="#F6F1D8" />
+        </shape>
+    </item>
+    <!-- bintang -->
+    <item android:gravity="top|start" android:start="200dp" android:top="44dp">
+        <shape android:shape="oval">
+            <size android:width="3dp" android:height="3dp" />
+            <solid android:color="#CCFFFFFF" />
+        </shape>
+    </item>
+    <item android:gravity="top|start" android:start="188dp" android:top="66dp">
+        <shape android:shape="oval">
+            <size android:width="2dp" android:height="2dp" />
+            <solid android:color="#CCFFFFFF" />
+        </shape>
+    </item>
+    <item android:gravity="top|start" android:start="218dp" android:top="84dp">
+        <shape android:shape="oval">
+            <size android:width="3dp" android:height="3dp" />
+            <solid android:color="#CCFFFFFF" />
+        </shape>
+    </item>
+    <item android:gravity="top|end" android:end="12dp" android:top="52dp">
+        <shape android:shape="oval">
+            <size android:width="2dp" android:height="2dp" />
+            <solid android:color="#CCFFFFFF" />
+        </shape>
+    </item>
+    <item android:gravity="top|end" android:end="30dp" android:top="94dp">
+        <shape android:shape="oval">
+            <size android:width="3dp" android:height="3dp" />
+            <solid android:color="#CCFFFFFF" />
+        </shape>
+    </item>
+    <item android:gravity="top|start" android:start="236dp" android:top="40dp">
+        <shape android:shape="oval">
+            <size android:width="2dp" android:height="2dp" />
+            <solid android:color="#CCFFFFFF" />
+        </shape>
+    </item>
+</layer-list>

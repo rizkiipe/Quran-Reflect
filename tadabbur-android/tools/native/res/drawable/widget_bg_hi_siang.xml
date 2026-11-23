@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- khusus widget 4x3, cuaca cerah siang: matahari dan awan dipindah ke kanan jam besar, di bawah baris atas, tidak lagi di dasar widget di belakang jadwal sholat -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <gradient android:angle="270" android:startColor="#3FA7FF" android:endColor="#CDEBFF" />
+            <corners android:radius="22dp" />
+        </shape>
+    </item>
+    <!-- cahaya matahari -->
+    <item android:gravity="top|end" android:end="6dp" android:top="18dp">
+        <shape android:shape="oval">
+            <size android:width="96dp" android:height="96dp" />
+            <gradient android:type="radial" android:gradientRadius="48dp" android:centerColor="#99FFF176" android:endColor="#00FFF176" />
+        </shape>
+    </item>
+    <!-- matahari -->
+    <item android:gravity="top|end" android:end="32dp" android:top="44dp">
+        <shape android:shape="oval">
+            <size android:width="44dp" android:height="44dp" />
+            <solid android:color="#FFE45C" />
+        </shape>
+    </item>
+    <!-- awan di bawah matahari -->
+    <item android:gravity="top|end" android:end="24dp" android:top="84dp">
+        <shape android:shape="oval">
+            <size android:width="78dp" android:height="22dp" />
+            <solid android:color="#80FFFFFF" />
+        </shape>
+    </item>
+    <!-- awan kecil di kiri matahari -->
+    <item android:gravity="top|end" android:end="92dp" android:top="64dp">
+        <shape android:shape="oval">
+            <size android:width="52dp" android:height="16dp" />
+            <solid android:color="#66FFFFFF" />
+        </shape>
+    </item>
+</layer-list>
