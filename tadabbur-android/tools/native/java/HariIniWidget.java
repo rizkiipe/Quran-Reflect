@@ -149,7 +149,7 @@ public class HariIniWidget extends AppWidgetProvider {
         }
     }
 
-    /** Latar khusus widget 4x3: awan berawan/hujan diletakkan di bawah baris atas. Cerah memakai latar bawaan. */
+    /** Latar khusus widget 4x3: awan berawan/hujan diletakkan di bawah baris atas. Cerah, berawan, dan hujan semuanya memakai latar khusus widget ini. */
     private static int latarHi(int cu, int tema) {
         if (cu == WidgetTema.BERAWAN) {
             return tema == 0 ? R.drawable.widget_bg_hi_berawan_pagi : (tema == 1 ? R.drawable.widget_bg_hi_berawan_siang : R.drawable.widget_bg_hi_berawan_malam);
@@ -157,7 +157,8 @@ public class HariIniWidget extends AppWidgetProvider {
         if (cu == WidgetTema.HUJAN) {
             return tema == 0 ? R.drawable.widget_bg_hi_hujan_pagi : (tema == 1 ? R.drawable.widget_bg_hi_hujan_siang : R.drawable.widget_bg_hi_hujan_malam);
         }
-        return WidgetTema.latar(cu, tema);
+        // cerah: matahari, bulan, dan bintang di area kosong kanan jam besar
+        return tema == 0 ? R.drawable.widget_bg_hi_pagi : (tema == 1 ? R.drawable.widget_bg_hi_siang : R.drawable.widget_bg_hi_malam);
     }
 
     private static int redup(int warna) {
