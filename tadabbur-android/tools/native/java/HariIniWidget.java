@@ -25,8 +25,6 @@ import org.json.JSONObject;
 public class HariIniWidget extends AppWidgetProvider {
     private static final String ACTION_TICK = "TADABBUR_HARIINI_TICK";
     private static final String ACTION_REFRESH = "TADABBUR_HARIINI_REFRESH";
-    /** Koreksi tanggal Hijriah dalam hari (+1 / -1) bila berbeda dari kalender yang dipakai di daerahmu. */
-    private static final int KOREKSI_HIJRIAH = 0;
     /** Lama waktu yang ditampilkan di baris bawah (menit): Ishraq sesudah terbit, Istiwa sebelum dzuhur, Isfirar sebelum maghrib. */
     private static final int ISHRAQ_MENIT = 45, ISTIWA_MENIT = 10, ISFIRAR_MENIT = 45;
 
@@ -120,9 +118,9 @@ public class HariIniWidget extends AppWidgetProvider {
     }
 
     /** Konversi Masehi ke Hijriah (kalender sipil/tabular). Mengembalikan {hari, bulan 1-12, tahun}. */
-    static int[] hijriah(Calendar g) {
+    static int[] hijriah(Calendar g, int koreksi) {
         Calendar k = (Calendar) g.clone();
-        k.add(Calendar.DAY_OF_MONTH, KOREKSI_HIJRIAH);
+        k.add(Calendar.DAY_OF_MONTH, koreksi);
         int y = k.get(Calendar.YEAR), mo = k.get(Calendar.MONTH) + 1, d = k.get(Calendar.DAY_OF_MONTH);
         int a = (14 - mo) / 12, yy = y + 4800 - a, mm = mo + 12 * a - 3;
         long jd = d + (153 * mm + 2) / 5 + 365L * yy + yy / 4 - yy / 100 + yy / 400 - 32045;
@@ -161,6 +159,16 @@ public class HariIniWidget extends AppWidgetProvider {
         return tema == 0 ? R.drawable.widget_bg_hi_pagi : (tema == 1 ? R.drawable.widget_bg_hi_siang : R.drawable.widget_bg_hi_malam);
     }
 
+    /** Koreksi tanggal Hijriah (-1, 0, +1 hari) yang diatur di menu Ibadah › Kalender; disimpan bersama data sholat. */
+    private static int koreksiHijriah(Context c) {
+        try {
+            String raw = c.getSharedPreferences(WidgetTema.PREFS, Context.MODE_PRIVATE).getString("sholat", null);
+            return raw == null ? 0 : new JSONObject(raw).optInt("hk", 0);
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
     private static int redup(int warna) {
         return (warna & 0x00FFFFFF) | 0xB3000000;
     }
@@ -180,7 +188,7 @@ public class HariIniWidget extends AppWidgetProvider {
         v.setInt(R.id.hi_root, "setBackgroundResource", latarHi(cu, tema));
 
         // tanggal Hijriah
-        int[] hj = hijriah(cal);
+        int[] hj = hijriah(cal, koreksiHijriah(c));
         v.setTextViewText(R.id.hi_hijri, "\u263E " + hj[0] + " " + BULAN[Math.max(0, Math.min(11, hj[1] - 1))] + " " + hj[2] + " H");
         v.setTextColor(R.id.hi_hijri, pudar);
 
@@ -251,6 +259,9 @@ public class HariIniWidget extends AppWidgetProvider {
             extra = "Ishraq " + f.format(new Date(h[2])) + "\u2013" + f.format(new Date(h[2] + ISHRAQ_MENIT * mnt))
                 + " \u00B7 Istiwa " + f.format(new Date(h[3] - ISTIWA_MENIT * mnt)) + "\u2013" + f.format(new Date(h[3]))
                 + " \u00B7 Isfirar " + f.format(new Date(h[5] - ISFIRAR_MENIT * mnt)) + "\u2013" + f.format(new Date(h[5]));
+            if (hj[1] == 9) {   // bulan Ramadan: ganti baris makruh dengan imsak dan waktu berbuka
+                extra = "Ramadan hari ke-" + hj[0] + " \u00B7 Imsak " + f.format(new Date(h[0])) + " \u00B7 Berbuka " + f.format(new Date(h[5]));
+            }
         } else {
             extra = "Buka aplikasi \u203A Sholat \u203A ambil lokasi";
         }
