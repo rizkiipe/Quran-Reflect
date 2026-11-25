@@ -20,7 +20,7 @@ for f in os.listdir(os.path.join(native, 'java')):
     open(os.path.join(jdir, f), 'w', encoding='utf-8').write(src)
 
 # 1b) daftarkan plugin buatan sendiri di MainActivity (pembaca teks Asma'ul Husna dan alarm adzan); harus sebelum super.onCreate
-for cls in ('TadabburTts', 'AdzanPlugin', 'NavPlugin'):
+for cls in ('TadabburTts', 'AdzanPlugin', 'NavPlugin', 'DiagPlugin'):
     if not os.path.isfile(os.path.join(native, 'java', cls + '.java')):
         continue
     for f in os.listdir(jdir):
@@ -55,7 +55,8 @@ m = open(mp, encoding='utf-8').read()
 for perm in ('android.permission.POST_NOTIFICATIONS', 'android.permission.RECEIVE_BOOT_COMPLETED', 'android.permission.REQUEST_INSTALL_PACKAGES',
              'android.permission.ACCESS_COARSE_LOCATION', 'android.permission.ACCESS_FINE_LOCATION',
              'android.permission.SCHEDULE_EXACT_ALARM', 'android.permission.USE_EXACT_ALARM',
-             'android.permission.FOREGROUND_SERVICE', 'android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK', 'android.permission.WAKE_LOCK'):
+             'android.permission.FOREGROUND_SERVICE', 'android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK', 'android.permission.WAKE_LOCK',
+             'android.permission.VIBRATE'):
     if perm not in m:
         m = m.replace('<application', '<uses-permission android:name="%s" />\n    <application' % perm, 1)
 if 'TTS_SERVICE' not in m:   # Android 11+ wajib mendeklarasikan akses ke mesin Text-to-Speech
