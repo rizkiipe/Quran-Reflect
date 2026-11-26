@@ -85,6 +85,13 @@ section:not([hidden]){animation:fin .22s ease-out}
 .tsb{width:204px;height:204px;border-radius:50%;border:0;background:var(--card);color:var(--ink);font-size:64px;font-weight:700;cursor:pointer;font-variant-numeric:tabular-nums;box-shadow:inset 0 0 0 2px var(--line);-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 .tsb:active{background:var(--bg)}
 .rmt{width:100%;border-collapse:collapse;font-size:14.5px;font-variant-numeric:tabular-nums}.rmt th,.rmt td{padding:6px 8px;border-top:1px solid var(--line);text-align:left;white-space:nowrap}.rmt th{color:var(--mute);font-weight:600}.rmt tr.rmi{background:color-mix(in srgb,var(--gold) 16%,transparent);font-weight:700}
+.mug{display:grid;grid-template-columns:1fr 1fr;gap:8px 10px;margin-top:10px}.mug label{font-size:14px;color:var(--mute);display:flex;flex-direction:column;gap:3px}.mug select,.mug input{padding:9px 8px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;width:100%;min-width:0}
+.card.mp-on{outline:2px solid var(--gold);outline-offset:2px}
+#mpbar{position:fixed;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom,0px));z-index:70;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px 8px 14px;border-radius:16px;background:#0F3E3C;color:#fff;box-shadow:0 6px 24px rgba(0,0,0,.35)}#mpbar[hidden]{display:none}
+#mpbar .mpt{display:flex;flex-direction:column;min-width:0}#mpbar .mpt b{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#mpbar .mpt span{font-size:12.5px;opacity:.88;white-space:nowrap}#mpbar .mpc{display:flex;gap:4px;flex:none}#mpbar .mpc button{width:40px;height:40px;border-radius:50%;border:0;background:rgba(255,255,255,.14);color:#fff;font-size:18px;cursor:pointer}
+body.mpon{padding-bottom:90px}
+.ntbox:empty{display:none}.ntview{margin-top:8px;padding:8px 10px;border-radius:12px;background:color-mix(in srgb,var(--gold) 14%,transparent)}.ntm{display:flex;justify-content:space-between;font-size:13.5px;color:var(--mute)}.nt{margin:4px 0 0;white-space:pre-wrap;font-size:16px}
+.nta{width:100%;padding:10px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;resize:vertical}
 </style>
 </head>
 <body>
@@ -92,7 +99,7 @@ section:not([hidden]){animation:fin .22s ease-out}
 <div id="wg" hidden><div class="card" style="--c:var(--gold)"><div class="hd"><b>Tadabbur</b><span id="wgdate"></span></div><div class="chips" id="wgchips" style="margin:10px 0 0"></div><div id="wgbody"></div><div class="row"><button class="btn" id="wgoff">Buka aplikasi</button><button class="ib" data-wgimg="save">🖼 Gambar kunci layar</button></div><p class="pesan wgmsg" aria-live="polite" style="margin:8px 0 0"></p></div></div>
 <header class="hero"><h1>Quran Reflect</h1><p class="tgl" id="tgl"></p></header>
 <div id="upd" class="card" style="--c:var(--gold)" hidden></div>
-<nav id="nav"><button data-v="hari" aria-current="true">Hari ini</button><button data-v="sholat" aria-current="false">Sholat</button><button data-v="ibadah" aria-current="false">Ibadah</button><button data-v="cari" aria-current="false">Sesuai harimu</button><button data-v="quran" aria-current="false">Al-Qur’an</button><button data-v="doa" aria-current="false">Doa</button><button data-v="asma" aria-current="false">Asma’ul Husna</button><button data-v="simpan" aria-current="false">Tersimpan</button></nav>
+<nav id="nav"><button data-v="hari" aria-current="true">Hari ini</button><button data-v="sholat" aria-current="false">Sholat</button><button data-v="ibadah" aria-current="false">Ibadah</button><button data-v="cari" aria-current="false">Sesuai harimu</button><button data-v="quran" aria-current="false">Al-Qur’an</button><button data-v="doa" aria-current="false">Doa</button><button data-v="asma" aria-current="false">Asma’ul Husna</button><button data-v="simpan" aria-current="false">Lainnya</button></nav>
 
 <section id="v-hari"><p class="sub">Tiga ayat untuk hari ini. Ayatnya berbeda setiap hari dan tidak berulang dalam siklus ±5 tahun.</p><div id="tiga"></div><div id="kisah"></div><div id="gaya"></div>
 <div class="card" id="panelw" style="--c:var(--dusk)"><div class="hd"><b>Widget dan pengingat</b></div>
@@ -285,12 +292,13 @@ function gnum(k){var q=k.split(':'),n=+q[1],i;for(i=0;i<+q[0]-1;i++)n+=COUNTS[i]
 function audioBtns(){Array.prototype.forEach.call(document.querySelectorAll('[data-p]'),function(x){var on=x.dataset.p===AK&&AU&&!AU.paused;x.setAttribute('aria-pressed',on);x.textContent=on?'⏸ Jeda':'▶ Dengar'})}
 function playAyat(k){
   if(AU&&AK===k){if(AU.paused)AU.play().catch(function(){});else AU.pause();audioBtns();return}
+  if(typeof MP!=='undefined'&&MP.run)mpHenti();
   if(AU)AU.pause();
-  var n=gnum(k),a=new Audio('https://cdn.islamic.network/quran/audio/128/ar.alafasy/'+n+'.mp3'),tried=0;
+  var n=gnum(k),a=new Audio(mpLokal(n)||mpUrl(128,n)),tried=0;
   a.preload='auto';a.playbackRate=SLOW?0.75:1;AU=a;AK=k;
   a.onended=a.onpause=a.onplay=function(){audioBtns()};
   a.onerror=function(){
-    if(tried++===0){a.src='https://cdn.islamic.network/quran/audio/64/ar.alafasy/'+n+'.mp3';a.load();a.playbackRate=SLOW?0.75:1;a.play().catch(function(){})}
+    if(tried++===0){a.src=mpUrl(64,n);a.load();a.playbackRate=SLOW?0.75:1;a.play().catch(function(){})}
     else{AU=null;AK=null;audioBtns();Array.prototype.forEach.call(document.querySelectorAll(".aud-err"),function(m){m.textContent='Audio belum bisa dimuat. Periksa koneksi internet, lalu coba lagi.'})}
   };
   Array.prototype.forEach.call(document.querySelectorAll(".aud-err"),function(m){m.textContent=''});
@@ -948,7 +956,8 @@ function card(S,a,label,c){
   +(AN[k]?'<details><summary>Asbabun nuzul <span class="gd" style="color:'+GR[AN[k].g][1]+'">'+GR[AN[k].g][0]+'</span></summary><p class="tf">'+esc(AN[k].t)+'</p><p class="tf" style="font-size:14.5px"><b>Derajat riwayat:</b> '+esc(AN[k].n)+'</p><p class="tf" style="font-size:14.5px"><b>Rujukan kitab:</b> '+esc(AN[k].r)+'</p></details>':'')
   +(v.s?'<details><summary>Tafsir Kemenag (ringkas)</summary><p class="tf">'+esc(v.s)+'</p>'+(v.l&&v.l!==v.s?'<details><summary>Tafsir lengkap</summary><p class="tf">'+esc(v.l)+'</p></details>':'')+'</details>':'')
   +'<details data-tj="'+k+'"><summary>Tajwid: warna dan hukum bacaan</summary><div class="tjb"></div></details>'
-  +'<div class="row r4"><button class="ib" data-p="'+k+'" aria-pressed="false">▶ Dengar</button><button class="ib" data-slow aria-pressed="'+SLOW+'">🐢 Pelan</button><button class="ib" data-f="'+k+'" aria-pressed="'+f+'">'+(f?'★ Favorit':'☆ Favorit')+'</button><button class="ib" data-b="'+k+'" aria-pressed="'+b+'">🔖 Tandai</button></div><p class="err aud-err" style="font-size:14.5px;margin:4px 0 0"></p></article>';
+  +'<div class="row r4"><button class="ib" data-p="'+k+'" aria-pressed="false">▶ Dengar</button><button class="ib" data-slow aria-pressed="'+SLOW+'">🐢 Pelan</button><button class="ib" data-f="'+k+'" aria-pressed="'+f+'">'+(f?'★ Favorit':'☆ Favorit')+'</button><button class="ib" data-b="'+k+'" aria-pressed="'+b+'">🔖 Tandai</button></div>'
+  +'<div class="row r4"><button class="ib" data-nt="'+k+'" aria-pressed="'+ntAda(k)+'">'+(ntAda(k)?'📝 Catatan ✓':'📝 Catatan')+'</button><button class="ib" data-mfrom="'+k+'">🎧 Putar dari sini</button></div>'+ntBox(k)+'<p class="err aud-err" style="font-size:14.5px;margin:4px 0 0"></p></article>';
 }
 function fail(e,fn){return '<p class="err">Gagal memuat: '+esc(e.message||e)+'. Server gratis ini membatasi sekitar 10 permintaan per 5 menit; surah yang sudah dibuka tersimpan di perangkat. <button class="ib" onclick="'+fn+'">Coba lagi</button></p>'}
 document.addEventListener('click',function(e){
@@ -965,7 +974,7 @@ $('tgl').textContent=now.toLocaleDateString('id-ID',{weekday:'long',day:'numeric
 var VW='hari';
 function show(v){VW=v;['hari','sholat','ibadah','cari','quran','doa','asma','simpan'].forEach(function(x){$('v-'+x).hidden=x!==v});if(v!=='asma')ahStop();if(v!=='ibadah')ibStop();
   Array.prototype.forEach.call($('nav').children,function(b){b.setAttribute('aria-current',b.dataset.v===v)});
-  if(v==='sholat')shRender();if(v==='ibadah')ibadah();if(v==='simpan')tersimpan();if(v==='doa')doa();if(v==='asma')asma();if(v==='quran'&&!$('daftar').children.length)daftar()}
+  if(v==='sholat')shRender();if(v==='ibadah')ibadah();if(v==='simpan')simpanMenu();if(v==='doa')doa();if(v==='asma')asma();if(v==='quran'&&!$('daftar').children.length)daftar()}
 $('nav').addEventListener('click',function(e){var b=e.target.closest('button');if(b){$('surah').hidden=true;$('daftar').hidden=false;show(b.dataset.v)}});
 /* ===== Geser kanan-kiri untuk pindah menu: geser ke kiri = menu berikutnya, ke kanan = menu sebelumnya ===== */
 (function(){
@@ -1037,20 +1046,29 @@ async function hari(){
 function daftar(){$('daftar').innerHTML=NAMA.map(function(n,i){return '<button onclick="buka('+(i+1)+')">'+(i+1)+'. '+esc(n)+'<small>'+COUNTS[i]+' ayat</small></button>'}).join('')}
 async function buka(n,a){
   show('quran');$('daftar').hidden=true;var z=$('surah');z.hidden=false;z.innerHTML='<p class="sub">Memuat…</p>';
-  try{var S=await getS(n),o='<div class="row"><button class="btn o" onclick="show(\'quran\');$(\'surah\').hidden=true;$(\'daftar\').hidden=false">‹ Daftar surah</button></div><h2>'+n+'. '+esc(S.nm)+'</h2><p class="sub">'+S.v.length+' ayat</p>';
+  try{var S=await getS(n),o='<div class="row"><button class="btn o" onclick="show(\'quran\');$(\'surah\').hidden=true;$(\'daftar\').hidden=false">‹ Daftar surah</button></div><h2>'+n+'. '+esc(S.nm)+'</h2><p class="sub">'+S.v.length+' ayat</p>'+mpPanel(n,S.v.length);
     for(var i=1;i<=S.v.length;i++)o+=card(S,i,'Ayat '+i);
-    z.innerHTML=o;if(a){var el=$('k'+n+'-'+a);if(el)el.scrollIntoView()}else window.scrollTo(0,0)
+    z.innerHTML=o;mpDlRender();mpSorot();if(a){var el=$('k'+n+'-'+a);if(el)el.scrollIntoView()}else window.scrollTo(0,0)
   }catch(e){z.innerHTML=fail(e,'buka('+n+')')}
 }
 
 /* tersimpan */
+var SM={tab:ls('sm_tab','simpan')};
+function simpanMenu(){
+  var z=$('simpan');if(!z)return;
+  if(SM.tab!=='simpan'&&SM.tab!=='izin')SM.tab='simpan';
+  z.innerHTML='<div class="chips">'+[['simpan','Tersimpan'],['izin','Cek izin']].map(function(t){return '<button class="ib" data-sm="'+t[0]+'" aria-pressed="'+(SM.tab===t[0])+'">'+t[1]+'</button>'}).join('')+'</div><div id="smp"></div>';
+  if(SM.tab==='izin')ibIzin();else tersimpan();
+}
+document.addEventListener('click',function(e){var b=e.target.closest('[data-sm]');if(!b)return;SM.tab=b.dataset.sm;sv('sm_tab',SM.tab);simpanMenu()});
 async function tersimpan(){
-  var z=$('simpan'),o=SYNCBOX();z.innerHTML='<p class="sub">Memuat…</p>';
+  var z=$('smp'),o=SYNCBOX();if(!z)return;z.innerHTML='<p class="sub">Memuat…</p>';
   if(BM){var q=BM.k.split(':');o+='<h2>Penanda bacaan</h2><button class="btn o" onclick="buka('+q[0]+','+q[1]+')">Lanjutkan di '+esc(NAMA[q[0]-1])+' '+BM.k+'</button>'}
   o+='<h2>Favorit</h2>';
   if(!FAV.length)o+='<p class="sub">Belum ada. Tekan ☆ Favorit pada ayat atau doa mana saja.</p>';
+  o+='<div id="favl"></div><div id="jurnal">'+jurnalHTML()+'</div>';
   z.innerHTML=o;
-  for(var i=0;i<FAV.length;i++){if(FAV[i].indexOf('D:')===0){var dd=doaById(FAV[i].slice(2));if(dd)z.insertAdjacentHTML('beforeend',doaCard(dd));continue}var p=FAV[i].split(':');try{var S=await getS(+p[0]);z.insertAdjacentHTML('beforeend',card(S,+p[1],'Favorit'))}catch(e){z.insertAdjacentHTML('beforeend',fail(e,'tersimpan()'));break}}
+  for(var i=0;i<FAV.length;i++){if(FAV[i].indexOf('D:')===0){var dd=doaById(FAV[i].slice(2));if(dd)$('favl').insertAdjacentHTML('beforeend',doaCard(dd));continue}var p=FAV[i].split(':');try{var S=await getS(+p[0]);$('favl').insertAdjacentHTML('beforeend',card(S,+p[1],'Favorit'))}catch(e){$('favl').insertAdjacentHTML('beforeend',fail(e,'tersimpan()'));break}}
 }
 
 /* sesuai harimu */
@@ -1089,17 +1107,17 @@ var AUTH=null,FS=null,UID=null,TMR=null,SYNC='Sinkron awan: belum aktif',ACC='';
 function setSync(t){SYNC=t;if($('sync'))$('sync').textContent=t}
 function SYNCBOX(){return '<div class="card" style="--c:var(--dusk)"><div class="hd"><b>Sinkronisasi</b></div><p class="sub" id="sync" style="margin:4px 0">'+esc(SYNC)+'</p><p class="sub" id="akun" style="margin:0 0 8px">'+esc(ACC)+'</p><div class="row"><button class="btn o" id="gbtn" onclick="masukGoogle()"'+(ACC.indexOf('anonim')<0&&ACC?' hidden':'')+'>Masuk dengan Google (sinkron antar-HP)</button></div></div>'}
 function dirty(){sv('dirty',1);clearTimeout(TMR);TMR=setTimeout(push,1200)}
-function push(){if(!FS||!UID)return;FS.collection('tadabbur').doc(UID).set({fav:FAV,bm:BM||null,at:Date.now()}).then(function(){sv('dirty',0);setSync('Sinkron awan: tersimpan')}).catch(function(e){setSync('Sinkron awan: gagal ('+(e.code||e.message)+')')})}
+function push(){if(!FS||!UID)return;FS.collection('tadabbur').doc(UID).set({fav:FAV,bm:BM||null,nt:ntPrune(),at:Date.now()},{merge:true}).then(function(){sv('dirty',0);setSync('Sinkron awan: tersimpan')}).catch(function(e){setSync('Sinkron awan: gagal ('+(e.code||e.message)+')')})}
 function pull(){
   FS.collection('tadabbur').doc(UID).get().then(function(d){
-    var c=d.exists?d.data():null,last=ls('syncUid',null);
+    var c=d.exists?d.data():null,last=ls('syncUid',null),nm=ntGabung(c&&c.nt);
     if(!c){push()}else{
       var cf=c.fav||[];
       if(last!==UID){cf.forEach(function(k){if(FAV.indexOf(k)<0)FAV.push(k)});if(c.bm&&(!BM||(c.bm.t||0)>(BM.t||0)))BM=c.bm;sv('fav',FAV);sv('bm',BM);push()}
       else if(ls('dirty',0)){push()}
       else{FAV=cf;BM=c.bm||BM;sv('fav',FAV);sv('bm',BM)}
     }
-    sv('syncUid',UID);setSync('Sinkron awan: aktif');if(VW==='simpan')tersimpan();
+    if(nm.dorong&&c)push();sv('syncUid',UID);setSync('Sinkron awan: aktif');if(VW==='simpan'&&SM.tab==='simpan')tersimpan();
   }).catch(function(e){setSync('Sinkron awan: gagal ('+(e.code||e.message)+')')})
 }
 function akun(u){ACC=u.isAnonymous?'Akun: anonim (data hanya untuk HP ini)':'Akun: '+(u.email||'Google');if($('akun'))$('akun').textContent=ACC;if($('gbtn'))$('gbtn').hidden=!u.isAnonymous}
@@ -1305,78 +1323,9 @@ $('ahq').addEventListener('input',function(){
 if(window.speechSynthesis&&speechSynthesis.addEventListener)speechSynthesis.addEventListener('voiceschanged',function(){});
 if('serviceWorker' in navigator&&!NATIVE&&/^https?:$/.test(location.protocol))window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})});
 showVer();if(/widget/.test(location.hash+location.search))wgOn();else hari();
-/* Dzikir pagi dan petang. Rujukan: Hisnul Muslim (Sa‘id bin ‘Ali al-Qahthani). Periksa derajat hadis dan jumlah bacaan pada kitab aslinya. */
-var DZK=[
-{j:'Ayat Kursi',n:1,
- a:'اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ ۚ لَهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ ۗ مَنْ ذَا الَّذِي يَشْفَعُ عِنْدَهُ إِلَّا بِإِذْنِهِ ۚ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ ۖ وَلَا يُحِيطُونَ بِشَيْءٍ مِنْ عِلْمِهِ إِلَّا بِمَا شَاءَ ۚ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ ۖ وَلَا يَئُودُهُ حِفْظُهُمَا ۚ وَهُوَ الْعَلِيُّ الْعَظِيمُ',
- t:'Allah, tidak ada tuhan selain Dia. Yang Mahahidup, Yang terus menerus mengurus (makhluk-Nya), tidak mengantuk dan tidak tidur. Milik-Nya apa yang ada di langit dan apa yang ada di bumi. Tidak ada yang dapat memberi syafaat di sisi-Nya tanpa izin-Nya. Dia mengetahui apa yang di hadapan mereka dan apa yang di belakang mereka, dan mereka tidak mengetahui sesuatu apa pun tentang ilmu-Nya melainkan apa yang Dia kehendaki. Kursi-Nya meliputi langit dan bumi. Dan Dia tidak merasa berat memelihara keduanya, dan Dia Mahatinggi, Mahabesar. (QS. Al-Baqarah: 255)',
- s:'Dibaca sekali. HR. Al-Hakim dan An-Nasa’i dalam ‘Amalul Yaum wal Lailah; dishahihkan Al-Albani.'},
-{j:'Al-Ikhlas, Al-Falaq, dan An-Nas',n:3,
- a:'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ. قُلْ هُوَ اللَّهُ أَحَدٌ ۝ اللَّهُ الصَّمَدُ ۝ لَمْ يَلِدْ وَلَمْ يُولَدْ ۝ وَلَمْ يَكُنْ لَهُ كُفُوًا أَحَدٌ.\nقُلْ أَعُوذُ بِرَبِّ الْفَلَقِ ۝ مِنْ شَرِّ مَا خَلَقَ ۝ وَمِنْ شَرِّ غَاسِقٍ إِذَا وَقَبَ ۝ وَمِنْ شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ ۝ وَمِنْ شَرِّ حَاسِدٍ إِذَا حَسَدَ.\nقُلْ أَعُوذُ بِرَبِّ النَّاسِ ۝ مَلِكِ النَّاسِ ۝ إِلَٰهِ النَّاسِ ۝ مِنْ شَرِّ الْوَسْوَاسِ الْخَنَّاسِ ۝ الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ ۝ مِنَ الْجِنَّةِ وَالنَّاسِ',
- t:'Al-Ikhlas: Katakanlah (Muhammad), “Dialah Allah, Yang Maha Esa. Allah tempat meminta segala sesuatu. (Allah) tidak beranak dan tidak pula diperanakkan. Dan tidak ada sesuatu yang setara dengan Dia.”\nAl-Falaq: Katakanlah, “Aku berlindung kepada Tuhan yang menguasai subuh (fajar), dari kejahatan (makhluk yang) Dia ciptakan, dan dari kejahatan malam apabila telah gelap gulita, dan dari kejahatan perempuan-perempuan penyihir yang meniup pada buhul-buhul (talinya), dan dari kejahatan orang yang dengki apabila dia dengki.”\nAn-Nas: Katakanlah, “Aku berlindung kepada Tuhannya manusia, Raja manusia, sembahan manusia, dari kejahatan (bisikan) setan yang bersembunyi, yang membisikkan (kejahatan) ke dalam dada manusia, dari (golongan) jin dan manusia.”',
- s:'Dibaca tiga kali (ketiga surah). HR. Abu Dawud no. 5082 dan At-Tirmidzi no. 3575; dihasankan Al-Albani.'},
-{j:'Doa memasuki pagi dan petang',n:1,
- a:['أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ. رَبِّ أَسْأَلُكَ خَيْرَ مَا فِي هَٰذَا الْيَوْمِ وَخَيْرَ مَا بَعْدَهُ، وَأَعُوذُ بِكَ مِنْ شَرِّ مَا فِي هَٰذَا الْيَوْمِ وَشَرِّ مَا بَعْدَهُ. رَبِّ أَعُوذُ بِكَ مِنَ الْكَسَلِ وَسُوءِ الْكِبَرِ. رَبِّ أَعُوذُ بِكَ مِنْ عَذَابٍ فِي النَّارِ وَعَذَابٍ فِي الْقَبْرِ',
-    'أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ. رَبِّ أَسْأَلُكَ خَيْرَ مَا فِي هَٰذِهِ اللَّيْلَةِ وَخَيْرَ مَا بَعْدَهَا، وَأَعُوذُ بِكَ مِنْ شَرِّ مَا فِي هَٰذِهِ اللَّيْلَةِ وَشَرِّ مَا بَعْدَهَا. رَبِّ أَعُوذُ بِكَ مِنَ الْكَسَلِ وَسُوءِ الْكِبَرِ. رَبِّ أَعُوذُ بِكَ مِنْ عَذَابٍ فِي النَّارِ وَعَذَابٍ فِي الْقَبْرِ'],
- l:['Ashbahnaa wa ashbahal mulku lillaah, walhamdu lillaah, laa ilaaha illallaahu wahdahu laa syariika lah, lahul mulku wa lahul hamdu wa huwa ‘alaa kulli syai-in qadiir. Rabbi as-aluka khaira maa fii haadzal yaum wa khaira maa ba‘dah, wa a‘uudzu bika min syarri maa fii haadzal yaum wa syarri maa ba‘dah. Rabbi a‘uudzu bika minal kasali wa suu-il kibar. Rabbi a‘uudzu bika min ‘adzaabin fin naar wa ‘adzaabin fil qabr.',
-    'Amsainaa wa amsal mulku lillaah, walhamdu lillaah, laa ilaaha illallaahu wahdahu laa syariika lah, lahul mulku wa lahul hamdu wa huwa ‘alaa kulli syai-in qadiir. Rabbi as-aluka khaira maa fii haadzihil lailah wa khaira maa ba‘daha, wa a‘uudzu bika min syarri maa fii haadzihil lailah wa syarri maa ba‘daha. Rabbi a‘uudzu bika minal kasali wa suu-il kibar. Rabbi a‘uudzu bika min ‘adzaabin fin naar wa ‘adzaabin fil qabr.'],
- t:['Kami memasuki waktu pagi dan kerajaan hanya milik Allah, segala puji bagi Allah. Tidak ada tuhan yang berhak disembah selain Allah semata, tiada sekutu bagi-Nya. Milik-Nya kerajaan dan milik-Nya segala puji, dan Dia Mahakuasa atas segala sesuatu. Wahai Rabbku, aku memohon kepada-Mu kebaikan hari ini dan kebaikan sesudahnya, dan aku berlindung kepada-Mu dari keburukan hari ini dan keburukan sesudahnya. Wahai Rabbku, aku berlindung kepada-Mu dari kemalasan dan kejelekan di hari tua. Wahai Rabbku, aku berlindung kepada-Mu dari siksa di neraka dan siksa di kubur.',
-    'Kami memasuki waktu petang dan kerajaan hanya milik Allah, segala puji bagi Allah. Tidak ada tuhan yang berhak disembah selain Allah semata, tiada sekutu bagi-Nya. Milik-Nya kerajaan dan milik-Nya segala puji, dan Dia Mahakuasa atas segala sesuatu. Wahai Rabbku, aku memohon kepada-Mu kebaikan malam ini dan kebaikan sesudahnya, dan aku berlindung kepada-Mu dari keburukan malam ini dan keburukan sesudahnya. Wahai Rabbku, aku berlindung kepada-Mu dari kemalasan dan kejelekan di hari tua. Wahai Rabbku, aku berlindung kepada-Mu dari siksa di neraka dan siksa di kubur.'],
- s:'Dibaca sekali. HR. Muslim no. 2723.'},
-{j:'Allahumma bika ashbahna',n:1,
- a:['اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ النُّشُورُ','اللَّهُمَّ بِكَ أَمْسَيْنَا، وَبِكَ أَصْبَحْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ الْمَصِيرُ'],
- l:['Allaahumma bika ashbahnaa, wa bika amsainaa, wa bika nahyaa, wa bika namuutu, wa ilaikan nusyuur.','Allaahumma bika amsainaa, wa bika ashbahnaa, wa bika nahyaa, wa bika namuutu, wa ilaikal mashiir.'],
- t:['Ya Allah, dengan rahmat dan pertolongan-Mu kami memasuki waktu pagi, dengan rahmat dan pertolongan-Mu kami memasuki waktu petang, dengan kehendak-Mu kami hidup, dengan kehendak-Mu kami mati, dan kepada-Mu kebangkitan (kami).','Ya Allah, dengan rahmat dan pertolongan-Mu kami memasuki waktu petang, dengan rahmat dan pertolongan-Mu kami memasuki waktu pagi, dengan kehendak-Mu kami hidup, dengan kehendak-Mu kami mati, dan kepada-Mu tempat kembali (kami).'],
- s:'Dibaca sekali. HR. At-Tirmidzi no. 3391, Abu Dawud no. 5068, Ibnu Majah no. 3868; dishahihkan Al-Albani.'},
-{j:'Sayyidul istighfar',n:1,
- a:'اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَٰهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَىٰ عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ بِذَنْبِي فَاغْفِرْ لِي، فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ',
- l:'Allaahumma anta rabbii laa ilaaha illaa anta, khalaqtanii wa anaa ‘abduka, wa anaa ‘alaa ‘ahdika wa wa‘dika mastatha‘tu, a‘uudzu bika min syarri maa shana‘tu, abuu-u laka bini‘matika ‘alayya, wa abuu-u bidzanbii faghfir lii fa innahu laa yaghfirudz dzunuuba illaa anta.',
- t:'Ya Allah, Engkau adalah Rabbku, tidak ada tuhan yang berhak disembah selain Engkau. Engkau yang menciptakanku dan aku adalah hamba-Mu. Aku berada di atas perjanjian dan janji-Mu semampuku. Aku berlindung kepada-Mu dari keburukan yang kuperbuat. Aku mengakui nikmat-Mu kepadaku dan aku mengakui dosaku, maka ampunilah aku. Sesungguhnya tidak ada yang dapat mengampuni dosa selain Engkau.',
- s:'Dibaca sekali dengan penuh keyakinan. HR. Al-Bukhari no. 6306.'},
-{j:'Doa kesehatan dan perlindungan',n:3,
- a:'اللَّهُمَّ عَافِنِي فِي بَدَنِي، اللَّهُمَّ عَافِنِي فِي سَمْعِي، اللَّهُمَّ عَافِنِي فِي بَصَرِي، لَا إِلَٰهَ إِلَّا أَنْتَ. اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْكُفْرِ وَالْفَقْرِ، وَأَعُوذُ بِكَ مِنْ عَذَابِ الْقَبْرِ، لَا إِلَٰهَ إِلَّا أَنْتَ',
- l:'Allaahumma ‘aafinii fii badanii, allaahumma ‘aafinii fii sam‘ii, allaahumma ‘aafinii fii bashariii, laa ilaaha illaa anta. Allaahumma innii a‘uudzu bika minal kufri wal faqr, wa a‘uudzu bika min ‘adzaabil qabr, laa ilaaha illaa anta.',
- t:'Ya Allah, selamatkanlah tubuhku. Ya Allah, selamatkanlah pendengaranku. Ya Allah, selamatkanlah penglihatanku. Tidak ada tuhan yang berhak disembah selain Engkau. Ya Allah, aku berlindung kepada-Mu dari kekufuran dan kefakiran, dan aku berlindung kepada-Mu dari siksa kubur. Tidak ada tuhan yang berhak disembah selain Engkau.',
- s:'Dibaca tiga kali. HR. Abu Dawud no. 5090 dan Al-Bukhari dalam Al-Adab Al-Mufrad; dihasankan Al-Albani.'},
-{j:'Bismillahilladzi la yadhurru',n:3,
- a:'بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ',
- l:'Bismillaahilladzii laa yadhurru ma‘asmihii syai-un fil ardhi wa laa fis samaa-i wa huwas samii‘ul ‘aliim.',
- t:'Dengan nama Allah yang bersama nama-Nya tidak ada sesuatu pun di bumi dan di langit yang dapat membahayakan, dan Dia Maha Mendengar lagi Maha Mengetahui.',
- s:'Dibaca tiga kali. HR. Abu Dawud no. 5088, At-Tirmidzi no. 3388, Ibnu Majah no. 3869; dishahihkan Al-Albani.'},
-{j:'Ridha Allah sebagai Rabb',n:3,
- a:'رَضِيتُ بِاللَّهِ رَبًّا، وَبِالْإِسْلَامِ دِينًا، وَبِمُحَمَّدٍ نَبِيًّا',
- l:'Radhiitu billaahi rabbaa, wa bil islaami diinaa, wa bi Muhammadin nabiyyaa.',
- t:'Aku ridha Allah sebagai Rabb, Islam sebagai agama, dan Muhammad sebagai nabi.',
- s:'Dibaca tiga kali. HR. Abu Dawud no. 5072 dan At-Tirmidzi no. 3389; dihasankan Al-Albani.'},
-{j:'Ya Hayyu ya Qayyum',n:1,
- a:'يَا حَيُّ يَا قَيُّومُ بِرَحْمَتِكَ أَسْتَغِيثُ، أَصْلِحْ لِي شَأْنِي كُلَّهُ، وَلَا تَكِلْنِي إِلَىٰ نَفْسِي طَرْفَةَ عَيْنٍ',
- l:'Yaa hayyu yaa qayyuumu birahmatika astaghiits, ashlih lii sya’nii kullahu, wa laa takilnii ilaa nafsii tharfata ‘ain.',
- t:'Wahai Yang Mahahidup, wahai Yang Maha Berdiri Sendiri, dengan rahmat-Mu aku memohon pertolongan. Perbaikilah seluruh urusanku dan jangan Engkau serahkan aku kepada diriku sendiri walau sekejap mata.',
- s:'Dibaca sekali. HR. Al-Hakim; dihasankan Al-Albani.'},
-{j:'Permohonan maaf dan keselamatan',n:1,
- a:'اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي الدُّنْيَا وَالْآخِرَةِ. اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي دِينِي وَدُنْيَايَ وَأَهْلِي وَمَالِي. اللَّهُمَّ اسْتُرْ عَوْرَاتِي وَآمِنْ رَوْعَاتِي. اللَّهُمَّ احْفَظْنِي مِنْ بَيْنِ يَدَيَّ وَمِنْ خَلْفِي وَعَنْ يَمِينِي وَعَنْ شِمَالِي وَمِنْ فَوْقِي، وَأَعُوذُ بِعَظَمَتِكَ أَنْ أُغْتَالَ مِنْ تَحْتِي',
- l:'Allaahumma innii as-alukal ‘afwa wal ‘aafiyata fid dunyaa wal aakhirah. Allaahumma innii as-alukal ‘afwa wal ‘aafiyata fii diinii wa dunyaaya wa ahlii wa maalii. Allaahummastur ‘auraatii wa aamin rau‘aatii. Allaahummahfazhnii min baini yadayya wa min khalfii wa ‘an yamiinii wa ‘an syimaalii wa min fauqii, wa a‘uudzu bi‘azhamatika an ughtaala min tahtii.',
- t:'Ya Allah, aku memohon kepada-Mu pemaafan dan keselamatan di dunia dan akhirat. Ya Allah, aku memohon pemaafan dan keselamatan dalam agamaku, duniaku, keluargaku, dan hartaku. Ya Allah, tutupilah auratku (aib dan kekuranganku) dan tenangkanlah kegelisahanku. Ya Allah, jagalah aku dari depan, belakang, kanan, kiri, dan dari atasku. Aku berlindung dengan keagungan-Mu dari dibinasakan dari arah bawahku.',
- s:'Dibaca sekali. HR. Abu Dawud no. 5074 dan Ibnu Majah no. 3871; dishahihkan Al-Albani.'},
-{j:'Tasbih dan tahmid',n:100,
- a:'سُبْحَانَ اللَّهِ وَبِحَمْدِهِ',
- l:'Subhaanallaahi wa bihamdih.',
- t:'Mahasuci Allah dan segala puji bagi-Nya.',
- s:'Dibaca seratus kali (pagi dan petang). HR. Muslim no. 2692.'},
-{j:'Tasbih sebanyak makhluk-Nya',n:3,w:'pagi',
- a:'سُبْحَانَ اللَّهِ وَبِحَمْدِهِ، عَدَدَ خَلْقِهِ، وَرِضَا نَفْسِهِ، وَزِنَةَ عَرْشِهِ، وَمِدَادَ كَلِمَاتِهِ',
- l:'Subhaanallaahi wa bihamdih, ‘adada khalqih, wa ridhaa nafsih, wa zinata ‘arsyih, wa midaada kalimaatih.',
- t:'Mahasuci Allah dan segala puji bagi-Nya sebanyak bilangan makhluk-Nya, sesuai keridhaan-Nya, seberat timbangan ‘Arsy-Nya, dan sebanyak tinta (untuk menulis) kalimat-kalimat-Nya.',
- s:'Dibaca tiga kali di pagi hari. HR. Muslim no. 2726.'},
-{j:'Tahlil seratus kali',n:100,
- a:'لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ',
- l:'Laa ilaaha illallaahu wahdahu laa syariika lah, lahul mulku wa lahul hamdu wa huwa ‘alaa kulli syai-in qadiir.',
- t:'Tidak ada tuhan yang berhak disembah selain Allah semata, tiada sekutu bagi-Nya. Milik-Nya kerajaan dan milik-Nya segala puji, dan Dia Mahakuasa atas segala sesuatu.',
- s:'Dibaca seratus kali dalam sehari. HR. Al-Bukhari no. 3293 dan Muslim no. 2691.'}
-];
-
 /* ===== Ibadah: kiblat, dzikir pagi dan petang, tasbih, kalender puasa dan hari besar, Ramadan, cek izin ===== */
-var IB={tab:ls('ib_tab','kiblat')},IBT=[];   // IBT: timer yang harus dihentikan saat panel berganti
+var IB={tab:ls('ib_tab','kiblat')},IBT=[];
+if(['kiblat','tasbih','kalender','ramadan'].indexOf(IB.tab)<0)IB.tab='kiblat';   // IBT: timer yang harus dihentikan saat panel berganti
 var HJ_BLN=['Muharram','Safar','Rabiul Awal','Rabiul Akhir','Jumadil Awal','Jumadil Akhir','Rajab','Sya’ban','Ramadhan','Syawal','Dzulqa’dah','Dzulhijjah'];
 var HARI=['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
 function ibJam(ms){return shJam(ms)}
@@ -1403,9 +1352,9 @@ function ibStop(){
 }
 function ibadah(){
   var z=$('ibadah');if(!z)return;ibStop();
-  var tabs=[['kiblat','Kiblat'],['dzikir','Dzikir'],['tasbih','Tasbih'],['kalender','Kalender'],['ramadan','Ramadan'],['izin','Cek izin']];
+  var tabs=[['kiblat','Kiblat'],['tasbih','Tasbih'],['kalender','Kalender'],['ramadan','Ramadan']];
   z.innerHTML='<div class="chips">'+tabs.map(function(t){return '<button class="ib" data-ib="tab:'+t[0]+'" aria-pressed="'+(IB.tab===t[0])+'">'+t[1]+'</button>'}).join('')+'</div><div id="ibp"></div>';
-  ({kiblat:ibKiblat,dzikir:ibDzikir,tasbih:ibTasbih,kalender:ibKalender,ramadan:ibRamadan,izin:ibIzin}[IB.tab]||ibKiblat)();
+  ({kiblat:ibKiblat,tasbih:ibTasbih,kalender:ibKalender,ramadan:ibRamadan}[IB.tab]||ibKiblat)();
 }
 function ibKartu(judul,kanan,isi,warna){return '<article class="card" style="--c:var(--'+(warna||'teal')+')"><div class="hd"><b>'+judul+'</b><span>'+(kanan||'')+'</span></div>'+isi+'</article>'}
 function ibBtn(a,txt,on,dis){return '<button class="ib" data-ib="'+a+'" aria-pressed="'+!!on+'"'+(dis?' disabled':'')+'>'+txt+'</button>'}
@@ -1455,49 +1404,6 @@ function ibKiblat(){
   window.addEventListener('deviceorientationabsolute',cmpOn,true);window.addEventListener('deviceorientation',cmpOn,true);
   var tm=setTimeout(function(){if(CMP.h==null&&$('cmpt'))$('cmpt').textContent='Sensor kompas tidak terbaca di perangkat ini. Pakai arah '+Math.round(b)+'° ('+mataAngin(b)+') dari Utara.'},2500);
   IBT.push(tm);
-}
-
-/* ========== DZIKIR PAGI DAN PETANG ========== */
-function dzSesiDefault(){
-  var L=ibLok(),now=Date.now(),T=shHitung(new Date(),L.la,L.lo);
-  return (now>=T.ashar||now<T.subuh)?'petang':'pagi';
-}
-function dzKunci(s){return 'dz_'+dkey(new Date())+'_'+s}
-function dzSetel(){var s=ls('dz_set',null)||{};return {p:+s.p||0,s:+s.s||0}}
-function dzBersih(){try{var h=dkey(new Date()),ks=[];for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.indexOf('dz_')===0&&k.indexOf('dz_set')!==0&&k.indexOf('dz_'+h)!==0)ks.push(k)}ks.forEach(function(k){localStorage.removeItem(k)})}catch(e){}}
-var DZS=null,dzMsg='';
-function ibDzikir(){
-  dzBersih();if(!DZS)DZS=dzSesiDefault();
-  var ses=DZS,idx=1*(ses==='petang'),items=DZK.map(function(x,i){return {x:x,i:i}}).filter(function(o){return !o.x.w||o.x.w===ses});
-  var cnt=ls(dzKunci(ses),{}),sel=0;
-  items.forEach(function(o){if((cnt[o.i]||0)>=o.x.n)sel++});
-  var set=dzSetel();
-  var h='<div class="chips">'+ibBtn('dz:s:pagi','Dzikir pagi',ses==='pagi')+ibBtn('dz:s:petang','Dzikir petang',ses==='petang')+'</div>'
-   +'<p class="sub" style="margin:0 0 10px">'+(ses==='pagi'?'Waktunya sesudah Subuh sampai matahari terbit atau menjelang Dzuhur.':'Waktunya sesudah Ashar sampai menjelang Maghrib atau malam.')+' Selesai <b>'+sel+'</b> dari <b>'+items.length+'</b> hari ini.</p>';
-  h+=items.map(function(o){
-    var x=o.x,a=Array.isArray(x.a)?x.a[idx]:x.a,l=x.l==null?'':(Array.isArray(x.l)?x.l[idx]:x.l),t=Array.isArray(x.t)?x.t[idx]:x.t,c=cnt[o.i]||0,done=c>=x.n;
-    var tr=esc(t).replace(/\n/g,'<br>'),ar=esc(a).replace(/\n/g,'<br>');
-    return ibKartu(esc(x.j),x.n+'×','<div class="ar" lang="ar">'+ar+'</div>'+(l?'<p class="dt" style="font-size:16px;font-weight:500;font-style:italic">'+esc(l)+'</p>':'')+'<p class="id" style="margin-top:8px">'+tr+'</p><p class="mk" style="font-size:14.5px">'+esc(x.s)+'</p>'
-      +'<div class="row">'+ibBtn('dz:+:'+o.i,done?'✓ Selesai ('+c+'/'+x.n+')':'Baca ('+c+'/'+x.n+')',done)+(x.n>=30&&!done?ibBtn('dz:+10:'+o.i,'+10',false):'')+(c>0?ibBtn('dz:-:'+o.i,'Kurangi',false):'')+'</div>','gold');
-  }).join('');
-  h+=ibKartu('Pengingat dzikir','','<p class="sub" style="margin:8px 0">Notifikasi untuk 7 hari ke depan, diperbarui setiap aplikasi dibuka. Pagi: 20 menit setelah Subuh. Petang: 15 menit setelah Ashar.</p><div class="chips">'+ibBtn('dz:r:p','Pagi: '+(set.p?'Aktif':'Mati'),set.p)+ibBtn('dz:r:s','Petang: '+(set.s?'Aktif':'Mati'),set.s)+'</div>'+(dzMsg?'<p class="sub" style="margin:8px 0 0">'+esc(dzMsg)+'</p>':'')+'<div class="row"><button class="btn o" data-ib="dz:reset">Ulangi hitungan hari ini</button></div>','dusk');
-  h+='<p class="note">Disusun dari Hisnul Muslim (Sa‘id bin ‘Ali al-Qahthani). Nomor hadis dan derajatnya ditulis ringkas dari rujukan umum; periksa kembali kitab aslinya, dan tanyakan kepada ustadz bila ragu soal jumlah atau waktu bacaan.</p>';
-  $('ibp').innerHTML=h;
-}
-async function dzJadwalkan(){
-  var LN=nplug('LocalNotifications');if(!LN)return;
-  var S=dzSetel();await ibCancelRentang(LN,72000,72999);
-  if(!(S.p||S.s))return;
-  var L=shLok();if(!L)throw new Error('Ambil lokasi di menu Sholat dulu agar waktu Subuh dan Ashar akurat.');
-  await ibNotifOk();
-  try{await LN.createChannel({id:'dzikir',name:'Dzikir pagi dan petang',description:'Pengingat dzikir',importance:3,vibration:true})}catch(e){}
-  var now=Date.now(),list=[];
-  for(var d=0;d<7;d++){
-    var dt=new Date();dt.setDate(dt.getDate()+d);var T=shHitung(dt,L.la,L.lo);
-    if(S.p&&T.subuh+20*60000>now)list.push({id:72000+d*2,title:'Waktunya dzikir pagi',body:'Luangkan beberapa menit untuk dzikir pagi sebelum matahari terbit.',schedule:{at:new Date(T.subuh+20*60000),allowWhileIdle:true},smallIcon:'ic_stat_tadabbur',channelId:'dzikir'});
-    if(S.s&&T.ashar+15*60000>now)list.push({id:72000+d*2+1,title:'Waktunya dzikir petang',body:'Luangkan beberapa menit untuk dzikir petang sebelum Maghrib.',schedule:{at:new Date(T.ashar+15*60000),allowWhileIdle:true},smallIcon:'ic_stat_tadabbur',channelId:'dzikir'});
-  }
-  if(list.length)await LN.schedule({notifications:list});
 }
 
 /* ========== TASBIH DIGITAL ========== */
@@ -1655,7 +1561,7 @@ function izTips(pab){
   return 'Bila alarm sering terlambat, pilih “Tanpa batasan” pada penggunaan baterai aplikasi ini dan izinkan aktivitas latar belakang di pengaturan HP.';
 }
 async function ibIzin(){
-  $('ibp').innerHTML=ibKartu('Cek izin dan pengaturan','','<p class="sub">Memeriksa…</p>');
+  if($('smp'))$('smp').innerHTML=ibKartu('Cek izin dan pengaturan','','<p class="sub">Memeriksa…</p>');
   var r=await izStatus(),D=nplug('TadabburDiag'),S=shSet(),L=shLok();
   var badge=function(v){return v===true?'<b style="color:#2E9E5B">✓ Baik</b>':(v===false?'<b style="color:#C0392B">✗ Perlu diperbaiki</b>':'<b style="color:var(--mute)">? Tidak diketahui</b>')};
   var baris=function(nama,ket,v,aksi,tombol){return '<div class="shr" style="align-items:flex-start;gap:10px"><span><b>'+nama+'</b><br><span style="font-size:14px;color:var(--mute)">'+ket+'</span></span><span style="text-align:right;white-space:nowrap">'+badge(v)+(aksi&&v!==true?'<br><button class="ib" data-ib="'+aksi+'" style="margin-top:4px">'+tombol+'</button>':'')+'</span></div>'};
@@ -1675,7 +1581,7 @@ async function ibIzin(){
    +(D?'':'<p class="sub" style="margin:8px 0 0">Pemeriksaan lengkap hanya tersedia di aplikasi Android versi terbaru.</p>')
    +'<p class="mk">Silent atau getar: adzan tetap berbunyi lewat volume alarm. Notifikasi biasa mengikuti setelan HP.</p>'
    +'<p class="sub" style="margin:6px 0 0">'+esc(izTips(r.pabrikan))+'</p>');
-  if($('ibp')&&IB.tab==='izin')$('ibp').innerHTML=h;
+  if($('smp')&&VW==='simpan'&&SM.tab==='izin')$('smp').innerHTML=h;
 }
 
 /* ========== KLIK ========== */
@@ -1688,15 +1594,6 @@ document.addEventListener('click',async function(e){
     if(p[0]==='ts'){var d=tsData();
       if(p[1]==='z'){d.z=+p[2];d.n=0}else if(p[1]==='t'){d.t=+p[2];d.n=0}else if(p[1]==='hap')d.hap=d.hap?0:1;else if(p[1]==='reset'){d.n=0;d.r=0}
       sv('tsb',d);ibTasbih();return}
-    if(p[0]==='dz'){
-      var ses=DZS||'pagi';
-      if(p[1]==='s'){DZS=p[2];ibDzikir();return}
-      if(p[1]==='+'||p[1]==='+10'||p[1]==='-'){var c=ls(dzKunci(ses),{}),i=+p[2],mx=DZK[i].n;c[i]=Math.max(0,Math.min(mx,(c[i]||0)+(p[1]==='+10'?10:(p[1]==='-'?-1:1))));sv(dzKunci(ses),c);if(navigator.vibrate&&p[1]!=='-')try{navigator.vibrate(c[i]>=mx?[60,40,60]:10)}catch(x){};ibDzikir();return}
-      if(p[1]==='reset'){sv(dzKunci(ses),{});ibDzikir();return}
-      if(p[1]==='r'){var s=dzSetel();s[p[2]]=s[p[2]]?0:1;sv('dz_set',s);dzMsg='';
-        try{await dzJadwalkan();dzMsg=(s.p||s.s)?'Pengingat dzikir diatur untuk 7 hari ke depan.':'Pengingat dzikir dimatikan.'}catch(x){s[p[2]]=0;sv('dz_set',s);dzMsg=x.message||String(x)}
-        ibDzikir();return}
-    }
     if(p[0]==='kl'){
       if(p[1]==='kor'){sv('hj_kor',+p[2]);shSimpanWidget();ibKalender();return}
       if(p[1]==='p'){var q=klSetel();q[p[2]]=q[p[2]]?0:1;sv('pz_set',q);klMsg='';
@@ -1718,26 +1615,317 @@ document.addEventListener('click',async function(e){
       else if(p[1]==='vol'){if(!D)throw new Error('Perlu aplikasi Android versi terbaru');await D.aturVolumeAlarm({persen:70});izMsg='Volume alarm diatur ke 70%.'}
       else if(p[1]==='lok'){await shRefresh(true)}
       else if(p[1]==='sholat'){var nb=document.querySelector('#nav button[data-v="sholat"]');if(nb)nb.click();return}
-      else if(p[1]==='ujin'){var pm2=await ibNotifOk();try{await pm2.createChannel({id:'sholat',name:'Waktu sholat',description:'Pengingat waktu sholat',importance:4,vibration:true})}catch(x){}await pm2.schedule({notifications:[{id:72999,title:'Uji notifikasi',body:'Jika ini tampil, notifikasi biasa berfungsi.',schedule:{at:new Date(Date.now()+3000),allowWhileIdle:true},smallIcon:'ic_stat_tadabbur',channelId:'sholat'}]});izMsg='Notifikasi uji akan muncul dalam 3 detik. Coba juga dengan layar dikunci.'}
+      else if(p[1]==='ujin'){var pm2=await ibNotifOk();try{await pm2.createChannel({id:'sholat',name:'Waktu sholat',description:'Pengingat waktu sholat',importance:4,vibration:true})}catch(x){}await pm2.schedule({notifications:[{id:79000,title:'Uji notifikasi',body:'Jika ini tampil, notifikasi biasa berfungsi.',schedule:{at:new Date(Date.now()+3000),allowWhileIdle:true},smallIcon:'ic_stat_tadabbur',channelId:'sholat'}]});izMsg='Notifikasi uji akan muncul dalam 3 detik. Coba juga dengan layar dikunci.'}
       else if(p[1]==='ujadzan'){var AD=nplug('TadabburAdzan');if(!AD)throw new Error('Fitur adzan volume alarm hanya ada di aplikasi Android versi terbaru');await AD.uji({file:window.ADZAN_ADA?'adzan':'adzan_subuh'});izMsg='Adzan uji diputar lewat volume alarm. Ketuk Hentikan untuk berhenti.'}
       else if(p[1]==='ujstop'){var AD2=nplug('TadabburAdzan');if(AD2)await AD2.berhenti();izMsg='Dihentikan.'}
       ibIzin();return;
     }
   }catch(x){
-    if(IB.tab==='izin'){izMsg=x.message||String(x);ibIzin()}else if(IB.tab==='dzikir'){dzMsg=x.message||String(x);ibDzikir()}else if(IB.tab==='kalender'){klMsg=x.message||String(x);ibKalender()}else if(IB.tab==='ramadan'){rmMsg=x.message||String(x);ibRamadan()}
+    if(VW==='simpan'&&SM.tab==='izin'){izMsg=x.message||String(x);ibIzin()}else if(IB.tab==='kalender'){klMsg=x.message||String(x);ibKalender()}else if(IB.tab==='ramadan'){rmMsg=x.message||String(x);ibRamadan()}
   }
 });
 /* pengingat dzikir, puasa, dan Ramadan diperbarui tiap aplikasi dibuka (paling sering sekali per 20 menit) */
 var ibAutoT=0;
 function ibAuto(){
   if(!nplug('LocalNotifications')||Date.now()-ibAutoT<20*60000)return;ibAutoT=Date.now();
-  var d=dzSetel(),k=klSetel(),r=ls('rm_set',null)||{};
-  if(d.p||d.s)dzJadwalkan().catch(function(){});
+  var k=klSetel(),r=ls('rm_set',null)||{};
+  if(!ls('dz_clean',0))ibCancelRentang(nplug('LocalNotifications'),72000,72999).then(function(){sv('dz_clean',1)}).catch(function(){});
   if(k.snk||k.bid||k.khs||k.hb)pzJadwalkan().catch(function(){});
   if(r.n)rmJadwalkan().catch(function(){});
 }
 document.addEventListener('visibilitychange',function(){if(!document.hidden){ibAuto();if(VW==='ibadah')ibadah()}else ibStop()});
 setTimeout(ibAuto,6000);
+
+/* ===== Jurnal tadabbur: catatan pribadi per ayat, jurnal yang bisa dicari, cadangan, dan sinkron awan ===== */
+var NT=ls('nt',{});
+var BLN3=['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+function ntAda(k){return !!(NT[k]&&!NT[k].x&&NT[k].t)}
+function ntTgl(ms){var d=new Date(ms);return d.getDate()+' '+BLN3[d.getMonth()]+' '+d.getFullYear()}
+function ntRef(k){var q=k.split(':');return (NAMA[q[0]-1]||('Surah '+q[0]))+' '+k}
+function ntView(k,ringkas){
+  if(!ntAda(k))return '';var n=NT[k];
+  return '<div class="ntview">'+(ringkas?'':'<div class="ntm"><b>📝 Catatanku</b><span>'+esc(ntTgl(n.u))+'</span></div>')+'<p class="nt">'+esc(n.t)+'</p></div>';
+}
+function ntBox(k,ringkas){return '<div class="ntbox" data-nk="'+k+'"'+(ringkas?' data-r="1"':'')+'>'+ntView(k,ringkas)+'</div>'}
+function ntPrune(){var batas=Date.now()-45*864e5;Object.keys(NT).forEach(function(k){if(NT[k].x&&NT[k].u<batas)delete NT[k]});return NT}
+function ntSimpan(){ntPrune();sv('nt',NT);dirty()}
+function ntRefresh(k){
+  Array.prototype.forEach.call(document.querySelectorAll('.ntbox[data-nk="'+k+'"]'),function(b){if(!b.dataset.edit)b.innerHTML=ntView(k,!!b.dataset.r)});
+  Array.prototype.forEach.call(document.querySelectorAll('[data-nt="'+k+'"]'),function(x){var ada=ntAda(k);x.setAttribute('aria-pressed',ada);if(x.dataset.lbl!=='ubah')x.textContent=ada?'📝 Catatan ✓':'📝 Catatan'});
+}
+function ntEdit(box,k){
+  box.dataset.edit='1';var teks=ntAda(k)?NT[k].t:'';
+  box.innerHTML='<div class="nted"><textarea class="nta" maxlength="2000" rows="4" placeholder="Apa yang ayat ini ajarkan kepadaku hari ini? Apa yang akan kuamalkan?">'+esc(teks)+'</textarea>'
+   +'<div class="chips" style="margin:6px 0 0"><button class="ib" data-ntins="Pelajaran: ">+ Pelajaran</button><button class="ib" data-ntins="Doa: ">+ Doa</button><button class="ib" data-ntins="Amalan: ">+ Amalan</button></div>'
+   +'<div class="row"><button class="btn" data-ntsave="'+k+'">Simpan</button><button class="btn o" data-ntcancel="'+k+'">Batal</button>'+(teks?'<button class="btn o" data-ntdel="'+k+'">Hapus</button>':'')+'</div></div>';
+  var ta=box.querySelector('.nta');if(ta){ta.focus();ta.setSelectionRange(ta.value.length,ta.value.length)}
+}
+function ntTutup(box,k){delete box.dataset.edit;box.innerHTML=ntView(k,!!box.dataset.r)}
+function jurnalItem(k){
+  return '<div class="card jitem" data-k="'+k+'" data-q="'+esc((ntRef(k)+' '+NT[k].t).toLowerCase())+'" style="--c:var(--gold)"><div class="hd"><b>'+esc(ntRef(k))+'</b><span>'+esc(ntTgl(NT[k].u))+'</span></div>'
+   +ntBox(k,true)+'<div class="row r4"><button class="ib" data-nt="'+k+'" data-lbl="ubah">✏️ Ubah</button><button class="ib" onclick="buka('+k.split(':')[0]+','+k.split(':')[1]+')">Buka ayat</button></div></div>';
+}
+function jurnalTeks(){
+  var ks=Object.keys(NT).filter(ntAda).sort(function(a,b){return NT[a].u-NT[b].u});
+  return 'Jurnal Tadabbur — Quran Reflect\n\n'+ks.map(function(k){return ntRef(k)+' · '+ntTgl(NT[k].u)+'\n'+NT[k].t}).join('\n\n');
+}
+function jurnalAlat(){
+  return '<div class="card" style="--c:var(--dusk)"><div class="hd"><b>Cadangan jurnal</b></div><p class="sub" style="margin:6px 0">Salin jurnalmu sebagai teks rapi (untuk disimpan di catatan atau WhatsApp), atau sebagai cadangan JSON untuk dipulihkan di HP lain. Jurnal juga ikut tersinkron lewat akun Google bila kamu sudah masuk.</p>'
+   +'<div class="row"><button class="btn o" data-jr="teks">Salin sebagai teks</button><button class="btn o" data-jr="json">Salin cadangan (JSON)</button></div>'
+   +'<textarea id="jrimp" rows="3" placeholder="Tempel cadangan JSON di sini, lalu tekan Pulihkan" style="width:100%;margin-top:10px;padding:10px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit"></textarea>'
+   +'<div class="row"><button class="btn o" data-jr="pulih">Pulihkan dari cadangan</button></div><p class="sub" id="jrmsg" aria-live="polite" style="margin:8px 0 0"></p></div>';
+}
+function jurnalHTML(){
+  var ks=Object.keys(NT).filter(ntAda).sort(function(a,b){return NT[b].u-NT[a].u});
+  var h='<h2>Jurnal tadabbur</h2>';
+  if(!ks.length)return h+'<p class="sub">Belum ada catatan. Tekan 📝 Catatan pada ayat mana saja untuk menulis refleksimu.</p>'+jurnalAlat();
+  return h+'<p class="sub" style="margin:0 0 8px">'+ks.length+' catatan</p><input id="jrq" type="search" placeholder="Cari di jurnal…" aria-label="Cari di jurnal" autocomplete="off" style="width:100%;padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;margin:0 0 10px">'
+   +'<div id="jrlist">'+ks.map(jurnalItem).join('')+'</div>'+jurnalAlat();
+}
+function jrPesan(t){var m=$('jrmsg');if(m)m.textContent=t}
+function jrSalin(teks,ok){
+  var selesai=function(){jrPesan(ok)},gagal=function(){
+    try{var ta=document.createElement('textarea');ta.value=teks;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();var b=document.execCommand('copy');document.body.removeChild(ta);jrPesan(b?ok:'Tidak bisa menyalin otomatis di perangkat ini.')}catch(e){jrPesan('Tidak bisa menyalin otomatis di perangkat ini.')}};
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(teks).then(selesai,gagal);else gagal();
+}
+function ntGabung(masuk){   // gabung catatan dari awan atau cadangan: yang lebih baru menang per ayat
+  var ubah=0,dorong=false;
+  if(masuk&&typeof masuk==='object'){
+    Object.keys(masuk).forEach(function(k){
+      var v=masuk[k];if(!/^\d{1,3}:\d{1,3}$/.test(k)||!v||typeof v!=='object')return;
+      var u=+v.u||0,t=typeof v.t==='string'?v.t.slice(0,2000):'';
+      if(!NT[k]||u>(NT[k].u||0)){NT[k]=v.x?{t:'',u:u,x:1}:{t:t,c:+v.c||u,u:u};ubah++}
+    });
+  }
+  Object.keys(NT).forEach(function(k){if(!masuk||!masuk[k]||(NT[k].u||0)>(masuk[k].u||0))dorong=true});
+  if(ubah)sv('nt',NT);
+  return {ubah:ubah,dorong:dorong};
+}
+document.addEventListener('click',function(e){
+  var b=e.target.closest('[data-nt]');
+  if(b){var k=b.dataset.nt,card=b.closest('.card,.jitem'),box=card&&card.querySelector('.ntbox[data-nk="'+k+'"]');if(box){if(box.dataset.edit)ntTutup(box,k);else ntEdit(box,k)}return}
+  var s=e.target.closest('[data-ntsave]');
+  if(s){var k2=s.dataset.ntsave,bx=s.closest('.ntbox'),t=(bx.querySelector('.nta').value||'').trim().slice(0,2000),n=Date.now();
+    if(!t){if(NT[k2])NT[k2]={t:'',u:n,x:1}}else NT[k2]={t:t,c:(NT[k2]&&NT[k2].c)||n,u:n};
+    delete bx.dataset.edit;ntSimpan();ntRefresh(k2);bx.innerHTML=ntView(k2,!!bx.dataset.r);if(VW==='simpan'&&!t)jurnalRender();return}
+  var c=e.target.closest('[data-ntcancel]');if(c){ntTutup(c.closest('.ntbox'),c.dataset.ntcancel);return}
+  var d=e.target.closest('[data-ntdel]');
+  if(d){var k3=d.dataset.ntdel,bx2=d.closest('.ntbox');if(NT[k3])NT[k3]={t:'',u:Date.now(),x:1};delete bx2.dataset.edit;ntSimpan();ntRefresh(k3);bx2.innerHTML='';if(VW==='simpan')jurnalRender();return}
+  var i=e.target.closest('[data-ntins]');
+  if(i){var ta=i.closest('.nted').querySelector('.nta');ta.value+=(ta.value&&!/\n$/.test(ta.value)?'\n':'')+i.dataset.ntins;ta.focus();return}
+  var j=e.target.closest('[data-jr]');
+  if(j){var a=j.dataset.jr;
+    if(a==='teks')jrSalin(jurnalTeks(),'Jurnal disalin sebagai teks.');
+    else if(a==='json')jrSalin(JSON.stringify({v:1,app:'quran-reflect',nt:ntPrune()}),'Cadangan JSON disalin. Simpan di tempat yang aman.');
+    else if(a==='pulih'){
+      try{var o=JSON.parse(($('jrimp').value||'').trim()),r=ntGabung(o&&o.nt),msg=r.ubah?r.ubah+' catatan dipulihkan atau diperbarui.':'Tidak ada catatan baru di cadangan itu.';if(r.ubah){dirty();jurnalRender()}jrPesan(msg)}
+      catch(x){jrPesan('Cadangan tidak terbaca. Pastikan teks JSON yang ditempel utuh.')}
+    }
+  }
+});
+document.addEventListener('input',function(e){
+  if(e.target&&e.target.id==='jrq'){var q=e.target.value.trim().toLowerCase();Array.prototype.forEach.call(document.querySelectorAll('#jrlist .jitem'),function(x){x.hidden=!!q&&x.dataset.q.indexOf(q)<0})}
+});
+function jurnalRender(){var z=$('jurnal');if(z)z.innerHTML=jurnalHTML()}
+
+/* ===== Murottal: putar surat penuh, ulangi ayat untuk menghafal, jeda, pengatur waktu tidur, unduh offline ===== */
+var MPQARI=[['ar.alafasy','Mishary Alafasy'],['ar.abdulbasitmurattal','Abdul Basit (Murattal)'],['ar.husary','Mahmoud Khalil Al-Husary'],['ar.minshawi','Muhammad Siddiq Al-Minshawi'],['ar.abdurrahmaansudais','Abdurrahman As-Sudais'],['ar.saoodshuraym','Su‘ud Asy-Syuraim'],['ar.mahermuaiqly','Maher Al-Mu‘aiqly'],['ar.hudhaify','Ali Al-Hudzaifi'],['ar.shaatree','Abu Bakr Asy-Syatiri'],['ar.muhammadayyoub','Muhammad Ayyub']];
+var MPS=ls('mu_set',null)||{};
+function mpSet(k,d){return MPS[k]==null?d:MPS[k]}
+function mpSim(k,v){MPS[k]=v;sv('mu_set',MPS)}
+function MPQ(){return mpSet('q','ar.alafasy')}
+function mpQNama(){var q=MPQ();for(var i=0;i<MPQARI.length;i++)if(MPQARI[i][0]===q)return MPQARI[i][1];return q}
+function mpUrl(b,n){return 'https://cdn.islamic.network/quran/audio/'+b+'/'+MPQ()+'/'+n+'.mp3'}
+var MP={s:0,a:1,from:1,to:1,run:false,pause:false,ingap:false,pending:false,cnt:0,rc:0,au:null,gapT:0,try:0,urls:[],sleepEnd:0,sleepMode:0,sleepT:0,fadeT:0,ps:0,dl:false,vol:1},MPD={},MPDIR='',MPB={};
+function mpMB(b){return b>=1048576?(b/1048576).toFixed(1).replace('.',',')+' MB':Math.max(1,Math.round(b/1024))+' KB'}
+function mpLokal(n){
+  var ed=MPQ();
+  if(NATIVE&&MPDIR&&MPD[ed]&&MPD[ed][n]&&window.Capacitor&&Capacitor.convertFileSrc)return Capacitor.convertFileSrc('file://'+MPDIR+'/'+ed+'/'+n+'.mp3');
+  return '';
+}
+async function mpDaftar(ed){
+  var P=nplug('TadabburMurottal');if(!P)return;
+  try{var r=await P.daftar({edisi:ed});MPDIR=r.dir||MPDIR;var m={};(r.nomor||[]).forEach(function(n){m[n]=1});MPD[ed]=m;MPB[ed]=r.bytes||0}catch(e){}
+}
+
+/* --- pemutar berurutan --- */
+function mpSorot(){
+  Array.prototype.forEach.call(document.querySelectorAll('.mp-on'),function(x){x.classList.remove('mp-on')});
+  if(!MP.run)return;
+  var el=$('k'+MP.s+'-'+MP.a);
+  if(el){el.classList.add('mp-on');if(mpSet('ik',1)&&el.scrollIntoView)el.scrollIntoView({block:'center',behavior:'smooth'})}
+}
+function mpBar(){
+  var b=$('mpbar');if(!b)return;
+  if(!MP.run){b.hidden=true;document.body.classList.remove('mpon');return}
+  b.hidden=false;document.body.classList.add('mpon');
+  var ra=mpSet('ra',1),jalan=!MP.pause&&MP.au&&!MP.au.paused||MP.ingap&&!MP.pause;
+  $('mpj').textContent=NAMA[MP.s-1]||('Surah '+MP.s);
+  $('mps').textContent='ayat '+MP.a+' dari '+MP.to+(ra>1?' · ulang '+(MP.cnt+1)+'/'+ra:'')+(mpSet('rr',1)!==1&&MP.to>=MP.from?' · putaran '+(MP.rc+1)+(mpSet('rr',1)?'/'+mpSet('rr',1):''):'');
+  $('mptg').textContent=MP.pause?'▶':'⏸';$('mptg').setAttribute('aria-label',MP.pause?'Lanjutkan':'Jeda');
+  var z=$('mpz');if(z)z.textContent=MP.sleepMode==='surat'?'⏱ sampai akhir':(MP.sleepEnd?'⏱ '+rmDur2(MP.sleepEnd-Date.now()):'');
+}
+function rmDur2(ms){var s=Math.max(0,Math.round(ms/1000)),m=Math.floor(s/60);return m+':'+p2(s%60)}
+function mpLayanan(on,ubah){
+  var P=nplug('TadabburMurottal');if(!P)return;
+  try{
+    if(on)P.layanan({aktif:true,judul:'Murottal · '+(NAMA[MP.s-1]||''),isi:'Ayat '+MP.a+' dari '+MP.to+' · '+mpQNama(),jalan:!MP.pause}).catch(function(){});
+    else P.layanan({aktif:false}).catch(function(){});
+  }catch(e){}
+}
+function mpMulai(s,dari,sampai){
+  if(AU)AU.pause();if(AK){AK=null;audioBtns()}
+  mpHenti(true);
+  MP.s=s;MP.from=dari;MP.to=sampai;MP.a=dari;MP.cnt=0;MP.rc=0;MP.run=true;MP.pause=false;MP.pending=false;MP.ingap=false;
+  mpLayanan(true);mpAyat();
+}
+function mpAyat(){
+  clearTimeout(MP.gapT);MP.ingap=false;MP.pending=false;
+  if(!MP.run)return;
+  var n=gnum(MP.s+':'+MP.a),au=MP.au||(MP.au=new Audio()),lk=mpLokal(n);
+  MP.urls=[];if(lk)MP.urls.push(lk);[128,64,192].forEach(function(b){MP.urls.push(mpUrl(b,n))});MP.try=0;
+  if(MP.fadeT){clearInterval(MP.fadeT);MP.fadeT=0;MP.vol=1}
+  au.onended=mpSelesaiAyat;
+  au.onerror=function(){if(!MP.run)return;if(++MP.try<MP.urls.length){mpPasang()}else{var m=document.querySelector('.mu-err');if(m)m.textContent='Audio belum bisa dimuat. Periksa koneksi internet, atau pilih qari lain. Surat yang sudah diunduh bisa diputar tanpa internet.';mpHenti()}};
+  au.onplay=au.onpause=function(){mpBar()};
+  mpPasang();mpSorot();mpBar();
+  if(MP.run&&NATIVE)mpLayanan(true);
+}
+function mpPasang(){
+  var au=MP.au;au.src=MP.urls[MP.try];au.playbackRate=mpSet('r',1);au.volume=MP.vol;
+  if(!MP.pause)au.play().catch(function(){});
+}
+function mpJeda(fn){
+  var g=mpSet('jd',0)*1000;
+  if(!g){fn();return}
+  MP.ingap=true;MP.gapT=setTimeout(function(){MP.ingap=false;if(MP.pause){MP.pending=true}else fn()},g);mpBar();
+}
+function mpSelesaiAyat(){
+  if(!MP.run)return;
+  MP.cnt++;var ra=mpSet('ra',1);
+  if(MP.cnt<ra){mpJeda(mpAyat);return}
+  MP.cnt=0;
+  if(MP.a<MP.to){MP.a++;mpJeda(mpAyat);return}
+  MP.rc++;var rr=mpSet('rr',1);
+  if(MP.sleepMode==='surat'){mpHenti();return}
+  if(rr===0||MP.rc<rr){MP.a=MP.from;mpJeda(mpAyat);return}
+  if(mpSet('ln',0)&&MP.s<114){MP.s++;MP.from=1;MP.to=COUNTS[MP.s-1];MP.a=1;MP.rc=0;mpJeda(mpAyat);return}
+  mpHenti();
+}
+function mpToggle(){
+  if(!MP.run)return;
+  if(MP.pause){MP.pause=false;if(MP.pending){mpAyat()}else if(MP.ingap){}else if(MP.au)MP.au.play().catch(function(){})}
+  else{MP.pause=true;if(MP.au&&!MP.ingap)MP.au.pause();if(MP.ingap){clearTimeout(MP.gapT);MP.ingap=false;MP.pending=true}}
+  mpBar();mpLayanan(true);
+}
+function mpLompat(arah){
+  if(!MP.run)return;
+  MP.cnt=0;
+  if(arah>0)MP.a=MP.a<MP.to?MP.a+1:MP.from;else MP.a=MP.a>MP.from?MP.a-1:MP.to;
+  MP.pause=false;mpAyat();
+}
+function mpHenti(jaga){
+  clearTimeout(MP.gapT);if(MP.fadeT){clearInterval(MP.fadeT);MP.fadeT=0}
+  MP.run=false;MP.ingap=false;MP.pending=false;MP.vol=1;
+  if(MP.au){try{MP.au.onended=MP.au.onerror=MP.au.onplay=MP.au.onpause=null;MP.au.pause()}catch(e){}}
+  mpSorot();mpBar();if(!jaga)mpLayanan(false);
+}
+
+/* --- pengatur waktu tidur --- */
+function mpTidur(v){
+  clearInterval(MP.sleepT);MP.sleepT=0;MP.sleepEnd=0;MP.sleepMode=0;
+  if(v==='surat'){MP.sleepMode='surat'}
+  else if(+v>0){
+    MP.sleepEnd=Date.now()+(+v)*60000;
+    MP.sleepT=setInterval(function(){
+      if(Date.now()>=MP.sleepEnd){clearInterval(MP.sleepT);MP.sleepT=0;MP.sleepEnd=0;mpRedup();return}
+      mpBar();
+    },1000);
+  }
+  mpBar();
+}
+function mpRedup(){   // suara dipelankan 6 detik lalu berhenti
+  if(!MP.run){mpBar();return}
+  var step=0;MP.fadeT=setInterval(function(){
+    step++;MP.vol=Math.max(0,1-step/6);if(MP.au)MP.au.volume=MP.vol;
+    if(step>=6){clearInterval(MP.fadeT);MP.fadeT=0;mpHenti();var s=$('mutidur');if(s)s.value='0'}
+  },1000);
+}
+
+/* --- panel di tampilan surat --- */
+function mpSel(key,opsi,val){return '<select data-mus="'+key+'">'+opsi.map(function(o){return '<option value="'+o[0]+'"'+(String(o[0])===String(val)?' selected':'')+'>'+o[1]+'</option>'}).join('')+'</select>'}
+function mpPanel(s,N){
+  MP.ps=s;
+  return '<details class="card" id="mpdet" style="--c:var(--teal)"><summary><b>🎧 Pemutar murottal</b></summary>'
+   +'<p class="sub" style="margin:8px 0 0">Putar surat penuh, ulangi ayat untuk menghafal, atur waktu tidur, dan unduh untuk didengar tanpa internet.</p>'
+   +'<div class="mug"><label>Dari ayat<input type="number" id="mufrom" inputmode="numeric" min="1" max="'+N+'" value="1"></label><label>Sampai ayat<input type="number" id="muto" inputmode="numeric" min="1" max="'+N+'" value="'+N+'"></label></div>'
+   +'<div class="row"><button class="btn" data-mu="play">▶ Putar</button><button class="btn o" data-mu="hafal">🧠 Pengaturan hafalan</button></div>'
+   +'<div class="mug">'
+   +'<label>Qari'+mpSel('q',MPQARI.map(function(q){return [q[0],q[1]]}),MPQ())+'</label>'
+   +'<label>Kecepatan'+mpSel('r',[[0.75,'0,75×'],[0.9,'0,9×'],[1,'1× (normal)'],[1.25,'1,25×']],mpSet('r',1))+'</label>'
+   +'<label>Ulangi tiap ayat'+mpSel('ra',[[1,'1× (tanpa ulang)'],[2,'2×'],[3,'3×'],[5,'5×'],[10,'10×']],mpSet('ra',1))+'</label>'
+   +'<label>Ulangi rentang'+mpSel('rr',[[1,'1× (sekali)'],[2,'2×'],[3,'3×'],[5,'5×'],[0,'Tanpa batas']],mpSet('rr',1))+'</label>'
+   +'<label>Jeda antar ayat'+mpSel('jd',[[0,'Tanpa jeda'],[1,'1 detik'],[2,'2 detik'],[3,'3 detik'],[5,'5 detik']],mpSet('jd',0))+'</label>'
+   +'<label>Waktu tidur<select id="mutidur" data-mus="tidur"><option value="0">Mati</option><option value="15">15 menit</option><option value="30">30 menit</option><option value="45">45 menit</option><option value="60">60 menit</option><option value="surat">Sampai rentang selesai</option></select></label>'
+   +'</div>'
+   +'<div class="chips" style="margin-top:8px">'+ibBtn2('ln','Lanjut ke surat berikutnya',mpSet('ln',0))+ibBtn2('ik','Gulir mengikuti ayat',mpSet('ik',1))+'</div>'
+   +'<p class="err mu-err" style="font-size:14.5px;margin:6px 0 0"></p>'
+   +'<div id="mudl" style="margin-top:6px"></div></details>';
+}
+function ibBtn2(k,txt,on){return '<button class="ib" data-mut="'+k+'" aria-pressed="'+!!on+'">'+txt+'</button>'}
+async function mpDlRender(){
+  var box=$('mudl');if(!box)return;var s=MP.ps,P=nplug('TadabburMurottal');
+  if(!P){box.innerHTML='<p class="sub">Unduhan offline hanya tersedia di aplikasi Android versi terbaru.</p>';return}
+  var ed=MPQ();await mpDaftar(ed);box=$('mudl');if(!box)return;
+  var N=COUNTS[s-1],first=gnum(s+':1'),ada=0,m=MPD[ed]||{};for(var i=0;i<N;i++)if(m[first+i])ada++;
+  if(MP.dl)return;
+  box.innerHTML='<p class="id" style="margin:6px 0 0">Offline ('+esc(mpQNama())+'): <b>'+ada+'/'+N+'</b> ayat · seluruh unduhan qari ini: '+mpMB(MPB[ed]||0)+'</p>'
+   +'<div class="row"><button class="btn o" data-mu="dl">⬇ Unduh surat ini</button>'+(ada?'<button class="btn o" data-mu="dlhapus">Hapus surat ini</button>':'')+((MPB[ed]||0)?'<button class="btn o" data-mu="dlsemua">Hapus semua unduhan qari ini</button>':'')+'</div><p class="sub" id="mudlp" aria-live="polite" style="margin:6px 0 0"></p>';
+}
+async function mpUnduh(){
+  var P=nplug('TadabburMurottal');if(!P)return;var s=MP.ps,N=COUNTS[s-1],first=gnum(s+':1'),ed=MPQ(),m=MPD[ed]||{},perlu=[];
+  for(var i=0;i<N;i++)if(!m[first+i])perlu.push(first+i);
+  if(!perlu.length){var p0=$('mudlp');if(p0)p0.textContent='Semua ayat surat ini sudah terunduh.';return}
+  if(perlu.length>80&&!confirm('Surat ini '+perlu.length+' ayat dan bisa memakan puluhan MB. Sebaiknya lewat Wi‑Fi. Lanjutkan mengunduh?'))return;
+  MP.dl=true;var box=$('mudl');
+  if(box)box.innerHTML='<div class="row"><button class="btn o" data-mu="dlbatal">Batalkan unduhan</button></div><p class="sub" id="mudlp" aria-live="polite" style="margin:6px 0 0">Mulai mengunduh…</p>';
+  try{
+    var r=await P.unduh({edisi:ed,nomor:perlu,bitrate:[64,128,192]});
+    MP.dl=false;await mpDlRender();var p=$('mudlp');
+    if(p)p.textContent=(r.batal?'Unduhan dibatalkan. ':'')+(r.gagal&&r.gagal.length?r.gagal.length+' ayat gagal diunduh (cek koneksi atau pilih qari lain). Yang sudah terunduh tidak diunduh ulang.':(r.batal?'':'Selesai. Surat ini bisa didengar tanpa internet.'));
+  }catch(e){MP.dl=false;await mpDlRender();var p2=$('mudlp');if(p2)p2.textContent='Gagal mengunduh: '+(e.message||e)}
+}
+(function(){
+  var P=nplug('TadabburMurottal');if(!P)return;
+  try{P.addListener('unduh',function(e){var p=$('mudlp');if(p)p.textContent='Mengunduh '+e.selesai+'/'+e.total+' ayat · '+mpMB(e.bytes||0)});
+      P.addListener('aksi',function(e){var a=e&&e.aksi;if(a==='toggle')mpToggle();else if(a==='next')mpLompat(1);else if(a==='prev')mpLompat(-1);else if(a==='stop')mpHenti()})}catch(x){}
+  setTimeout(function(){mpDaftar(MPQ())},2500);
+})();
+document.body.insertAdjacentHTML('beforeend','<div id="mpbar" hidden><div class="mpt"><b id="mpj"></b><span id="mps"></span><span id="mpz"></span></div><div class="mpc"><button data-mu="prev" aria-label="Ayat sebelumnya">⏮</button><button data-mu="toggle" id="mptg" aria-label="Jeda">⏸</button><button data-mu="next" aria-label="Ayat berikutnya">⏭</button><button data-mu="stop" aria-label="Berhenti">■</button></div></div>');
+document.addEventListener('click',async function(e){
+  var m=e.target.closest('[data-mu]'),f=e.target.closest('[data-mfrom]'),t=e.target.closest('[data-mut]');
+  if(f){var q=f.dataset.mfrom.split(':');mpMulai(+q[0],+q[1],COUNTS[q[0]-1]);return}
+  if(t){var k=t.dataset.mut;mpSim(k,mpSet(k,k==='ik'?1:0)?0:1);t.setAttribute('aria-pressed',!!mpSet(k,k==='ik'?1:0));return}
+  if(!m)return;var a=m.dataset.mu;
+  if(a==='play'){var N=COUNTS[MP.ps-1],d=Math.max(1,Math.min(N,+($('mufrom').value)||1)),s=Math.max(d,Math.min(N,+($('muto').value)||N));mpMulai(MP.ps,d,s)}
+  else if(a==='toggle')mpToggle();else if(a==='next')mpLompat(1);else if(a==='prev')mpLompat(-1);else if(a==='stop')mpHenti();
+  else if(a==='hafal'){mpSim('ra',3);mpSim('jd',2);mpSim('rr',1);var det=$('mpdet');if(det){Array.prototype.forEach.call(det.querySelectorAll('[data-mus]'),function(x){var k=x.dataset.mus;if(k==='ra')x.value='3';if(k==='jd')x.value='2';if(k==='rr')x.value='1'})}var er=document.querySelector('.mu-err');if(er)er.textContent='Preset hafalan: tiap ayat diulang 3× dengan jeda 2 detik. Atur rentang ayat di atas lalu tekan Putar.';}
+  else if(a==='dl')mpUnduh();
+  else if(a==='dlbatal'){try{await nplug('TadabburMurottal').batal()}catch(x){}}
+  else if(a==='dlhapus'||a==='dlsemua'){
+    var P=nplug('TadabburMurottal'),ed=MPQ();if(!P)return;
+    if(a==='dlsemua'&&!confirm('Hapus semua audio unduhan untuk '+mpQNama()+'?'))return;
+    var s2=MP.ps,first=gnum(s2+':1'),nom=[];if(a==='dlhapus')for(var i=0;i<COUNTS[s2-1];i++)nom.push(first+i);
+    try{await P.hapus(a==='dlsemua'?{edisi:ed,semua:true}:{edisi:ed,nomor:nom})}catch(x){}
+    await mpDlRender();
+  }
+});
+document.addEventListener('change',function(e){
+  var s=e.target.closest('[data-mus]');if(!s)return;var k=s.dataset.mus,v=s.value;
+  if(k==='tidur'){mpTidur(v);return}
+  if(k==='q'){mpSim('q',v);if(MP.run&&MP.au){MP.au.pause();mpAyat()}mpDlRender();return}
+  mpSim(k,+v);if(k==='r'&&MP.au)MP.au.playbackRate=+v;
+});
 
 /* widget 4x3: ketuk jadwal sholat atau ayat membuka menu yang sesuai */
 if(NATIVE){var NV=nplug('TadabburNav');if(NV){
