@@ -312,7 +312,7 @@ document.addEventListener('click',function(e){
 });
 
 /* ===== Doa & Dzikir: tiap doa memuat sumber kitab dan derajat riwayat; ayat Al-Qur’an memakai teks dan terjemahan yang sama dengan bagian Al-Qur’an ===== */
-var DC={semua:'Semua',shalat:'Setelah Shalat',pagi:'Pagi & Petang',sehari:'Sehari-hari',lindung:'Perlindungan',khusus:'Waktu Khusus',lemah:'Riwayat Lemah',matsurat:'Al-Ma’tsurat'};
+var DC={semua:'Semua',shalat:'Setelah Shalat',sehari:'Sehari-hari',lindung:'Perlindungan',khusus:'Waktu Khusus',lemah:'Riwayat Lemah',matsurat:'Al-Ma’tsurat'};
 var DOA=[
 {id:'salam',c:['shalat'],t:'Setelah salam shalat fardu',k:'shalat salam istighfar sholat',
  ar:['أَسْتَغْفِرُ اللَّهَ (٣×)','اللَّهُمَّ أَنْتَ السَّلَامُ وَمِنْكَ السَّلَامُ تَبَارَكْتَ يَا ذَا الْجَلَالِ وَالْإِكْرَامِ'],
@@ -325,13 +325,7 @@ var DOA=[
  ia:['Maha Suci Allah (33 kali), segala puji bagi Allah (33 kali), Allah Maha Besar (33 kali).','Lalu untuk menggenapkan seratus:','Tiada tuhan selain Allah semata, tiada sekutu bagi-Nya. Milik-Nya kerajaan dan milik-Nya segala puji, dan Dia Maha Kuasa atas segala sesuatu.'],
  note:'Ada variasi sahih lain: takbir 34 kali sehingga genap seratus (Shahih Muslim no. 596).',
  src:'Abu Hurairah. Shahih Muslim no. 597 (Kitab al-Masajid); variasi takbir 34 kali: Shahih Muslim no. 596.',g:'kuat'},
-{id:'istighfar',c:['pagi'],t:'Sayyidul istighfar (pemimpin istighfar)',k:'pagi petang sore istighfar ampun taubat',
- ar:['اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ خَلَقْتَنِي وَأَنَا عَبْدُكَ وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ وَأَبُوءُ لَكَ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ'],
- lat:['Allahumma anta rabbi la ilaha illa anta, khalaqtani wa ana ‘abduka, wa ana ‘ala ‘ahdika wa wa‘dika mastatha‘tu, a‘udzu bika min syarri ma shana‘tu, abu’u laka bi ni‘matika ‘alayya, wa abu’u laka bi dzanbi, faghfir li fa innahu la yaghfirudz-dzunuba illa anta.'],
- ia:['Ya Allah, Engkau Tuhanku, tiada tuhan selain Engkau. Engkau menciptakanku dan aku hamba-Mu. Aku berada di atas perjanjian dan janji-Mu semampuku. Aku berlindung kepada-Mu dari keburukan perbuatanku. Aku mengakui nikmat-Mu atasku dan mengakui dosaku, maka ampunilah aku, sebab tidak ada yang mengampuni dosa kecuali Engkau.'],
- note:'Menurut hadis, siapa yang membacanya pada siang hari dengan penuh keyakinan lalu wafat sebelum sore, atau membacanya pada malam hari lalu wafat sebelum pagi, ia termasuk penghuni surga.',
- src:'Syaddad bin Aus. Shahih al-Bukhari no. 6306 (Kitab ad-Da‘awat, bab afdalul istighfar).',g:'kuat'},
-{id:'bangun',c:['pagi','sehari'],t:'Bangun tidur',k:'tidur bangun pagi',
+{id:'bangun',c:['sehari'],t:'Bangun tidur',k:'tidur bangun pagi',
  ar:['الْحَمْدُ لِلَّهِ الَّذِي أَحْيَانَا بَعْدَ مَا أَمَاتَنَا وَإِلَيْهِ النُّشُورُ'],
  lat:['Alhamdu lillahilladzi ahyana ba‘da ma amatana wa ilaihin-nusyur.'],
  ia:['Segala puji bagi Allah yang menghidupkan kami setelah mematikan kami, dan kepada-Nya kami dibangkitkan.'],
@@ -1323,9 +1317,79 @@ $('ahq').addEventListener('input',function(){
 if(window.speechSynthesis&&speechSynthesis.addEventListener)speechSynthesis.addEventListener('voiceschanged',function(){});
 if('serviceWorker' in navigator&&!NATIVE&&/^https?:$/.test(location.protocol))window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})});
 showVer();if(/widget/.test(location.hash+location.search))wgOn();else hari();
+/* Dzikir pagi dan petang. Rujukan: Hisnul Muslim (Sa‘id bin ‘Ali al-Qahthani). Periksa derajat hadis dan jumlah bacaan pada kitab aslinya. */
+var DZK=[
+{j:'Ayat Kursi',n:1,
+ a:'اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ ۚ لَهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ ۗ مَنْ ذَا الَّذِي يَشْفَعُ عِنْدَهُ إِلَّا بِإِذْنِهِ ۚ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ ۖ وَلَا يُحِيطُونَ بِشَيْءٍ مِنْ عِلْمِهِ إِلَّا بِمَا شَاءَ ۚ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ ۖ وَلَا يَئُودُهُ حِفْظُهُمَا ۚ وَهُوَ الْعَلِيُّ الْعَظِيمُ',
+ t:'Allah, tidak ada tuhan selain Dia. Yang Mahahidup, Yang terus menerus mengurus (makhluk-Nya), tidak mengantuk dan tidak tidur. Milik-Nya apa yang ada di langit dan apa yang ada di bumi. Tidak ada yang dapat memberi syafaat di sisi-Nya tanpa izin-Nya. Dia mengetahui apa yang di hadapan mereka dan apa yang di belakang mereka, dan mereka tidak mengetahui sesuatu apa pun tentang ilmu-Nya melainkan apa yang Dia kehendaki. Kursi-Nya meliputi langit dan bumi. Dan Dia tidak merasa berat memelihara keduanya, dan Dia Mahatinggi, Mahabesar. (QS. Al-Baqarah: 255)',
+ s:'Dibaca sekali. HR. Al-Hakim dan An-Nasa’i dalam ‘Amalul Yaum wal Lailah; dishahihkan Al-Albani.'},
+{j:'Al-Ikhlas, Al-Falaq, dan An-Nas',n:3,
+ a:'بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ. قُلْ هُوَ اللَّهُ أَحَدٌ ۝ اللَّهُ الصَّمَدُ ۝ لَمْ يَلِدْ وَلَمْ يُولَدْ ۝ وَلَمْ يَكُنْ لَهُ كُفُوًا أَحَدٌ.\nقُلْ أَعُوذُ بِرَبِّ الْفَلَقِ ۝ مِنْ شَرِّ مَا خَلَقَ ۝ وَمِنْ شَرِّ غَاسِقٍ إِذَا وَقَبَ ۝ وَمِنْ شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ ۝ وَمِنْ شَرِّ حَاسِدٍ إِذَا حَسَدَ.\nقُلْ أَعُوذُ بِرَبِّ النَّاسِ ۝ مَلِكِ النَّاسِ ۝ إِلَٰهِ النَّاسِ ۝ مِنْ شَرِّ الْوَسْوَاسِ الْخَنَّاسِ ۝ الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ ۝ مِنَ الْجِنَّةِ وَالنَّاسِ',
+ t:'Al-Ikhlas: Katakanlah (Muhammad), “Dialah Allah, Yang Maha Esa. Allah tempat meminta segala sesuatu. (Allah) tidak beranak dan tidak pula diperanakkan. Dan tidak ada sesuatu yang setara dengan Dia.”\nAl-Falaq: Katakanlah, “Aku berlindung kepada Tuhan yang menguasai subuh (fajar), dari kejahatan (makhluk yang) Dia ciptakan, dan dari kejahatan malam apabila telah gelap gulita, dan dari kejahatan perempuan-perempuan penyihir yang meniup pada buhul-buhul (talinya), dan dari kejahatan orang yang dengki apabila dia dengki.”\nAn-Nas: Katakanlah, “Aku berlindung kepada Tuhannya manusia, Raja manusia, sembahan manusia, dari kejahatan (bisikan) setan yang bersembunyi, yang membisikkan (kejahatan) ke dalam dada manusia, dari (golongan) jin dan manusia.”',
+ s:'Dibaca tiga kali (ketiga surah). HR. Abu Dawud no. 5082 dan At-Tirmidzi no. 3575; dihasankan Al-Albani.'},
+{j:'Doa memasuki pagi dan petang',n:1,
+ a:['أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ. رَبِّ أَسْأَلُكَ خَيْرَ مَا فِي هَٰذَا الْيَوْمِ وَخَيْرَ مَا بَعْدَهُ، وَأَعُوذُ بِكَ مِنْ شَرِّ مَا فِي هَٰذَا الْيَوْمِ وَشَرِّ مَا بَعْدَهُ. رَبِّ أَعُوذُ بِكَ مِنَ الْكَسَلِ وَسُوءِ الْكِبَرِ. رَبِّ أَعُوذُ بِكَ مِنْ عَذَابٍ فِي النَّارِ وَعَذَابٍ فِي الْقَبْرِ',
+    'أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ. رَبِّ أَسْأَلُكَ خَيْرَ مَا فِي هَٰذِهِ اللَّيْلَةِ وَخَيْرَ مَا بَعْدَهَا، وَأَعُوذُ بِكَ مِنْ شَرِّ مَا فِي هَٰذِهِ اللَّيْلَةِ وَشَرِّ مَا بَعْدَهَا. رَبِّ أَعُوذُ بِكَ مِنَ الْكَسَلِ وَسُوءِ الْكِبَرِ. رَبِّ أَعُوذُ بِكَ مِنْ عَذَابٍ فِي النَّارِ وَعَذَابٍ فِي الْقَبْرِ'],
+ l:['Ashbahnaa wa ashbahal mulku lillaah, walhamdu lillaah, laa ilaaha illallaahu wahdahu laa syariika lah, lahul mulku wa lahul hamdu wa huwa ‘alaa kulli syai-in qadiir. Rabbi as-aluka khaira maa fii haadzal yaum wa khaira maa ba‘dah, wa a‘uudzu bika min syarri maa fii haadzal yaum wa syarri maa ba‘dah. Rabbi a‘uudzu bika minal kasali wa suu-il kibar. Rabbi a‘uudzu bika min ‘adzaabin fin naar wa ‘adzaabin fil qabr.',
+    'Amsainaa wa amsal mulku lillaah, walhamdu lillaah, laa ilaaha illallaahu wahdahu laa syariika lah, lahul mulku wa lahul hamdu wa huwa ‘alaa kulli syai-in qadiir. Rabbi as-aluka khaira maa fii haadzihil lailah wa khaira maa ba‘daha, wa a‘uudzu bika min syarri maa fii haadzihil lailah wa syarri maa ba‘daha. Rabbi a‘uudzu bika minal kasali wa suu-il kibar. Rabbi a‘uudzu bika min ‘adzaabin fin naar wa ‘adzaabin fil qabr.'],
+ t:['Kami memasuki waktu pagi dan kerajaan hanya milik Allah, segala puji bagi Allah. Tidak ada tuhan yang berhak disembah selain Allah semata, tiada sekutu bagi-Nya. Milik-Nya kerajaan dan milik-Nya segala puji, dan Dia Mahakuasa atas segala sesuatu. Wahai Rabbku, aku memohon kepada-Mu kebaikan hari ini dan kebaikan sesudahnya, dan aku berlindung kepada-Mu dari keburukan hari ini dan keburukan sesudahnya. Wahai Rabbku, aku berlindung kepada-Mu dari kemalasan dan kejelekan di hari tua. Wahai Rabbku, aku berlindung kepada-Mu dari siksa di neraka dan siksa di kubur.',
+    'Kami memasuki waktu petang dan kerajaan hanya milik Allah, segala puji bagi Allah. Tidak ada tuhan yang berhak disembah selain Allah semata, tiada sekutu bagi-Nya. Milik-Nya kerajaan dan milik-Nya segala puji, dan Dia Mahakuasa atas segala sesuatu. Wahai Rabbku, aku memohon kepada-Mu kebaikan malam ini dan kebaikan sesudahnya, dan aku berlindung kepada-Mu dari keburukan malam ini dan keburukan sesudahnya. Wahai Rabbku, aku berlindung kepada-Mu dari kemalasan dan kejelekan di hari tua. Wahai Rabbku, aku berlindung kepada-Mu dari siksa di neraka dan siksa di kubur.'],
+ s:'Dibaca sekali. HR. Muslim no. 2723.'},
+{j:'Allahumma bika ashbahna',n:1,
+ a:['اللَّهُمَّ بِكَ أَصْبَحْنَا، وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ النُّشُورُ','اللَّهُمَّ بِكَ أَمْسَيْنَا، وَبِكَ أَصْبَحْنَا، وَبِكَ نَحْيَا، وَبِكَ نَمُوتُ، وَإِلَيْكَ الْمَصِيرُ'],
+ l:['Allaahumma bika ashbahnaa, wa bika amsainaa, wa bika nahyaa, wa bika namuutu, wa ilaikan nusyuur.','Allaahumma bika amsainaa, wa bika ashbahnaa, wa bika nahyaa, wa bika namuutu, wa ilaikal mashiir.'],
+ t:['Ya Allah, dengan rahmat dan pertolongan-Mu kami memasuki waktu pagi, dengan rahmat dan pertolongan-Mu kami memasuki waktu petang, dengan kehendak-Mu kami hidup, dengan kehendak-Mu kami mati, dan kepada-Mu kebangkitan (kami).','Ya Allah, dengan rahmat dan pertolongan-Mu kami memasuki waktu petang, dengan rahmat dan pertolongan-Mu kami memasuki waktu pagi, dengan kehendak-Mu kami hidup, dengan kehendak-Mu kami mati, dan kepada-Mu tempat kembali (kami).'],
+ s:'Dibaca sekali. HR. At-Tirmidzi no. 3391, Abu Dawud no. 5068, Ibnu Majah no. 3868; dishahihkan Al-Albani.'},
+{j:'Sayyidul istighfar',n:1,
+ a:'اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَٰهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَىٰ عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ بِذَنْبِي فَاغْفِرْ لِي، فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ',
+ l:'Allaahumma anta rabbii laa ilaaha illaa anta, khalaqtanii wa anaa ‘abduka, wa anaa ‘alaa ‘ahdika wa wa‘dika mastatha‘tu, a‘uudzu bika min syarri maa shana‘tu, abuu-u laka bini‘matika ‘alayya, wa abuu-u bidzanbii faghfir lii fa innahu laa yaghfirudz dzunuuba illaa anta.',
+ t:'Ya Allah, Engkau adalah Rabbku, tidak ada tuhan yang berhak disembah selain Engkau. Engkau yang menciptakanku dan aku adalah hamba-Mu. Aku berada di atas perjanjian dan janji-Mu semampuku. Aku berlindung kepada-Mu dari keburukan yang kuperbuat. Aku mengakui nikmat-Mu kepadaku dan aku mengakui dosaku, maka ampunilah aku. Sesungguhnya tidak ada yang dapat mengampuni dosa selain Engkau.',
+ s:'Dibaca sekali dengan penuh keyakinan. HR. Al-Bukhari no. 6306.'},
+{j:'Doa kesehatan dan perlindungan',n:3,
+ a:'اللَّهُمَّ عَافِنِي فِي بَدَنِي، اللَّهُمَّ عَافِنِي فِي سَمْعِي، اللَّهُمَّ عَافِنِي فِي بَصَرِي، لَا إِلَٰهَ إِلَّا أَنْتَ. اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْكُفْرِ وَالْفَقْرِ، وَأَعُوذُ بِكَ مِنْ عَذَابِ الْقَبْرِ، لَا إِلَٰهَ إِلَّا أَنْتَ',
+ l:'Allaahumma ‘aafinii fii badanii, allaahumma ‘aafinii fii sam‘ii, allaahumma ‘aafinii fii bashariii, laa ilaaha illaa anta. Allaahumma innii a‘uudzu bika minal kufri wal faqr, wa a‘uudzu bika min ‘adzaabil qabr, laa ilaaha illaa anta.',
+ t:'Ya Allah, selamatkanlah tubuhku. Ya Allah, selamatkanlah pendengaranku. Ya Allah, selamatkanlah penglihatanku. Tidak ada tuhan yang berhak disembah selain Engkau. Ya Allah, aku berlindung kepada-Mu dari kekufuran dan kefakiran, dan aku berlindung kepada-Mu dari siksa kubur. Tidak ada tuhan yang berhak disembah selain Engkau.',
+ s:'Dibaca tiga kali. HR. Abu Dawud no. 5090 dan Al-Bukhari dalam Al-Adab Al-Mufrad; dihasankan Al-Albani.'},
+{j:'Bismillahilladzi la yadhurru',n:3,
+ a:'بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ',
+ l:'Bismillaahilladzii laa yadhurru ma‘asmihii syai-un fil ardhi wa laa fis samaa-i wa huwas samii‘ul ‘aliim.',
+ t:'Dengan nama Allah yang bersama nama-Nya tidak ada sesuatu pun di bumi dan di langit yang dapat membahayakan, dan Dia Maha Mendengar lagi Maha Mengetahui.',
+ s:'Dibaca tiga kali. HR. Abu Dawud no. 5088, At-Tirmidzi no. 3388, Ibnu Majah no. 3869; dishahihkan Al-Albani.'},
+{j:'Ridha Allah sebagai Rabb',n:3,
+ a:'رَضِيتُ بِاللَّهِ رَبًّا، وَبِالْإِسْلَامِ دِينًا، وَبِمُحَمَّدٍ نَبِيًّا',
+ l:'Radhiitu billaahi rabbaa, wa bil islaami diinaa, wa bi Muhammadin nabiyyaa.',
+ t:'Aku ridha Allah sebagai Rabb, Islam sebagai agama, dan Muhammad sebagai nabi.',
+ s:'Dibaca tiga kali. HR. Abu Dawud no. 5072 dan At-Tirmidzi no. 3389; dihasankan Al-Albani.'},
+{j:'Ya Hayyu ya Qayyum',n:1,
+ a:'يَا حَيُّ يَا قَيُّومُ بِرَحْمَتِكَ أَسْتَغِيثُ، أَصْلِحْ لِي شَأْنِي كُلَّهُ، وَلَا تَكِلْنِي إِلَىٰ نَفْسِي طَرْفَةَ عَيْنٍ',
+ l:'Yaa hayyu yaa qayyuumu birahmatika astaghiits, ashlih lii sya’nii kullahu, wa laa takilnii ilaa nafsii tharfata ‘ain.',
+ t:'Wahai Yang Mahahidup, wahai Yang Maha Berdiri Sendiri, dengan rahmat-Mu aku memohon pertolongan. Perbaikilah seluruh urusanku dan jangan Engkau serahkan aku kepada diriku sendiri walau sekejap mata.',
+ s:'Dibaca sekali. HR. Al-Hakim; dihasankan Al-Albani.'},
+{j:'Permohonan maaf dan keselamatan',n:1,
+ a:'اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي الدُّنْيَا وَالْآخِرَةِ. اللَّهُمَّ إِنِّي أَسْأَلُكَ الْعَفْوَ وَالْعَافِيَةَ فِي دِينِي وَدُنْيَايَ وَأَهْلِي وَمَالِي. اللَّهُمَّ اسْتُرْ عَوْرَاتِي وَآمِنْ رَوْعَاتِي. اللَّهُمَّ احْفَظْنِي مِنْ بَيْنِ يَدَيَّ وَمِنْ خَلْفِي وَعَنْ يَمِينِي وَعَنْ شِمَالِي وَمِنْ فَوْقِي، وَأَعُوذُ بِعَظَمَتِكَ أَنْ أُغْتَالَ مِنْ تَحْتِي',
+ l:'Allaahumma innii as-alukal ‘afwa wal ‘aafiyata fid dunyaa wal aakhirah. Allaahumma innii as-alukal ‘afwa wal ‘aafiyata fii diinii wa dunyaaya wa ahlii wa maalii. Allaahummastur ‘auraatii wa aamin rau‘aatii. Allaahummahfazhnii min baini yadayya wa min khalfii wa ‘an yamiinii wa ‘an syimaalii wa min fauqii, wa a‘uudzu bi‘azhamatika an ughtaala min tahtii.',
+ t:'Ya Allah, aku memohon kepada-Mu pemaafan dan keselamatan di dunia dan akhirat. Ya Allah, aku memohon pemaafan dan keselamatan dalam agamaku, duniaku, keluargaku, dan hartaku. Ya Allah, tutupilah auratku (aib dan kekuranganku) dan tenangkanlah kegelisahanku. Ya Allah, jagalah aku dari depan, belakang, kanan, kiri, dan dari atasku. Aku berlindung dengan keagungan-Mu dari dibinasakan dari arah bawahku.',
+ s:'Dibaca sekali. HR. Abu Dawud no. 5074 dan Ibnu Majah no. 3871; dishahihkan Al-Albani.'},
+{j:'Tasbih dan tahmid',n:100,
+ a:'سُبْحَانَ اللَّهِ وَبِحَمْدِهِ',
+ l:'Subhaanallaahi wa bihamdih.',
+ t:'Mahasuci Allah dan segala puji bagi-Nya.',
+ s:'Dibaca seratus kali (pagi dan petang). HR. Muslim no. 2692.'},
+{j:'Tasbih sebanyak makhluk-Nya',n:3,w:'pagi',
+ a:'سُبْحَانَ اللَّهِ وَبِحَمْدِهِ، عَدَدَ خَلْقِهِ، وَرِضَا نَفْسِهِ، وَزِنَةَ عَرْشِهِ، وَمِدَادَ كَلِمَاتِهِ',
+ l:'Subhaanallaahi wa bihamdih, ‘adada khalqih, wa ridhaa nafsih, wa zinata ‘arsyih, wa midaada kalimaatih.',
+ t:'Mahasuci Allah dan segala puji bagi-Nya sebanyak bilangan makhluk-Nya, sesuai keridhaan-Nya, seberat timbangan ‘Arsy-Nya, dan sebanyak tinta (untuk menulis) kalimat-kalimat-Nya.',
+ s:'Dibaca tiga kali di pagi hari. HR. Muslim no. 2726.'},
+{j:'Tahlil seratus kali',n:100,
+ a:'لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ',
+ l:'Laa ilaaha illallaahu wahdahu laa syariika lah, lahul mulku wa lahul hamdu wa huwa ‘alaa kulli syai-in qadiir.',
+ t:'Tidak ada tuhan yang berhak disembah selain Allah semata, tiada sekutu bagi-Nya. Milik-Nya kerajaan dan milik-Nya segala puji, dan Dia Mahakuasa atas segala sesuatu.',
+ s:'Dibaca seratus kali dalam sehari. HR. Al-Bukhari no. 3293 dan Muslim no. 2691.'}
+];
+
 /* ===== Ibadah: kiblat, dzikir pagi dan petang, tasbih, kalender puasa dan hari besar, Ramadan, cek izin ===== */
 var IB={tab:ls('ib_tab','kiblat')},IBT=[];
-if(['kiblat','tasbih','kalender','ramadan'].indexOf(IB.tab)<0)IB.tab='kiblat';   // IBT: timer yang harus dihentikan saat panel berganti
+if(['kiblat','dzikir','tasbih','kalender','ramadan'].indexOf(IB.tab)<0)IB.tab='kiblat';   // IBT: timer yang harus dihentikan saat panel berganti
 var HJ_BLN=['Muharram','Safar','Rabiul Awal','Rabiul Akhir','Jumadil Awal','Jumadil Akhir','Rajab','Sya’ban','Ramadhan','Syawal','Dzulqa’dah','Dzulhijjah'];
 var HARI=['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
 function ibJam(ms){return shJam(ms)}
@@ -1352,9 +1416,9 @@ function ibStop(){
 }
 function ibadah(){
   var z=$('ibadah');if(!z)return;ibStop();
-  var tabs=[['kiblat','Kiblat'],['tasbih','Tasbih'],['kalender','Kalender'],['ramadan','Ramadan']];
+  var tabs=[['kiblat','Kiblat'],['dzikir','Dzikir'],['tasbih','Tasbih'],['kalender','Kalender'],['ramadan','Ramadan']];
   z.innerHTML='<div class="chips">'+tabs.map(function(t){return '<button class="ib" data-ib="tab:'+t[0]+'" aria-pressed="'+(IB.tab===t[0])+'">'+t[1]+'</button>'}).join('')+'</div><div id="ibp"></div>';
-  ({kiblat:ibKiblat,tasbih:ibTasbih,kalender:ibKalender,ramadan:ibRamadan}[IB.tab]||ibKiblat)();
+  ({kiblat:ibKiblat,dzikir:ibDzikir,tasbih:ibTasbih,kalender:ibKalender,ramadan:ibRamadan}[IB.tab]||ibKiblat)();
 }
 function ibKartu(judul,kanan,isi,warna){return '<article class="card" style="--c:var(--'+(warna||'teal')+')"><div class="hd"><b>'+judul+'</b><span>'+(kanan||'')+'</span></div>'+isi+'</article>'}
 function ibBtn(a,txt,on,dis){return '<button class="ib" data-ib="'+a+'" aria-pressed="'+!!on+'"'+(dis?' disabled':'')+'>'+txt+'</button>'}
@@ -1404,6 +1468,49 @@ function ibKiblat(){
   window.addEventListener('deviceorientationabsolute',cmpOn,true);window.addEventListener('deviceorientation',cmpOn,true);
   var tm=setTimeout(function(){if(CMP.h==null&&$('cmpt'))$('cmpt').textContent='Sensor kompas tidak terbaca di perangkat ini. Pakai arah '+Math.round(b)+'° ('+mataAngin(b)+') dari Utara.'},2500);
   IBT.push(tm);
+}
+
+/* ========== DZIKIR PAGI DAN PETANG ========== */
+function dzSesiDefault(){
+  var L=ibLok(),now=Date.now(),T=shHitung(new Date(),L.la,L.lo);
+  return (now>=T.ashar||now<T.subuh)?'petang':'pagi';
+}
+function dzKunci(s){return 'dz_'+dkey(new Date())+'_'+s}
+function dzSetel(){var s=ls('dz_set',null)||{};return {p:+s.p||0,s:+s.s||0}}
+function dzBersih(){try{var h=dkey(new Date()),ks=[];for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.indexOf('dz_')===0&&k.indexOf('dz_set')!==0&&k.indexOf('dz_'+h)!==0)ks.push(k)}ks.forEach(function(k){localStorage.removeItem(k)})}catch(e){}}
+var DZS=null,dzMsg='';
+function ibDzikir(){
+  dzBersih();if(!DZS)DZS=dzSesiDefault();
+  var ses=DZS,idx=1*(ses==='petang'),items=DZK.map(function(x,i){return {x:x,i:i}}).filter(function(o){return !o.x.w||o.x.w===ses});
+  var cnt=ls(dzKunci(ses),{}),sel=0;
+  items.forEach(function(o){if((cnt[o.i]||0)>=o.x.n)sel++});
+  var set=dzSetel();
+  var h='<div class="chips">'+ibBtn('dz:s:pagi','Dzikir pagi',ses==='pagi')+ibBtn('dz:s:petang','Dzikir petang',ses==='petang')+'</div>'
+   +'<p class="sub" style="margin:0 0 10px">'+(ses==='pagi'?'Waktunya sesudah Subuh sampai matahari terbit atau menjelang Dzuhur.':'Waktunya sesudah Ashar sampai menjelang Maghrib atau malam.')+' Selesai <b>'+sel+'</b> dari <b>'+items.length+'</b> hari ini.</p>';
+  h+=items.map(function(o){
+    var x=o.x,a=Array.isArray(x.a)?x.a[idx]:x.a,l=x.l==null?'':(Array.isArray(x.l)?x.l[idx]:x.l),t=Array.isArray(x.t)?x.t[idx]:x.t,c=cnt[o.i]||0,done=c>=x.n;
+    var tr=esc(t).replace(/\n/g,'<br>'),ar=esc(a).replace(/\n/g,'<br>');
+    return ibKartu(esc(x.j),x.n+'×','<div class="ar" lang="ar">'+ar+'</div>'+(l?'<p class="dt" style="font-size:16px;font-weight:500;font-style:italic">'+esc(l)+'</p>':'')+'<p class="id" style="margin-top:8px">'+tr+'</p><p class="mk" style="font-size:14.5px">'+esc(x.s)+'</p>'
+      +'<div class="row">'+ibBtn('dz:+:'+o.i,done?'✓ Selesai ('+c+'/'+x.n+')':'Baca ('+c+'/'+x.n+')',done)+(x.n>=30&&!done?ibBtn('dz:+10:'+o.i,'+10',false):'')+(c>0?ibBtn('dz:-:'+o.i,'Kurangi',false):'')+'</div>','gold');
+  }).join('');
+  h+=ibKartu('Pengingat dzikir','','<p class="sub" style="margin:8px 0">Notifikasi untuk 7 hari ke depan, diperbarui setiap aplikasi dibuka. Pagi: 20 menit setelah Subuh. Petang: 15 menit setelah Ashar.</p><div class="chips">'+ibBtn('dz:r:p','Pagi: '+(set.p?'Aktif':'Mati'),set.p)+ibBtn('dz:r:s','Petang: '+(set.s?'Aktif':'Mati'),set.s)+'</div>'+(dzMsg?'<p class="sub" style="margin:8px 0 0">'+esc(dzMsg)+'</p>':'')+'<div class="row"><button class="btn o" data-ib="dz:reset">Ulangi hitungan hari ini</button></div>','dusk');
+  h+='<p class="note">Disusun dari Hisnul Muslim (Sa‘id bin ‘Ali al-Qahthani). Nomor hadis dan derajatnya ditulis ringkas dari rujukan umum; periksa kembali kitab aslinya, dan tanyakan kepada ustadz bila ragu soal jumlah atau waktu bacaan.</p>';
+  $('ibp').innerHTML=h;
+}
+async function dzJadwalkan(){
+  var LN=nplug('LocalNotifications');if(!LN)return;
+  var S=dzSetel();await ibCancelRentang(LN,72000,72999);
+  if(!(S.p||S.s))return;
+  var L=shLok();if(!L)throw new Error('Ambil lokasi di menu Sholat dulu agar waktu Subuh dan Ashar akurat.');
+  await ibNotifOk();
+  try{await LN.createChannel({id:'dzikir',name:'Dzikir pagi dan petang',description:'Pengingat dzikir',importance:3,vibration:true})}catch(e){}
+  var now=Date.now(),list=[];
+  for(var d=0;d<7;d++){
+    var dt=new Date();dt.setDate(dt.getDate()+d);var T=shHitung(dt,L.la,L.lo);
+    if(S.p&&T.subuh+20*60000>now)list.push({id:72000+d*2,title:'Waktunya dzikir pagi',body:'Luangkan beberapa menit untuk dzikir pagi sebelum matahari terbit.',schedule:{at:new Date(T.subuh+20*60000),allowWhileIdle:true},smallIcon:'ic_stat_tadabbur',channelId:'dzikir'});
+    if(S.s&&T.ashar+15*60000>now)list.push({id:72000+d*2+1,title:'Waktunya dzikir petang',body:'Luangkan beberapa menit untuk dzikir petang sebelum Maghrib.',schedule:{at:new Date(T.ashar+15*60000),allowWhileIdle:true},smallIcon:'ic_stat_tadabbur',channelId:'dzikir'});
+  }
+  if(list.length)await LN.schedule({notifications:list});
 }
 
 /* ========== TASBIH DIGITAL ========== */
@@ -1594,6 +1701,15 @@ document.addEventListener('click',async function(e){
     if(p[0]==='ts'){var d=tsData();
       if(p[1]==='z'){d.z=+p[2];d.n=0}else if(p[1]==='t'){d.t=+p[2];d.n=0}else if(p[1]==='hap')d.hap=d.hap?0:1;else if(p[1]==='reset'){d.n=0;d.r=0}
       sv('tsb',d);ibTasbih();return}
+    if(p[0]==='dz'){
+      var ses=DZS||'pagi';
+      if(p[1]==='s'){DZS=p[2];ibDzikir();return}
+      if(p[1]==='+'||p[1]==='+10'||p[1]==='-'){var c=ls(dzKunci(ses),{}),i=+p[2],mx=DZK[i].n;c[i]=Math.max(0,Math.min(mx,(c[i]||0)+(p[1]==='+10'?10:(p[1]==='-'?-1:1))));sv(dzKunci(ses),c);if(navigator.vibrate&&p[1]!=='-')try{navigator.vibrate(c[i]>=mx?[60,40,60]:10)}catch(x){};ibDzikir();return}
+      if(p[1]==='reset'){sv(dzKunci(ses),{});ibDzikir();return}
+      if(p[1]==='r'){var s=dzSetel();s[p[2]]=s[p[2]]?0:1;sv('dz_set',s);dzMsg='';
+        try{await dzJadwalkan();dzMsg=(s.p||s.s)?'Pengingat dzikir diatur untuk 7 hari ke depan.':'Pengingat dzikir dimatikan.'}catch(x){s[p[2]]=0;sv('dz_set',s);dzMsg=x.message||String(x)}
+        ibDzikir();return}
+    }
     if(p[0]==='kl'){
       if(p[1]==='kor'){sv('hj_kor',+p[2]);shSimpanWidget();ibKalender();return}
       if(p[1]==='p'){var q=klSetel();q[p[2]]=q[p[2]]?0:1;sv('pz_set',q);klMsg='';
@@ -1621,15 +1737,15 @@ document.addEventListener('click',async function(e){
       ibIzin();return;
     }
   }catch(x){
-    if(VW==='simpan'&&SM.tab==='izin'){izMsg=x.message||String(x);ibIzin()}else if(IB.tab==='kalender'){klMsg=x.message||String(x);ibKalender()}else if(IB.tab==='ramadan'){rmMsg=x.message||String(x);ibRamadan()}
+    if(VW==='simpan'&&SM.tab==='izin'){izMsg=x.message||String(x);ibIzin()}else if(IB.tab==='dzikir'){dzMsg=x.message||String(x);ibDzikir()}else if(IB.tab==='kalender'){klMsg=x.message||String(x);ibKalender()}else if(IB.tab==='ramadan'){rmMsg=x.message||String(x);ibRamadan()}
   }
 });
 /* pengingat dzikir, puasa, dan Ramadan diperbarui tiap aplikasi dibuka (paling sering sekali per 20 menit) */
 var ibAutoT=0;
 function ibAuto(){
   if(!nplug('LocalNotifications')||Date.now()-ibAutoT<20*60000)return;ibAutoT=Date.now();
-  var k=klSetel(),r=ls('rm_set',null)||{};
-  if(!ls('dz_clean',0))ibCancelRentang(nplug('LocalNotifications'),72000,72999).then(function(){sv('dz_clean',1)}).catch(function(){});
+  var d=dzSetel(),k=klSetel(),r=ls('rm_set',null)||{};
+  if(d.p||d.s)dzJadwalkan().catch(function(){});
   if(k.snk||k.bid||k.khs||k.hb)pzJadwalkan().catch(function(){});
   if(r.n)rmJadwalkan().catch(function(){});
 }
