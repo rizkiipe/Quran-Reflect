@@ -20,7 +20,7 @@ for f in os.listdir(os.path.join(native, 'java')):
     open(os.path.join(jdir, f), 'w', encoding='utf-8').write(src)
 
 # 1b) daftarkan plugin buatan sendiri di MainActivity (pembaca teks Asma'ul Husna dan alarm adzan); harus sebelum super.onCreate
-for cls in ('TadabburTts', 'AdzanPlugin', 'NavPlugin', 'DiagPlugin'):
+for cls in ('TadabburTts', 'AdzanPlugin', 'NavPlugin', 'DiagPlugin', 'MurottalPlugin'):
     if not os.path.isfile(os.path.join(native, 'java', cls + '.java')):
         continue
     for f in os.listdir(jdir):
@@ -83,6 +83,12 @@ if 'AyatWidget' not in m:
         </receiver>
 '''
     m = re.sub(r'</application>', receiver + '    </application>', m, count=1)
+if 'MurottalService' not in m and os.path.isfile(os.path.join(native, 'java', 'MurottalService.java')):
+    mur = '''
+        <receiver android:name=".MurottalReceiver" android:exported="false" />
+        <service android:name=".MurottalService" android:exported="false" android:foregroundServiceType="mediaPlayback" />
+'''
+    m = re.sub(r'</application>', mur + '    </application>', m, count=1)
 if 'HariIniWidget' not in m and os.path.isfile(os.path.join(native, 'java', 'HariIniWidget.java')):
     receiver3 = '''
         <receiver android:name=".HariIniWidget" android:label="Hari Ini 4x3" android:exported="true">
