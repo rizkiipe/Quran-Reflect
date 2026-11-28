@@ -18,15 +18,37 @@
 @media (prefers-color-scheme:dark){:root{--bg:#0A1618;--ink:#E6EEEA;--mute:#9DB6B0;--card:#122427;--line:#27403F;--gold:#E2AE45;--teal:#5FC0B6;--dusk:#93B4E6;--mix:#fff;--on:#0A1618;--g1:#071F22;--g2:#12534F;--g3:#2A8179;--sh:rgba(0,0,0,.6);color-scheme:dark}}
 *{box-sizing:inherit}html,body{margin:0}
 body{background:linear-gradient(180deg,color-mix(in srgb,var(--teal) 16%,var(--bg)) 0,var(--bg) 380px) no-repeat var(--bg);color:var(--ink);font:18px/1.6 'Newsreader',Georgia,serif}
-main{max-width:680px;margin:0 auto;padding:16px 16px 60px}
+main{max-width:680px;margin:0 auto;padding:16px 16px calc(96px + env(safe-area-inset-bottom,0px))}
 .hero{position:relative;border-radius:22px;padding:26px 22px 22px;margin:0 0 16px;color:#fff;background:radial-gradient(circle at 92% 8%,rgba(236,190,90,.55),transparent 42%),linear-gradient(135deg,var(--g1),var(--g2) 58%,var(--g3));box-shadow:0 14px 30px -16px var(--sh)}
 h1{font-size:clamp(32px,8vw,44px);line-height:1.1;margin:0 0 4px;font-weight:600;color:#fff}
 .tgl{margin:0;font-size:16px;color:rgba(255,255,255,.82)}
 h2{font-size:21px;margin:26px 0 6px;font-weight:600}
 .sub,.pesan{color:var(--mute);font-size:16px;margin:0 0 14px}
-nav{display:flex;gap:6px;margin:0 0 18px;position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);padding:8px 0;z-index:5;overflow-x:auto}
-nav button{flex:1;white-space:nowrap;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:8px 14px;cursor:pointer;font-size:16px}
-nav button[aria-current="true"]{background:linear-gradient(135deg,var(--teal),color-mix(in srgb,var(--teal) 60%,var(--mix)));color:var(--on);border-color:transparent;box-shadow:0 6px 14px -8px var(--teal)}
+nav#nav{position:fixed;left:0;right:0;bottom:0;z-index:60;display:flex;justify-content:space-around;margin:0;padding:6px 4px calc(6px + env(safe-area-inset-bottom,0px));background:color-mix(in srgb,var(--card) 93%,transparent);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-top:1px solid var(--line)}
+nav#nav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;border:0;background:transparent;color:var(--mute);padding:2px 2px;border-radius:16px;cursor:pointer;font:600 12px/1.1 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;-webkit-tap-highlight-color:transparent}
+nav#nav .ni{display:flex;align-items:center;justify-content:center;width:58px;height:30px;border-radius:15px;transition:background .18s}
+nav#nav svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+nav#nav button[aria-current="true"]{color:var(--teal)}
+nav#nav button[aria-current="true"] .ni{background:color-mix(in srgb,var(--teal) 24%,transparent)}
+.appbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;display:flex;align-items:center;gap:8px;margin:-16px -16px 14px;padding:10px 14px;background:color-mix(in srgb,var(--bg) 90%,transparent);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.appbar[hidden]{display:none}
+.abt{flex:1;min-width:0;font:600 23px/1.25 'Newsreader',Georgia,serif;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.abback{flex:none;width:40px;height:40px;border-radius:50%;border:0;background:color-mix(in srgb,var(--teal) 15%,transparent);color:var(--teal);font-size:28px;line-height:1;padding:0 0 4px;cursor:pointer}
+.abback[hidden]{display:none}
+.seg{display:flex;gap:4px;padding:4px;margin:0 0 16px;border-radius:14px;background:color-mix(in srgb,var(--teal) 10%,var(--card));border:1px solid var(--line)}
+.seg[hidden]{display:none}
+.seg button{flex:1;border:0;background:transparent;border-radius:10px;padding:9px 8px;font:600 15.5px/1.2 system-ui,-apple-system,Roboto,sans-serif;color:var(--mute);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--teal);color:var(--on);box-shadow:0 4px 10px -6px var(--teal)}
+.hub{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 16px}
+.tile{display:flex;flex-direction:column;align-items:flex-start;gap:8px;text-align:left;border:1px solid var(--line);border-radius:20px;padding:14px;background:linear-gradient(160deg,color-mix(in srgb,var(--c) 11%,var(--card)),var(--card));color:var(--ink);cursor:pointer;font:inherit;-webkit-tap-highlight-color:transparent}
+.tile:active{transform:scale(.98)}
+.tile .ti{width:46px;height:46px;border-radius:15px;display:flex;align-items:center;justify-content:center;font-size:24px;background:color-mix(in srgb,var(--c) 20%,transparent)}
+.tile .tx{display:flex;flex-direction:column;gap:2px;min-width:0}.tile.lebar{grid-column:1/-1;flex-direction:row;align-items:center;gap:14px}.tile b{font-size:18px;line-height:1.2}.tile .ts{font-size:14px;color:var(--mute);line-height:1.3}
+.rows{border:1px solid var(--line);border-radius:20px;overflow:hidden;background:var(--card);margin:0 0 16px}
+.rowi{display:flex;align-items:center;gap:12px;width:100%;padding:13px 14px;border:0;border-top:1px solid var(--line);background:transparent;color:var(--ink);text-align:left;font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.rowi:first-child{border-top:0}.rowi:active{background:color-mix(in srgb,var(--teal) 8%,transparent)}
+.rowi .ri{width:42px;height:42px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:21px;background:color-mix(in srgb,var(--c) 20%,transparent);flex:none}
+.rowi .rt{flex:1;min-width:0}.rowi .rt b{display:block;font-size:17.5px;line-height:1.25}.rowi .rt small{display:block;color:var(--mute);font-size:14.5px;line-height:1.3}.rowi .rc{color:var(--mute);font-size:24px;flex:none}
 .card{--c2:color-mix(in srgb,var(--c) 62%,var(--mix));--c1:color-mix(in srgb,var(--c) 70%,#fff);position:relative;overflow:hidden;background:linear-gradient(160deg,color-mix(in srgb,var(--c) 7%,var(--card)),var(--card) 55%);border:1px solid var(--line);border-radius:18px;padding:16px 18px 14px 24px;margin:0 0 16px;box-shadow:0 10px 24px -16px var(--sh)}
 .card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:7px;background:linear-gradient(180deg,var(--c1),var(--c),var(--c2))}
 .hd{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:15px;color:var(--mute)}
@@ -45,7 +67,7 @@ details{font-size:16.5px;margin:6px 0}summary{cursor:pointer;color:var(--c,var(-
 #doaq{width:100%;padding:12px 14px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;margin:0 0 10px}
 .dt{font-size:19px;line-height:1.3;margin:8px 0 0;font-weight:600}
 .lat{font-style:italic;color:var(--mute);margin:2px 0 8px;font-size:16.5px}.nolat .lat{display:none}
-body.wg main>*:not(#wg){display:none!important}
+body.wg main>*:not(#wg){display:none!important}body.wg #mpbar{display:none!important}
 .tm{font:inherit;padding:6px 8px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);margin-left:4px}
 body.native{padding-top:max(env(safe-area-inset-top,0px),var(--safe-area-inset-top,0px));padding-bottom:max(env(safe-area-inset-bottom,0px),var(--safe-area-inset-bottom,0px))}
 .tf{white-space:pre-line;color:var(--mute);margin:6px 0}
@@ -87,9 +109,9 @@ section:not([hidden]){animation:fin .22s ease-out}
 .rmt{width:100%;border-collapse:collapse;font-size:14.5px;font-variant-numeric:tabular-nums}.rmt th,.rmt td{padding:6px 8px;border-top:1px solid var(--line);text-align:left;white-space:nowrap}.rmt th{color:var(--mute);font-weight:600}.rmt tr.rmi{background:color-mix(in srgb,var(--gold) 16%,transparent);font-weight:700}
 .mug{display:grid;grid-template-columns:1fr 1fr;gap:8px 10px;margin-top:10px}.mug label{font-size:14px;color:var(--mute);display:flex;flex-direction:column;gap:3px}.mug select,.mug input{padding:9px 8px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;width:100%;min-width:0}
 .card.mp-on{outline:2px solid var(--gold);outline-offset:2px}
-#mpbar{position:fixed;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom,0px));z-index:70;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px 8px 14px;border-radius:16px;background:#0F3E3C;color:#fff;box-shadow:0 6px 24px rgba(0,0,0,.35)}#mpbar[hidden]{display:none}
+#mpbar{position:fixed;left:10px;right:10px;bottom:calc(78px + env(safe-area-inset-bottom,0px));z-index:70;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px 8px 14px;border-radius:16px;background:#0F3E3C;color:#fff;box-shadow:0 6px 24px rgba(0,0,0,.35)}#mpbar[hidden]{display:none}
 #mpbar .mpt{display:flex;flex-direction:column;min-width:0}#mpbar .mpt b{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}#mpbar .mpt span{font-size:12.5px;opacity:.88;white-space:nowrap}#mpbar .mpc{display:flex;gap:4px;flex:none}#mpbar .mpc button{width:40px;height:40px;border-radius:50%;border:0;background:rgba(255,255,255,.14);color:#fff;font-size:18px;cursor:pointer}
-body.mpon{padding-bottom:90px}
+body.mpon{padding-bottom:80px}
 .ntbox:empty{display:none}.ntview{margin-top:8px;padding:8px 10px;border-radius:12px;background:color-mix(in srgb,var(--gold) 14%,transparent)}.ntm{display:flex;justify-content:space-between;font-size:13.5px;color:var(--mute)}.nt{margin:4px 0 0;white-space:pre-wrap;font-size:16px}
 .nta{width:100%;padding:10px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;resize:vertical}
 </style>
@@ -97,9 +119,11 @@ body.mpon{padding-bottom:90px}
 <body>
 <main>
 <div id="wg" hidden><div class="card" style="--c:var(--gold)"><div class="hd"><b>Tadabbur</b><span id="wgdate"></span></div><div class="chips" id="wgchips" style="margin:10px 0 0"></div><div id="wgbody"></div><div class="row"><button class="btn" id="wgoff">Buka aplikasi</button><button class="ib" data-wgimg="save">🖼 Gambar kunci layar</button></div><p class="pesan wgmsg" aria-live="polite" style="margin:8px 0 0"></p></div></div>
+<div id="appbar" class="appbar" hidden><button id="abback" class="abback" aria-label="Kembali" hidden>‹</button><span class="abt" id="abtitle">Quran Reflect</span></div>
 <header class="hero"><h1>Quran Reflect</h1><p class="tgl" id="tgl"></p></header>
 <div id="upd" class="card" style="--c:var(--gold)" hidden></div>
-<nav id="nav"><button data-v="hari" aria-current="true">Hari ini</button><button data-v="sholat" aria-current="false">Sholat</button><button data-v="ibadah" aria-current="false">Ibadah</button><button data-v="cari" aria-current="false">Sesuai harimu</button><button data-v="quran" aria-current="false">Al-Qur’an</button><button data-v="doa" aria-current="false">Doa</button><button data-v="asma" aria-current="false">Asma’ul Husna</button><button data-v="simpan" aria-current="false">Lainnya</button></nav>
+<div id="seg" class="seg" role="tablist" aria-label="Beranda"><button data-seg="hari" aria-pressed="true">Hari ini</button><button data-seg="cari" aria-pressed="false">Sesuai harimu</button></div>
+<nav id="nav" aria-label="Menu utama"><button data-v="hari" aria-current="true"><span class="ni"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10.5V20h13v-9.5"/><path d="M10 20v-5h4v5"/></svg></span><span>Beranda</span></button><button data-v="sholat" aria-current="false"><span class="ni"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg></span><span>Sholat</span></button><button data-v="quran" aria-current="false"><span class="ni"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5C4 4.7 4.7 4 5.5 4H12v16H5.5c-.8 0-1.5-.7-1.5-1.5z"/><path d="M20 5.5c0-.8-.7-1.5-1.5-1.5H12v16h6.5c.8 0 1.5-.7 1.5-1.5z"/></svg></span><span>Al-Qur’an</span></button><button data-v="ibadah" aria-current="false"><span class="ni"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5z"/></svg></span><span>Ibadah</span></button><button data-v="simpan" aria-current="false"><span class="ni"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1.7" fill="currentColor"/><circle cx="12" cy="12" r="1.7" fill="currentColor"/><circle cx="19" cy="12" r="1.7" fill="currentColor"/></svg></span><span>Lainnya</span></button></nav>
 
 <section id="v-hari"><p class="sub">Tiga ayat untuk hari ini. Ayatnya berbeda setiap hari dan tidak berulang dalam siklus ±5 tahun.</p><div id="tiga"></div><div id="kisah"></div><div id="gaya"></div>
 <div class="card" id="panelw" style="--c:var(--dusk)"><div class="hd"><b>Widget dan pengingat</b></div>
@@ -146,10 +170,12 @@ body.mpon{padding-bottom:90px}
 </section>
 <section id="v-simpan" hidden><div id="simpan"></div></section>
 
+<div id="tentangsrc" hidden>
 <p class="note" id="ver"></p>
 <p class="note" style="margin-top:12px">Teks Arab dan terjemahan Indonesia diambil langsung dari sumber data (api.quran.gading.dev; terjemahan dan tafsir dari Kementerian Agama RI, teks Arab dari api.alquran.cloud) dan tidak diubah oleh aplikasi ini. Tafsir yang ditampilkan adalah Tafsir Kemenag RI. “Renungan” dan tema adalah catatan ringkas aplikasi, bukan tafsir ulama; tema ditentukan otomatis dari kata kunci terjemahan. Favorit dan penanda disimpan di perangkat dan, saat online, di Firebase (proyek terpisah khusus aplikasi ini) pada dokumen milikmu sendiri. Asbabun nuzul hanya ditampilkan untuk ayat yang memiliki riwayat sahih (Bukhari/Muslim) dan sudah dicocokkan dengan teks hadisnya; isinya ringkasan aplikasi, bukan kutipan harfiah, dan sumbernya dicantumkan. Tajwid diambil dari data alquran.cloud dan audio dari CDN yang sama (qari Mishary Alafasy); keduanya perlu internet dan hanya alat bantu belajar. Tiap keterangan diberi derajat (Kuat, Cukup kuat, atau Belum terverifikasi) beserta nama kitab dan nomor riwayatnya. Tidak semua ayat memiliki sebab turun, dan ayat tanpa keterangan itu bukan berarti tidak berkaitan dengan peristiwa. Untuk rujukan hukum atau pembahasan mendalam, cocokkan dengan mushaf dan tanyakan kepada guru atau ulama. Kisah nabi dan orang saleh hanya bersumber dari Al-Qur’an dan hadis sahih (sumbernya dicantumkan di tiap kisah), berupa ringkasan aplikasi, dan tidak memuat riwayat israiliyat.</p>
 <p class="sub" id="verbar" hidden style="font-size:14px;text-align:center;margin-top:18px">Versi aplikasi <span id="vernow"></span> · <button class="chip" id="updbtn">Cek pembaruan</button></p>
 <p class="sub" id="updmsg" aria-live="polite" style="font-size:14px;text-align:center" hidden></p>
+</div>
 </main>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
@@ -967,12 +993,38 @@ var now=new Date(),h=now.getHours();
 $('tgl').textContent=now.toLocaleDateString('id-ID',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
 var VW='hari';
 function show(v){VW=v;['hari','sholat','ibadah','cari','quran','doa','asma','simpan'].forEach(function(x){$('v-'+x).hidden=x!==v});if(v!=='asma')ahStop();if(v!=='ibadah')ibStop();
-  Array.prototype.forEach.call($('nav').children,function(b){b.setAttribute('aria-current',b.dataset.v===v)});
-  if(v==='sholat')shRender();if(v==='ibadah')ibadah();if(v==='simpan')simpanMenu();if(v==='doa')doa();if(v==='asma')asma();if(v==='quran'&&!$('daftar').children.length)daftar()}
-$('nav').addEventListener('click',function(e){var b=e.target.closest('button');if(b){$('surah').hidden=true;$('daftar').hidden=false;show(b.dataset.v)}});
+  var top={cari:'hari',doa:'ibadah',asma:'ibadah'}[v]||v;
+  Array.prototype.forEach.call($('nav').children,function(b){b.setAttribute('aria-current',b.dataset.v===top)});
+  if(v==='sholat')shRender();if(v==='ibadah')ibadah();if(v==='simpan')simpanMenu();if(v==='doa')doa();if(v==='asma')asma();if(v==='quran'&&!$('daftar').children.length)daftar();
+  abUpdate()}
+/* ---- bilah judul, tombol kembali, dan segmen Beranda ---- */
+var ABT={sholat:'Jadwal sholat',quran:'Al-Qur’an',ibadah:'Ibadah',simpan:'Lainnya',doa:'Doa',asma:'Asma’ul Husna'};
+var ABIB={kiblat:'Arah kiblat',dzikir:'Dzikir pagi dan petang',tasbih:'Tasbih digital',kalender:'Kalender Islam',ramadan:'Ramadan'};
+var ABSM={simpan:'Tersimpan',akun:'Akun dan sinkronisasi',izin:'Cek izin dan pengaturan',tentang:'Tentang aplikasi'};
+function abUpdate(){
+  var v=VW,t=ABT[v]||'',back=false,hero=v==='hari'||v==='cari';
+  if(v==='ibadah'&&IB.tab!=='home'){t=ABIB[IB.tab]||t;back=true}
+  if(v==='doa'||v==='asma')back=true;
+  if(v==='simpan'&&SM.tab!=='home'){t=ABSM[SM.tab]||t;back=true}
+  $('appbar').hidden=hero;document.querySelector('.hero').hidden=!hero;$('seg').hidden=!hero;
+  $('abtitle').textContent=t;$('abback').hidden=!back;
+  Array.prototype.forEach.call($('seg').children,function(b){b.setAttribute('aria-pressed',b.dataset.seg===v)});
+}
+function goBack(){
+  if(VW==='quran'&&!$('surah').hidden){$('surah').hidden=true;$('daftar').hidden=false;return true}
+  if(VW==='doa'||VW==='asma'){IB.tab='home';show('ibadah');return true}
+  if(VW==='ibadah'&&IB.tab!=='home'){IB.tab='home';ibadah();return true}
+  if(VW==='simpan'&&SM.tab!=='home'){SM.tab='home';simpanMenu();return true}
+  if(VW!=='hari'){show('hari');return true}
+  return false;
+}
+$('nav').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;$('surah').hidden=true;$('daftar').hidden=false;var v=b.dataset.v;if(v==='ibadah')IB.tab='home';if(v==='simpan')SM.tab='home';show(v);window.scrollTo(0,0)});
+$('seg').addEventListener('click',function(e){var b=e.target.closest('button');if(b){show(b.dataset.seg);window.scrollTo(0,0)}});
+$('abback').addEventListener('click',function(){goBack();window.scrollTo(0,0)});
+(function(){var A=nplug('App');if(A&&A.addListener){try{A.addListener('backButton',function(){if(!goBack()&&A.exitApp)A.exitApp()})}catch(e){}}})();
 /* ===== Geser kanan-kiri untuk pindah menu: geser ke kiri = menu berikutnya, ke kanan = menu sebelumnya ===== */
 (function(){
-  var ORD=['hari','sholat','ibadah','cari','quran','doa','asma','simpan'],sx=0,sy=0,st=0,ok=false;
+  var ORD=['hari','sholat','quran','ibadah','simpan'],sx=0,sy=0,st=0,ok=false;
   function bolehGeser(el){
     for(var n=el;n&&n!==document.body;n=n.parentElement){
       var t=n.tagName;if(t==='INPUT'||t==='TEXTAREA'||t==='SELECT'||t==='PRE'||t==='TABLE')return false;
@@ -983,7 +1035,7 @@ $('nav').addEventListener('click',function(e){var b=e.target.closest('button');i
   document.addEventListener('touchstart',function(e){
     if(e.touches.length!==1){ok=false;return}
     var t=e.touches[0];sx=t.clientX;sy=t.clientY;st=Date.now();
-    ok=bolehGeser(e.target)&&!($('surah')&&!$('surah').hidden);   // saat membaca satu surah, geser tidak pindah menu
+    ok=bolehGeser(e.target)&&!($('surah')&&!$('surah').hidden)&&!(VW==='ibadah'&&IB.tab!=='home')&&!(VW==='simpan'&&SM.tab!=='home');   // saat membaca satu surah, geser tidak pindah menu
   },{passive:true});
   document.addEventListener('touchend',function(e){
     if(!ok)return;ok=false;
@@ -992,7 +1044,7 @@ $('nav').addEventListener('click',function(e){var b=e.target.closest('button');i
     var sel=window.getSelection&&String(window.getSelection());if(sel)return;
     var i=ORD.indexOf(VW);if(i<0)return;
     var j=dx<0?i+1:i-1;if(j<0||j>=ORD.length)return;
-    $('surah').hidden=true;$('daftar').hidden=false;show(ORD[j]);
+    $('surah').hidden=true;$('daftar').hidden=false;if(ORD[j]==='ibadah')IB.tab='home';if(ORD[j]==='simpan')SM.tab='home';show(ORD[j]);
     window.scrollTo(0,0);
     var b=$('nav').children[j];if(b&&b.scrollIntoView)b.scrollIntoView({inline:'center',block:'nearest'});
   },{passive:true});
@@ -1047,16 +1099,39 @@ async function buka(n,a){
 }
 
 /* tersimpan */
-var SM={tab:ls('sm_tab','simpan')};
+var SM={tab:'home'};
+function smBaris(k,ik,jd,sb,w){return '<button class="rowi" style="--c:var(--'+w+')" data-sm="'+k+'"><span class="ri" aria-hidden="true">'+ik+'</span><span class="rt"><b>'+jd+'</b><small>'+sb+'</small></span><span class="rc" aria-hidden="true">›</span></button>'}
+function smHub(){
+  var nc=Object.keys(NT).filter(ntAda).length,nf=FAV.length;
+  return '<div class="rows">'
+   +smBaris('simpan','⭐','Tersimpan',nf+' favorit · '+nc+' catatan jurnal'+(BM?' · penanda bacaan':''),'gold')
+   +smBaris('akun','☁️','Akun dan sinkronisasi',esc(ACC||'Masuk dengan Google untuk sinkron antar-HP'),'dusk')
+   +smBaris('izin','🔔','Cek izin dan pengaturan','Notifikasi, alarm adzan, baterai, volume','teal')
+   +smBaris('tentang','ℹ️','Tentang aplikasi',(window.APP_VERSION?'Versi '+esc(APP_VERSION.v)+' · cek pembaruan':'Sumber data dan catatan'),'teal')
+   +'</div>';
+}
+function smAkun(){$('smp').innerHTML=SYNCBOX()+'<p class="note">Favorit, penanda bacaan, dan catatan jurnal disinkronkan ke akun Google-mu. Bila dua HP mengubah catatan yang sama, yang paling baru disimpan.</p>'}
+function smTentang(){
+  var V=window.APP_VERSION;
+  $('smp').innerHTML=ibKartu('Quran Reflect','Tadabbur harian','<p class="id" style="margin:8px 0">Aplikasi tadabbur Al-Qur’an dengan jadwal sholat, adzan, dzikir, murottal, dan jurnal pribadi.</p><div id="tentangv"></div>');
+  var w=$('tentangv'),s=$('tentangsrc');if(!w||!s)return;
+  ['verbar','updmsg'].forEach(function(i){var e=$(i);if(e)w.appendChild(e)});
+  var vb=$('verbar');if(vb&&!V){vb.hidden=true}
+  var nb=document.createElement('div');nb.id='tentangn';$('smp').appendChild(nb);
+  Array.prototype.forEach.call(s.querySelectorAll('.note'),function(n){nb.appendChild(n)});
+}
 function simpanMenu(){
   var z=$('simpan');if(!z)return;
-  if(SM.tab!=='simpan'&&SM.tab!=='izin')SM.tab='simpan';
-  z.innerHTML='<div class="chips">'+[['simpan','Tersimpan'],['izin','Cek izin']].map(function(t){return '<button class="ib" data-sm="'+t[0]+'" aria-pressed="'+(SM.tab===t[0])+'">'+t[1]+'</button>'}).join('')+'</div><div id="smp"></div>';
-  if(SM.tab==='izin')ibIzin();else tersimpan();
+  var s=$('tentangsrc');   // kembalikan catatan dan bilah versi ke wadahnya sebelum isi layar diganti
+  if(s)['verbar','updmsg'].forEach(function(i){var e=$(i);if(e&&e.parentNode!==s)s.appendChild(e)});
+  var nb=$('tentangn');if(nb&&s)Array.prototype.slice.call(nb.children).forEach(function(n){s.insertBefore(n,s.firstChild)});
+  if(SM.tab==='home')z.innerHTML=smHub();
+  else{z.innerHTML='<div id="smp"></div>';({simpan:tersimpan,akun:smAkun,izin:ibIzin,tentang:smTentang}[SM.tab]||tersimpan)()}
+  abUpdate();
 }
-document.addEventListener('click',function(e){var b=e.target.closest('[data-sm]');if(!b)return;SM.tab=b.dataset.sm;sv('sm_tab',SM.tab);simpanMenu()});
+document.addEventListener('click',function(e){var b=e.target.closest('[data-sm]');if(!b)return;SM.tab=b.dataset.sm;simpanMenu();window.scrollTo(0,0)});
 async function tersimpan(){
-  var z=$('smp'),o=SYNCBOX();if(!z)return;z.innerHTML='<p class="sub">Memuat…</p>';
+  var z=$('smp'),o='';if(!z)return;z.innerHTML='<p class="sub">Memuat…</p>';
   if(BM){var q=BM.k.split(':');o+='<h2>Penanda bacaan</h2><button class="btn o" onclick="buka('+q[0]+','+q[1]+')">Lanjutkan di '+esc(NAMA[q[0]-1])+' '+BM.k+'</button>'}
   o+='<h2>Favorit</h2>';
   if(!FAV.length)o+='<p class="sub">Belum ada. Tekan ☆ Favorit pada ayat atau doa mana saja.</p>';
@@ -1388,8 +1463,7 @@ var DZK=[
 ];
 
 /* ===== Ibadah: kiblat, dzikir pagi dan petang, tasbih, kalender puasa dan hari besar, Ramadan, cek izin ===== */
-var IB={tab:ls('ib_tab','kiblat')},IBT=[];
-if(['kiblat','dzikir','tasbih','kalender','ramadan'].indexOf(IB.tab)<0)IB.tab='kiblat';   // IBT: timer yang harus dihentikan saat panel berganti
+var IB={tab:'home'},IBT=[];   // IBT: timer yang harus dihentikan saat panel berganti
 var HJ_BLN=['Muharram','Safar','Rabiul Awal','Rabiul Akhir','Jumadil Awal','Jumadil Akhir','Rajab','Sya’ban','Ramadhan','Syawal','Dzulqa’dah','Dzulhijjah'];
 var HARI=['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
 function ibJam(ms){return shJam(ms)}
@@ -1416,9 +1490,27 @@ function ibStop(){
 }
 function ibadah(){
   var z=$('ibadah');if(!z)return;ibStop();
-  var tabs=[['kiblat','Kiblat'],['dzikir','Dzikir'],['tasbih','Tasbih'],['kalender','Kalender'],['ramadan','Ramadan']];
-  z.innerHTML='<div class="chips">'+tabs.map(function(t){return '<button class="ib" data-ib="tab:'+t[0]+'" aria-pressed="'+(IB.tab===t[0])+'">'+t[1]+'</button>'}).join('')+'</div><div id="ibp"></div>';
+  if(IB.tab==='home'){z.innerHTML=ibHub();abUpdate();return}
+  z.innerHTML='<div id="ibp"></div>';
   ({kiblat:ibKiblat,dzikir:ibDzikir,tasbih:ibTasbih,kalender:ibKalender,ramadan:ibRamadan}[IB.tab]||ibKiblat)();
+  abUpdate();
+}
+function ibTile(go,ik,jd,sb,w,kind,lebar){return '<button class="tile'+(lebar?' lebar':'')+'" style="--c:var(--'+w+')" '+(kind==='view'?'data-go="'+go+'"':'data-ib="tab:'+go+'"')+'><span class="ti" aria-hidden="true">'+ik+'</span><span class="tx"><b>'+jd+'</b><span class="ts">'+sb+'</span></span></button>'}
+function ibHub(){
+  var L=ibLok(),now=Date.now(),T=shHitung(new Date(),L.la,L.lo),dp=new Date(),nx=null;
+  [['Subuh',T.subuh],['Terbit',T.syuruq],['Dzuhur',T.dzuhur],['Ashar',T.ashar],['Maghrib',T.maghrib],['Isya',T.isya]].forEach(function(x){if(!nx&&x[1]>now)nx=x});
+  if(!nx){var B=shHitung(new Date(now+864e5),L.la,L.lo);nx=['Subuh',B.subuh]}
+  var m=Math.max(0,Math.round((nx[1]-now)/60000)),jm=Math.floor(m/60);
+  var ringkas='<div class="card" style="--c:var(--teal)"><div class="hd"><b>Hari ini</b><span>'+esc(ibTgl(dp))+'</span></div><p class="dt" style="margin:8px 0 2px">'+esc(hjTeks(dp))+'</p><p class="id" style="margin:4px 0 0">Berikutnya: <b>'+nx[0]+' '+ibJam(nx[1])+'</b> · dalam '+(jm?jm+' j ':'')+(m%60)+' m'+(L.ada?'':' <span style="color:var(--mute)">(lokasi sementara Jakarta)</span>')+'</p></div>';
+  return ringkas+'<div class="hub">'
+   +ibTile('kiblat','🧭','Kiblat','Arah kiblat dari lokasimu','teal')
+   +ibTile('dzikir','📿','Dzikir','Pagi dan petang','gold')
+   +ibTile('tasbih','🔢','Tasbih','Penghitung dzikir','dusk')
+   +ibTile('kalender','🗓️','Kalender','Puasa sunnah dan hari besar','teal')
+   +ibTile('ramadan','🌙','Ramadan','Imsakiyah dan khatam','gold')
+   +ibTile('doa','🤲','Doa','Doa harian bersumber','dusk','view')
+   +ibTile('asma','✨','Asma’ul Husna','99 nama Allah: arti, makna, dan pelafalan','teal','view',true)
+   +'</div>';
 }
 function ibKartu(judul,kanan,isi,warna){return '<article class="card" style="--c:var(--'+(warna||'teal')+')"><div class="hd"><b>'+judul+'</b><span>'+(kanan||'')+'</span></div>'+isi+'</article>'}
 function ibBtn(a,txt,on,dis){return '<button class="ib" data-ib="'+a+'" aria-pressed="'+!!on+'"'+(dis?' disabled':'')+'>'+txt+'</button>'}
@@ -1692,11 +1784,12 @@ async function ibIzin(){
 }
 
 /* ========== KLIK ========== */
+document.addEventListener('click',function(e){var g=e.target.closest('[data-go]');if(g){IB.tab='home';show(g.dataset.go);window.scrollTo(0,0)}});
 document.addEventListener('click',async function(e){
   var b=e.target.closest('[data-ib]');if(!b||b.disabled)return;var a=b.dataset.ib,p=a.split(':');
   try{
     if(a==='lok'){await shRefresh(true);ibadah();return}
-    if(p[0]==='tab'){IB.tab=p[1];sv('ib_tab',IB.tab);ibadah();return}
+    if(p[0]==='tab'){IB.tab=p[1];ibadah();window.scrollTo(0,0);return}
     if(a==='ts:tap'){tsTap();return}
     if(p[0]==='ts'){var d=tsData();
       if(p[1]==='z'){d.z=+p[2];d.n=0}else if(p[1]==='t'){d.t=+p[2];d.n=0}else if(p[1]==='hap')d.hap=d.hap?0:1;else if(p[1]==='reset'){d.n=0;d.r=0}
